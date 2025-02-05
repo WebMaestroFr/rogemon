@@ -1,2 +1,1 @@
-# rogemon
-Rogémon!
+# Rogémon!
