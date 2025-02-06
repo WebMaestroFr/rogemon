@@ -1,19 +1,20 @@
 {
-	"name": "Rogémon!",
-	"image": "mcr.microsoft.com/devcontainers/base:alpine",
-	"features": {
-		"ghcr.io/cirolosapio/devcontainers-features/alpine-node:0": {}
-	},
-	"postCreateCommand": "sh .devcontainer/post-create.sh",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"dbaeumer.vscode-eslint",
-				"rvest.vs-code-prettier-eslint",
-				"timonwong.shellcheck",
-				"Vue.volar",
-				"EditorConfig.EditorConfig"
-			]
-		}
-	}
+  "name": "Rogémon!",
+  "image": "mcr.microsoft.com/devcontainers/base:alpine",
+  "features": {
+    "ghcr.io/cirolosapio/devcontainers-features/alpine-node:0": {}
+  },
+  "postCreateCommand": "sh .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "rvest.vs-code-prettier-eslint",
+        "timonwong.shellcheck",
+        "Vue.volar"
+      ]
+    }
+  }
 }
