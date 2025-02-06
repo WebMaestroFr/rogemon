@@ -1,18 +1,17 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
   <header class="app__header">
-    <h1>Rogédex</h1>
-    <nav class="app__nav">
+    <h1>Rogémon</h1>
+    <!-- <nav class="app__nav">
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/about">About</RouterLink>
-    </nav>
+    </nav> -->
   </header>
   <RouterView />
 </template>
+
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+</script>
 
 <style scoped>
 .app__header {
