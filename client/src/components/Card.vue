@@ -1,10 +1,26 @@
 <template>
-  <!-- <div class="card" :style="{ backgroundImage: `url(${props.card.image})` }"> -->
   <div class="card">
-    <h3>{{ String(props.card.id).padStart(3, '0') }}</h3>
+    <img v-if="props.count > 0" class="card__image" :src="props.card.image" :alt="card.name" />
+    <h3 v-else class="card__id">{{ String(props.card.id).padStart(3, '0') }}</h3>
     <div class="card__buttons">
-      <button>✗</button>
-      <button>✓</button>
+      <button
+        :class="[
+          'card__button-down',
+          props.count === -1 ? 'card__button-down--on' : 'card__button-down--off',
+        ]"
+        @click="$emit('decrease')"
+      >
+        {{ props.count > 0 ? '-' : '✗' }}
+      </button>
+      <button
+        :class="[
+          'card__button-up',
+          props.count > 1 ? 'card__button-up--on' : 'card__button-up--off',
+        ]"
+        @click="$emit('increase')"
+      >
+        {{ props.count > 0 ? `×${props.count}` : '✓' }}
+      </button>
     </div>
   </div>
 </template>
@@ -12,24 +28,69 @@
 <script setup lang="ts">
 import type { ICard } from '../../types'
 
-const props = defineProps<{ card: ICard }>()
+const props = defineProps<{ card: ICard; count: number }>()
 </script>
 
 <style scoped>
 .card {
-  aspect-ratio: 2/3;
-  background-color: rgba(0, 0, 0, 0.1);
+  position: relative;
+  aspect-ratio: 367/512;
+  box-shadow:
+    inset 0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.2),
+    inset -0.2rem -0.2rem 0.4rem rgba(255, 255, 255, 0.8);
   border-radius: 0.2rem;
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 0.5rem;
+  justify-content: flex-end;
+  padding: 0.5em;
   background-size: cover;
+  gap: 0.5em;
+}
+.card__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: grayscale(33%);
+}
+.card__id {
+  font-size: 2em;
+  font-weight: bold;
+  color: #888;
 }
 .card__buttons {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
+}
+.card__buttons button {
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  text-align: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  cursor: pointer;
+  font-size: 1.618em;
+  box-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
+}
+.card__button-down {
+  color: red;
+  background-color: white;
+}
+.card__button-down--on {
+  color: white;
+  background-color: red;
+}
+.card__button-up {
+  color: green;
+  background-color: white;
+}
+.card__button-up--on {
+  color: white;
+  background-color: green;
 }
 </style>

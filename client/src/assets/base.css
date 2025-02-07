@@ -9,6 +9,7 @@
 body {
   min-height: 100vh;
   color: #333;
+  background: #f0f0f0;
   font-size: 16px;
   line-height: 1.25;
   font-family: sans-serif;
