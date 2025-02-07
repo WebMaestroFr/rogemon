@@ -15,7 +15,7 @@
       <button
         :class="[
           'card__button-up',
-          props.count > 1 ? 'card__button-up--on' : 'card__button-up--off',
+          props.count > 2 ? 'card__button-up--on' : 'card__button-up--off',
         ]"
         @click="$emit('increase')"
       >
@@ -28,7 +28,16 @@
 <script setup lang="ts">
 import type { ICard } from '../../types'
 
-const props = defineProps<{ card: ICard; count: number }>()
+const props = defineProps({
+  card: {
+    type: Object as PropType<ICard>,
+    required: true,
+  },
+  count: {
+    type: Number,
+    default: 0,
+  },
+})
 </script>
 
 <style scoped>

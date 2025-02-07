@@ -13,6 +13,7 @@
         "esbenp.prettier-vscode",
         "rvest.vs-code-prettier-eslint",
         "timonwong.shellcheck",
+        "vitest.explorer",
         "Vue.volar"
       ]
     }

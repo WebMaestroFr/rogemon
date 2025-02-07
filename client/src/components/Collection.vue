@@ -33,7 +33,6 @@ onMounted(async () => {
 
 function increaseCardRecord(cardId: string) {
   const cardRecord = records.value[cardId]
-  console.log(cardRecord)
   if (cardRecord === undefined || cardRecord === -1) {
     records.value[cardId] = 1
   } else {
@@ -43,11 +42,10 @@ function increaseCardRecord(cardId: string) {
 }
 function decreaseCardRecord(cardId: string) {
   const cardRecord = records.value[cardId]
-  console.log(cardRecord)
-  if (cardRecord === undefined || cardRecord === 0) {
-    records.value[cardId] = -1
-  } else if (cardRecord === -1) {
+  if (cardRecord === -1) {
     records.value[cardId] = 0
+  } else if (cardRecord === undefined || cardRecord <= 1) {
+    records.value[cardId] = -1
   } else {
     records.value[cardId] -= 1
   }
