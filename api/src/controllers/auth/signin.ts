@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 import User from "../../database/models/user";
 import { JWT_SECRET } from "../../middlewares/auth";
-import { validateRequestBody } from "../../utils/validator";
+import validateRequestBody from "../../utils/validateRequestBody";
 
 export default async function handleSignin(
   req: Request,

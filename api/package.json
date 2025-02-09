@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "node --env-file=.env -r ts-node/register src/index.ts",
     "preserve": "tsc",
     "serve": "node dist/index.js"
   },

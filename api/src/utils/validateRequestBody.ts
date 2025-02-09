@@ -15,7 +15,7 @@ const EMAIL_REGEX =
  *
  * @throws Will throw an error if a required field is missing or if a field does not meet the minimum length requirement.
  */
-export function validateRequestBody(
+export default function validateRequestBody(
   body: Request["body"],
   rules: {
     [key: string]: {

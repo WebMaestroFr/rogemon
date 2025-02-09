@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../../database/models/user";
-import { validateRequestBody } from "../../utils/validator";
+import validateRequestBody from "../../utils/validateRequestBody";
 
 export default async function handleSignup(
   req: Request,

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateRequestBody } from "./validator";
+import validateRequestBody from "../../utils/validateRequestBody";
 
 describe("validateRequestBody", () => {
   it("should throw an error if a required field is missing", () => {
