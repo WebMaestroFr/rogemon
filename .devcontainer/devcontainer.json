@@ -11,6 +11,7 @@
         "dbaeumer.vscode-eslint",
         "EditorConfig.EditorConfig",
         "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
         "rvest.vs-code-prettier-eslint",
         "timonwong.shellcheck",
         "vitest.explorer",

@@ -7,7 +7,7 @@
         :key="card.id"
         class="collection__card"
         :card="card"
-        :count="records[card.id] || 0"
+        :count="records[card.id]"
         @increase="() => increaseCardRecord(card.id)"
         @decrease="() => decreaseCardRecord(card.id)"
       />

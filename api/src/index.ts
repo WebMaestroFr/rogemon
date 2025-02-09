@@ -1,12 +1,20 @@
 import express, { Request, Response } from "express";
 
-const app = express();
+import authRouter from "./controllers/auth";
+import userRouter from "./controllers/user";
+
+const api = express();
 const port = process.env.PORT || 3000;
 
-app.get("/", (req: Request, res: Response) => {
+api.get("/", (req: Request, res: Response) => {
   res.send("Rogémon!");
 });
 
-app.listen(port, () => {
+api.use("/auth", authRouter);
+api.use("/user", userRouter);
+
+api.listen(port, () => {
   console.log(`API running at http://localhost:${port}`);
 });
+
+export default api;
