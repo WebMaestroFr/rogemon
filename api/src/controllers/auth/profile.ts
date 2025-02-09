@@ -9,6 +9,6 @@ export default async function handleProfile(
     res.status(200).json(res.locals.user);
     return next();
   }
-  const error = new Error("User not authenticated");
-  return next(error);
+  res.status(401);
+  return next("User is not authenticated");
 }

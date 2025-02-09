@@ -20,8 +20,8 @@ export default async function handleSignup(
   try {
     const verifyEmail = await User.findOne({ email: req.body.email });
     if (verifyEmail) {
-      res.status(403).json({ message: "Email already used." });
-      return next();
+      res.status(403);
+      return next("Email already used.");
     }
     const user = new User({
       name: req.body.name,
@@ -29,7 +29,7 @@ export default async function handleSignup(
       password: req.body.password,
     });
     const result = await user.save();
-    res.status(201).json({ message: "User successfully created.", result });
+    res.status(201).json(result);
     return next();
   } catch (err) {
     return next(err);

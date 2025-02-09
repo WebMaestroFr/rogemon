@@ -21,22 +21,22 @@ export function verifyToken(token: string) {
   return jwt.verify(token, JWT_SECRET) as UserPayload;
 }
 
-export default function authMiddleware(
+export default function useAuth(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   if (!req.headers.authorization) {
-    return res
-      .status(401)
-      .json({ message: "Authorization header is required" });
+    res.status(401);
+    return next("Authorization header is required");
   }
   const token = req.headers.authorization.replace("Bearer ", "");
   try {
     const jwtPayload = verifyToken(token);
     res.locals.user = User.findById(jwtPayload.userId);
   } catch {
-    return res.status(401).json({ message: "Authentification failed" });
+    res.status(401);
+    return next("Authentification failed");
   }
   next();
 }

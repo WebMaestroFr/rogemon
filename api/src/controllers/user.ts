@@ -18,8 +18,8 @@ userRouter.get(
       res.status(200).json(user);
       return next();
     }
-    const error = new Error("User not found");
-    return next(error);
+    res.status(404);
+    return next("User not found");
   }
 );
 

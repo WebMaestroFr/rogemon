@@ -19,12 +19,13 @@
 import { onMounted, ref } from 'vue'
 import type { ICard } from '../../types'
 import Card from '@/components/Card.vue'
-import { type CardRecords, getCardRecords, setCardRecord } from '@/storage'
+import { type CardCounts } from '../storage'
+import { getCardCounts, setCardCount } from '../storage/cardCounts'
 
 const props = defineProps<{ id: string; name: string }>()
 const cards = ref<ICard[]>()
-const initialRecords = getCardRecords(props.id)
-const records = ref<CardRecords>(initialRecords)
+const initialCounts = getCardCounts(props.id)
+const records = ref<CardCounts>(initialCounts)
 
 onMounted(async () => {
   const response = await fetch(`cards/${props.id}.json`)
@@ -38,7 +39,7 @@ function increaseCardRecord(cardId: string) {
   } else {
     records.value[cardId] += 1
   }
-  setCardRecord(props.id, cardId, records.value[cardId])
+  setCardCount(props.id, cardId, records.value[cardId])
 }
 function decreaseCardRecord(cardId: string) {
   const cardRecord = records.value[cardId]
@@ -49,7 +50,7 @@ function decreaseCardRecord(cardId: string) {
   } else {
     records.value[cardId] -= 1
   }
-  setCardRecord(props.id, cardId, records.value[cardId])
+  setCardCount(props.id, cardId, records.value[cardId])
 }
 </script>
 

@@ -16,21 +16,18 @@ export default async function handleSignin(
       password: { required: true, minLength: 6 },
     });
   } catch (validationError) {
-    res.status(412).json({ message: validationError });
-    return next();
+    res.status(412);
+    return next(validationError);
   }
   try {
     const emailUser = await User.findOne({ email: req.body.email });
-    if (!emailUser) throw new Error("Authentication failed");
+    if (!emailUser) throw "Authentication failed";
     const isPasswordCorrect = emailUser.comparePassword(req.body.password);
-    if (!isPasswordCorrect) throw new Error("Authentication failed");
+    if (!isPasswordCorrect) throw "Authentication failed";
     const accessToken = jwt.sign({ userId: emailUser._id }, JWT_SECRET, {
       expiresIn: "1h",
     });
-    res.status(201).json({
-      accessToken,
-      message: "Authentication successful",
-    });
+    res.status(201).json(accessToken);
     return next();
   } catch (err) {
     return next(err);
