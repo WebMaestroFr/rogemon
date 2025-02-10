@@ -7,24 +7,7 @@
       "type": "npm",
       "script": "dev",
       "isBackground": true,
-      "problemMatcher": [
-        {
-          "pattern": [
-            {
-              "regexp": ".",
-              "file": 1,
-              "line": 1,
-              "column": 1,
-              "message": 1
-            }
-          ],
-          "background": {
-            "activeOnStart": true,
-            "beginsPattern": { "regexp": "." },
-            "endsPattern": { "regexp": "." }
-          }
-        }
-      ]
+      "problemMatcher": ["$tsc-watch"]
     },
     {
       "label": "dev:client",
@@ -32,6 +15,11 @@
       "type": "npm",
       "script": "dev",
       "isBackground": true,
+      "problemMatcher": ["$vite"]
+    },
+    {
+      "label": "dev",
+      "dependsOn": ["dev:api", "dev:client"],
       "problemMatcher": [
         {
           "pattern": [
@@ -45,15 +33,15 @@
           ],
           "background": {
             "activeOnStart": true,
-            "beginsPattern": { "regexp": "." },
-            "endsPattern": { "regexp": "." }
+            "beginsPattern": {
+              "regexp": "."
+            },
+            "endsPattern": {
+              "regexp": "."
+            }
           }
         }
       ]
-    },
-    {
-      "label": "dev",
-      "dependsOn": ["dev:api", "dev:client"]
     }
   ]
 }

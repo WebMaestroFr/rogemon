@@ -34,4 +34,4 @@ UserSchema.pre("save", function hashPassword(next) {
   });
 });
 
-export default mongoose.model("User", UserSchema);
+export default UserSchema;

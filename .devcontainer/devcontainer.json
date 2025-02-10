@@ -1,16 +1,22 @@
 {
   "name": "Rogémon!",
-  "image": "mcr.microsoft.com/devcontainers/base:alpine",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "application",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [27017, 3000, 5173],
   "features": {
-    "ghcr.io/cirolosapio/devcontainers-features/alpine-node:0": {}
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
   "postCreateCommand": "sh .devcontainer/post-create.sh",
+  "postStartCommand": "sh .devcontainer/post-start.sh",
   "customizations": {
     "vscode": {
       "extensions": [
         "dbaeumer.vscode-eslint",
         "EditorConfig.EditorConfig",
         "esbenp.prettier-vscode",
+        "mongodb.mongodb-vscode",
+        "ms-azuretools.vscode-docker",
         "ms-vscode.vscode-typescript-next",
         "rvest.vs-code-prettier-eslint",
         "timonwong.shellcheck",

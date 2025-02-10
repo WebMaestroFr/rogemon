@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-import User from "../database/models/user";
+import { User } from "../database";
 
 if (!process.env.JWT_SECRET) {
   throw new Error("The JWT_SECRET environment variable is undefined");

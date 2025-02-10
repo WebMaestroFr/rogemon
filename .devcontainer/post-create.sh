@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Install client
-cd client || exit
+# Install Node Packages
+cd api || exit
+npm install
+cd ../client || exit
 npm install
 cd ..

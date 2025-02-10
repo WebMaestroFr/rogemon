@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import User from "../../database/models/user";
+import { User } from "../../database";
 import validateRequestBody from "../../utils/validateRequestBody";
 
 export default async function handleSignup(
@@ -14,8 +14,8 @@ export default async function handleSignup(
       password: { required: true, minLength: 6 },
     });
   } catch (validationError) {
-    res.status(412).json({ message: validationError });
-    return next();
+    res.status(412);
+    return next(validationError);
   }
   try {
     const verifyEmail = await User.findOne({ email: req.body.email });

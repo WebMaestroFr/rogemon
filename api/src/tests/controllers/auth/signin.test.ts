@@ -2,11 +2,11 @@ import { describe, it, expect, vi, Mock } from "vitest";
 import jwt from "jsonwebtoken";
 
 import handleSignin from "../../../controllers/auth/signin";
-import User from "../../../database/models/user";
+import { User } from "../../../database";
 import validateRequestBody from "../../../utils/validateRequestBody";
 import mockExpress from "../../mockExpress";
 
-vi.mock("../../../database/models/user");
+vi.mock("../../../database");
 vi.mock("../../../middlewares/auth");
 vi.mock("../../../utils/validateRequestBody");
 vi.mock("jsonwebtoken");
@@ -20,15 +20,14 @@ describe("handleSignin", () => {
       },
     });
 
-    const validationError = "Validation error";
     (validateRequestBody as Mock).mockImplementation(() => {
-      throw validationError;
+      throw "Validation error";
     });
 
     await handleSignin(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(412);
-    expect(next).toHaveBeenCalledWith(validationError);
+    expect(next).toHaveBeenCalledWith("Validation error");
   });
 
   it("should return 401 if user is not found", async () => {
