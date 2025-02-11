@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, Mock } from "vitest";
 import jwt from "jsonwebtoken";
 
-import handleSignin from "../../../controllers/auth/signin";
+import handleSignin from "../../../controllers/auth/signIn";
 import { User } from "../../../database";
 import validateRequestBody from "../../../utils/validateRequestBody";
 import mockExpress from "../../mockExpress";

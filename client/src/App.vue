@@ -5,6 +5,7 @@
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/about">About</RouterLink>
     </nav> -->
+    <Auth />
   </header>
   <RouterView />
 </template>
@@ -12,6 +13,7 @@
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { RouterView } from 'vue-router'
+import Auth from './components/Auth.vue'
 
 const audio = new Audio('audio/theme.mp3')
 onUnmounted(() => {

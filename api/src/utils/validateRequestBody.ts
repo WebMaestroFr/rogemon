@@ -1,5 +1,3 @@
-import { Request } from "express";
-
 const EMAIL_REGEX =
   /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 /**
@@ -16,7 +14,7 @@ const EMAIL_REGEX =
  * @throws Will throw an error if a required field is missing or if a field does not meet the minimum length requirement.
  */
 export default function validateRequestBody(
-  body: Request["body"],
+  body: { [key: string]: string },
   rules: {
     [key: string]: {
       email?: boolean;

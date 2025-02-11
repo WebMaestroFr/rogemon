@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, Mock } from "vitest";
-import handleSignup from "../../../controllers/auth/signup";
+import handleSignup from "../../../controllers/auth/signUp";
 import { User } from "../../../database";
 import validateRequestBody from "../../../utils/validateRequestBody";
 import mockExpress from "../../mockExpress";

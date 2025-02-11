@@ -2,7 +2,7 @@ import storage from '.'
 
 export type CardCounts = { [cardId: string]: number }
 
-function getCardCountsKey(collectionId: string) {
+export function getCardCountsKey(collectionId: string) {
   return `cardCounts__${collectionId}`
 }
 

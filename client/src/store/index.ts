@@ -3,7 +3,8 @@ function get<T>(key: string) {
   return value && (JSON.parse(value) as T)
 }
 
-function set(key: string, value: any) {
+type ItemValue = string | number | boolean | null | { [key: string]: ItemValue } | ItemValue[]
+function set(key: string, value: ItemValue) {
   const valueString = JSON.stringify(value)
   localStorage.setItem(key, valueString)
 }

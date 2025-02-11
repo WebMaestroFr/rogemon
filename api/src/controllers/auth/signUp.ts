@@ -1,15 +1,18 @@
 import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+
 import { User } from "../../database";
 import validateRequestBody from "../../utils/validateRequestBody";
+import { JWT_SECRET } from "../../middlewares/auth";
 
-export default async function handleSignup(
+export default async function handleSignUp(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
+  console.log(req.body);
   try {
     validateRequestBody(req.body, {
-      name: { required: true, minLength: 3 },
       email: { required: true, email: true },
       password: { required: true, minLength: 6 },
     });
@@ -24,12 +27,14 @@ export default async function handleSignup(
       return next("Email already used.");
     }
     const user = new User({
-      name: req.body.name,
       email: req.body.email,
       password: req.body.password,
     });
     const result = await user.save();
-    res.status(201).json(result);
+    const accessToken = jwt.sign({ userId: result._id }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.status(201).send(accessToken);
     return next();
   } catch (err) {
     return next(err);

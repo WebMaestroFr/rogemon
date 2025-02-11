@@ -5,7 +5,7 @@ import { User } from "../../database";
 import { JWT_SECRET } from "../../middlewares/auth";
 import validateRequestBody from "../../utils/validateRequestBody";
 
-export default async function handleSignin(
+export default async function handleSignIn(
   req: Request,
   res: Response,
   next: NextFunction
@@ -27,7 +27,7 @@ export default async function handleSignin(
     const accessToken = jwt.sign({ userId: emailUser._id }, JWT_SECRET, {
       expiresIn: "1h",
     });
-    res.status(201).json(accessToken);
+    res.status(200).send(accessToken);
     return next();
   } catch (err) {
     return next(err);

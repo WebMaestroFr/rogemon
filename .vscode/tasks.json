@@ -20,28 +20,15 @@
     {
       "label": "dev",
       "dependsOn": ["dev:api", "dev:client"],
-      "problemMatcher": [
-        {
-          "pattern": [
-            {
-              "regexp": ".",
-              "file": 1,
-              "line": 1,
-              "column": 1,
-              "message": 1
-            }
-          ],
-          "background": {
-            "activeOnStart": true,
-            "beginsPattern": {
-              "regexp": "."
-            },
-            "endsPattern": {
-              "regexp": "."
-            }
-          }
-        }
-      ]
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "problemMatcher": []
     }
   ]
 }
