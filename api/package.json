@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsc-watch --noClear --project ./tsconfig.json --outDir ./dist --onSuccess \"node ./dist/index.js\"",
+    "dev": "NODE_ENV=dev tsc-watch --noClear --project ./tsconfig.json --outDir ./dist --onSuccess \"node ./dist/index.js\"",
     "build": "tsc",
     "serve": "node dist/index.js"
   },

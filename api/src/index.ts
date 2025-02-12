@@ -1,7 +1,9 @@
 import * as dotenv from "dotenv";
-dotenv.config();
-
 import express, { NextFunction, Request, Response } from "express";
+
+dotenv.config({
+  path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env",
+});
 
 import authRouter from "./controllers/auth";
 import userRouter from "./controllers/user";
@@ -13,7 +15,7 @@ const jsonMiddleware = express.json();
 api.use(jsonMiddleware);
 
 function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
-  console.log(req.method, req.url, res.statusCode);
+  console.log(res.statusCode, req.method, req.url);
   next();
 }
 api.use(loggerMiddleware);

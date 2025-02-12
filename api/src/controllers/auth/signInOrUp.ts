@@ -13,7 +13,6 @@ export default async function handleSignInOrUp(
   res: Response,
   next: NextFunction
 ) {
-  console.log(req.body);
   try {
     validateRequestBody(req.body, {
       email: { required: true, email: true },

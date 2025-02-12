@@ -1,0 +1,7 @@
+{
+  "name": "rogemon",
+  "workspaces": [
+    "api",
+    "client"
+  ]
+}

@@ -1,5 +1,5 @@
 <template>
-  <form class="auth" @submit.prevent="signInOrUp({ email, password })">
+  <form class="auth" @submit.prevent="auth.signInOrUp({ email, password })">
     <input type="text" v-model="email" placeholder="Email" />
     <input type="password" v-model="password" placeholder="Password" />
     <button type="submit">Sign Up</button>
@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { signInOrUp } from '../store/auth'
+import auth from '../store/auth'
 import { ref } from 'vue'
 
 const email = ref('')
