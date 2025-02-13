@@ -1,35 +1,24 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import { User } from "../../database";
-import { JWT_SECRET } from "../../middlewares/auth";
-import validateRequestBody from "../../utils/validateRequestBody";
+import { JWT_SECRET } from "../../middlewares/verifyAuth";
+import { sendError } from "../../response";
 
 export default async function handleSignIn(
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: Request<unknown, unknown, { email: string; password: string }>,
+  res: Response
 ) {
-  try {
-    validateRequestBody(req.body, {
-      email: { required: true, email: true },
-      password: { required: true, minLength: 6 },
-    });
-  } catch (validationError) {
-    res.status(412);
-    return next(validationError);
+  const emailUser = await User.findOne({ email: req.body.email });
+  if (!emailUser) {
+    return sendError(res, 401, "Invalid email or password");
   }
-  try {
-    const emailUser = await User.findOne({ email: req.body.email });
-    if (!emailUser) throw "Authentication failed";
-    const isPasswordCorrect = emailUser.comparePassword(req.body.password);
-    if (!isPasswordCorrect) throw "Authentication failed";
-    const accessToken = jwt.sign({ userId: emailUser._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    res.status(200).send(accessToken);
-    return next();
-  } catch (err) {
-    return next(err);
+  const isPasswordCorrect = await emailUser.comparePassword(req.body.password);
+  if (!isPasswordCorrect) {
+    return sendError(res, 401, "Invalid email or password");
   }
+  const accessToken = jwt.sign({ userId: emailUser._id }, JWT_SECRET, {
+    expiresIn: "1h",
+  });
+  return sendError(res, 200, accessToken);
 }

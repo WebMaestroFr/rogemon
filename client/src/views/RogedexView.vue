@@ -9,7 +9,6 @@
 
 <script setup lang="ts">
 import Collection from '@/components/Collection.vue'
-import { onUnmounted } from 'vue'
 </script>
 
 <style scoped>

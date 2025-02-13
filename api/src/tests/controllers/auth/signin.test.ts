@@ -3,35 +3,16 @@ import jwt from "jsonwebtoken";
 
 import handleSignin from "../../../controllers/auth/signIn";
 import { User } from "../../../database";
-import validateRequestBody from "../../../utils/validateRequestBody";
 import mockExpress from "../../mockExpress";
 
 vi.mock("../../../database");
-vi.mock("../../../middlewares/auth");
-vi.mock("../../../utils/validateRequestBody");
+vi.mock("../../../middlewares/verifyAuth");
+vi.mock("../../../middlewares/validateRequestBody");
 vi.mock("jsonwebtoken");
 
 describe("handleSignin", () => {
-  it("should return 412 if request body validation fails", async () => {
-    const [req, res, next] = mockExpress({
-      body: {
-        email: "invalid",
-        password: "short",
-      },
-    });
-
-    (validateRequestBody as Mock).mockImplementation(() => {
-      throw "Validation error";
-    });
-
-    await handleSignin(req, res, next);
-
-    expect(res.status).toHaveBeenCalledWith(412);
-    expect(next).toHaveBeenCalledWith("Validation error");
-  });
-
   it("should return 401 if user is not found", async () => {
-    const [req, res, next] = mockExpress({
+    const [req, res] = mockExpress({
       body: {
         email: "test@example.com",
         password: "password123",
@@ -40,13 +21,13 @@ describe("handleSignin", () => {
 
     (User.findOne as Mock).mockResolvedValue(null);
 
-    await handleSignin(req, res, next);
+    await handleSignin(req, res);
 
-    expect(next).toHaveBeenCalledWith("Authentication failed");
+    expect(res.send).toHaveBeenCalledWith("Invalid email or password");
   });
 
   it("should return 401 if password is incorrect", async () => {
-    const [req, res, next] = mockExpress({
+    const [req, res] = mockExpress({
       body: {
         email: "test@example.com",
         password: "password123",
@@ -59,13 +40,13 @@ describe("handleSignin", () => {
 
     (User.findOne as Mock).mockResolvedValue(mockUser);
 
-    await handleSignin(req, res, next);
+    await handleSignin(req, res);
 
-    expect(next).toHaveBeenCalledWith("Authentication failed");
+    expect(res.send).toHaveBeenCalledWith("Invalid email or password");
   });
 
-  it("should return 201 and access token if authentication is successful", async () => {
-    const [req, res, next] = mockExpress({
+  it("should return 200 and access token if authentication is successful", async () => {
+    const [req, res] = mockExpress({
       body: {
         email: "test@example.com",
         password: "password123",
@@ -81,27 +62,10 @@ describe("handleSignin", () => {
     (User.findOne as Mock).mockResolvedValue(mockUser);
     (jwt.sign as Mock).mockReturnValue(mockToken);
 
-    await handleSignin(req, res, next);
+    await handleSignin(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(mockToken);
-    expect(next).toHaveBeenCalled();
-  });
-
-  it("should call next with error if an unexpected error occurs", async () => {
-    const [req, res, next] = mockExpress({
-      body: {
-        email: "test@example.com",
-        password: "password123",
-      },
-    });
-
-    const error = new Error("Unexpected error");
-
-    (User.findOne as Mock).mockRejectedValue(error);
-
-    await handleSignin(req, res, next);
-
-    expect(next).toHaveBeenCalledWith(error);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith(mockToken);
+    expect(res.send).toHaveBeenCalled();
   });
 });

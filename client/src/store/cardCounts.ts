@@ -1,4 +1,4 @@
-import storage from '.'
+import store from '@/store'
 
 export type CardCounts = { [cardId: string]: number }
 
@@ -8,7 +8,7 @@ export function getCardCountsKey(collectionId: string) {
 
 export function getCardCounts(collectionId: string) {
   const collectionKey = getCardCountsKey(collectionId)
-  return storage.get<CardCounts>(collectionKey) || {}
+  return store.get<CardCounts>(collectionKey) || {}
 }
 
 export function getcardCount(collectionId: string, cardId: string): number {
@@ -23,12 +23,12 @@ export function setCardCount(collectionId: string, cardId: string, count: number
     records[cardId] = count
   }
   const collectionKey = getCardCountsKey(collectionId)
-  storage.set(collectionKey, records)
+  store.set(collectionKey, records)
 }
 
 export function removeCardCount(collectionId: string, cardId: string) {
   const records = getCardCounts(collectionId)
   delete records[cardId]
   const collectionKey = getCardCountsKey(collectionId)
-  storage.set(collectionKey, records)
+  store.set(collectionKey, records)
 }

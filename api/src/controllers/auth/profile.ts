@@ -1,14 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
-export default async function handleProfile(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+import { sendData, sendError } from "../../response";
+
+export default async function handleProfile(_req: Request, res: Response) {
   if (res.locals.user) {
-    res.status(200).json(res.locals.user);
-    return next();
+    return sendData(res, 200, res.locals.user);
   }
-  res.status(401);
-  return next("User is not authenticated");
+  return sendError(res, 401, "User is not authenticated");
 }

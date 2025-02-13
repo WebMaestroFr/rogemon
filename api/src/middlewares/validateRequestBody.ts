@@ -1,5 +1,18 @@
+import { NextFunction, Request, Response } from "express";
+import { sendError } from "../response";
+
+export interface ValidationRules {
+  [key: string]: {
+    email?: boolean;
+    label?: string;
+    minLength?: number;
+    required?: boolean;
+  };
+}
+
 const EMAIL_REGEX =
   /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+
 /**
  * Validates the request body against the provided rules.
  *
@@ -13,16 +26,9 @@ const EMAIL_REGEX =
  *
  * @throws Will throw an error if a required field is missing or if a field does not meet the minimum length requirement.
  */
-export default function validateRequestBody(
+export function validateRequestBody(
   body: { [key: string]: string },
-  rules: {
-    [key: string]: {
-      email?: boolean;
-      label?: string;
-      minLength?: number;
-      required?: boolean;
-    };
-  }
+  rules: ValidationRules
 ) {
   for (const [key, rule] of Object.entries(rules)) {
     const input = body[key];
@@ -37,4 +43,26 @@ export default function validateRequestBody(
       throw `${label} should be a valid email address`;
     }
   }
+}
+
+/**
+ * Middleware to validate the request body against specified validation rules.
+ *
+ * @param {ValidationRules} rules - The validation rules to apply to the request body.
+ * @returns {Function} Middleware function to validate the request body.
+ */
+export default function validateRequestBodyMiddleware(
+  rules: ValidationRules
+): (req: Request, res: Response, next: NextFunction) => void {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      validateRequestBody(req.body, rules);
+      return next();
+    } catch (error) {
+      if (typeof error === "string") {
+        return sendError(res, 400, error);
+      }
+      return next(error);
+    }
+  };
 }

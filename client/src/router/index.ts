@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import RogedexView from '../views/RogedexView.vue'
+import RogedexView from '@/views/RogedexView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

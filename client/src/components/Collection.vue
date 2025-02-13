@@ -17,9 +17,9 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import type { ICard } from '../../types'
-import Card from './Card.vue'
-import { type CardCounts, getCardCounts, setCardCount } from '../store/cardCounts'
+import Card from '@/components/Card.vue'
+import { type CardCounts, getCardCounts, setCardCount } from '@/store/cardCounts'
+import type { ICard } from '@/types'
 
 const props = defineProps<{ id: string; name: string }>()
 const cards = ref<ICard[]>()

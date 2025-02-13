@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { User } from "../database";
+import { sendError } from "../response";
 
 if (!process.env.JWT_SECRET) {
   throw new Error("The JWT_SECRET environment variable is undefined");
@@ -21,22 +22,21 @@ export function verifyToken(token: string) {
   return jwt.verify(token, JWT_SECRET) as UserPayload;
 }
 
-export default function useAuth(
+export default function verifyAuth(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   if (!req.headers.authorization) {
-    res.status(401);
-    return next("Authorization header is required");
+    return sendError(res, 401, "Authorization header is required");
   }
-  const token = req.headers.authorization.replace("Bearer ", "");
   try {
+    const token = req.headers.authorization.replace("Bearer ", "");
     const jwtPayload = verifyToken(token);
     res.locals.user = User.findById(jwtPayload.userId);
-  } catch {
-    res.status(401);
-    return next("Authentification failed");
+    return next();
+  } catch (err) {
+    sendError(res, 401, "Authentification failed");
+    return next(err);
   }
-  next();
 }

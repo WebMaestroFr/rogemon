@@ -26,7 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ICard } from '../../types'
+import type { PropType } from 'vue'
+import type { ICard } from '@/types'
 
 const props = defineProps({
   card: {

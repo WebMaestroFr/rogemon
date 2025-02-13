@@ -1,41 +1,25 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import { User } from "../../database";
-import validateRequestBody from "../../utils/validateRequestBody";
-import { JWT_SECRET } from "../../middlewares/auth";
+import { JWT_SECRET } from "../../middlewares/verifyAuth";
+import { sendError } from "../../response";
 
 export default async function handleSignUp(
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: Request<unknown, unknown, { email: string; password: string }>,
+  res: Response
 ) {
-  try {
-    validateRequestBody(req.body, {
-      email: { required: true, email: true },
-      password: { required: true, minLength: 6 },
-    });
-  } catch (validationError) {
-    res.status(412);
-    return next(validationError);
+  const verifyEmail = await User.findOne({ email: req.body.email });
+  if (verifyEmail) {
+    return sendError(res, 403, "Email already used");
   }
-  try {
-    const verifyEmail = await User.findOne({ email: req.body.email });
-    if (verifyEmail) {
-      res.status(403);
-      return next("Email already used.");
-    }
-    const user = new User({
-      email: req.body.email,
-      password: req.body.password,
-    });
-    const result = await user.save();
-    const accessToken = jwt.sign({ userId: result._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    res.status(201).send(accessToken);
-    return next();
-  } catch (err) {
-    return next(err);
-  }
+  const user = new User({
+    email: req.body.email,
+    password: req.body.password,
+  });
+  const userResult = await user.save();
+  const accessToken = jwt.sign({ userId: userResult._id }, JWT_SECRET, {
+    expiresIn: "1h",
+  });
+  return sendError(res, 201, accessToken);
 }

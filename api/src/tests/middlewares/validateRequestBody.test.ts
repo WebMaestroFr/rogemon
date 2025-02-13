@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import validateRequestBody from "../../utils/validateRequestBody";
+import {
+  validateRequestBody,
+  default as validateRequestBodyMiddleware,
+} from "../../middlewares/validateRequestBody";
+import mockExpress from "../mockExpress";
 
 describe("validateRequestBody", () => {
   it("should throw an error if a required field is missing", () => {
@@ -50,5 +54,37 @@ describe("validateRequestBody", () => {
     };
 
     expect(() => validateRequestBody(body, rules)).toThrow("email is required");
+  });
+});
+
+describe("validateRequestBodyMiddleware", () => {
+  it("should respond with status 412 if validation fails", () => {
+    const [req, res, next] = mockExpress({
+      body: {},
+    });
+    const rules = {
+      email: { required: true, label: "Email" },
+    };
+
+    const middleware = validateRequestBodyMiddleware(rules);
+    middleware(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith("Email is required");
+  });
+
+  it("should not respond with an error if validation passes", () => {
+    const [req, res, next] = mockExpress({
+      body: { email: "test@example.com" },
+    });
+    const rules = {
+      email: { email: true, required: true, label: "Email" },
+    };
+
+    const middleware = validateRequestBodyMiddleware(rules);
+    middleware(req, res, next);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.send).not.toHaveBeenCalled();
   });
 });
