@@ -1,11 +1,8 @@
 <template>
   <header class="app__header">
     <h1 @click="toggleAudio">Rogémon</h1>
-    <!-- <nav class="app__nav">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-    </nav> -->
-    <Auth />
+    <AuthProfile v-if="auth.getToken()" />
+    <AuthSignInOrUp v-else />
   </header>
   <RouterView />
 </template>
@@ -13,7 +10,9 @@
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { RouterView } from 'vue-router'
-import Auth from '@/components/Auth.vue'
+import AuthProfile from '@/components/Auth/Profile.vue'
+import AuthSignInOrUp from '@/components/Auth/SignInOrUp.vue'
+import auth from '@/store/auth'
 
 const audio = new Audio('audio/theme.mp3')
 onUnmounted(() => {
@@ -31,7 +30,7 @@ function toggleAudio() {
 <style scoped>
 .app__header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
 }

@@ -22,7 +22,7 @@ describe("handleSignup", () => {
 
     await handleSignup(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.status).toHaveBeenCalledWith(409);
     expect(res.send).toHaveBeenCalledWith("Email already used");
   });
 

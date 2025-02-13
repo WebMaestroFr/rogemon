@@ -9,7 +9,15 @@ export default function handleError(
   _next: NextFunction
 ) {
   if (err instanceof Error) {
-    console.error(chalk.red(err.name), chalk.bold(err.message), err.stack);
+    console.error(
+      chalk.red(err.name),
+      chalk.bold(err.message),
+      err.stack
+        ?.replace(`${err.name}: ${err.message}`, "")
+        .split("\n")
+        .filter((line) => line.includes("/node_modules/") === false)
+        .join("\n")
+    );
   } else {
     console.error(chalk.red("Error"), chalk.bold(err));
   }

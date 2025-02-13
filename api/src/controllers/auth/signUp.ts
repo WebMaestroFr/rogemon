@@ -11,7 +11,7 @@ export default async function handleSignUp(
 ) {
   const verifyEmail = await User.findOne({ email: req.body.email });
   if (verifyEmail) {
-    return sendError(res, 403, "Email already used");
+    return sendError(res, 409, "Email already used");
   }
   const user = new User({
     email: req.body.email,

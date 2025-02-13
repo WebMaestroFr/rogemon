@@ -53,7 +53,7 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 0.5em;
+  padding: 0.8em 0.4em;
   background-size: cover;
   gap: 0.5em;
 }
@@ -73,7 +73,7 @@ const props = defineProps({
 }
 .card__buttons {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   justify-content: center;
 }
 .card__buttons button {
@@ -84,7 +84,7 @@ const props = defineProps({
   width: 2.4rem;
   height: 2.4rem;
   cursor: pointer;
-  font-size: 1.618em;
+  font-size: 1.6rem;
   box-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
 }
 .card__button-down {

@@ -22,18 +22,18 @@ export function verifyToken(token: string) {
   return jwt.verify(token, JWT_SECRET) as UserPayload;
 }
 
-export default function verifyAuth(
+export default async function verifyAuth(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   if (!req.headers.authorization) {
-    return sendError(res, 401, "Authorization header is required");
+    return sendError(res, 400, "Authorization header is required");
   }
   try {
     const token = req.headers.authorization.replace("Bearer ", "");
     const jwtPayload = verifyToken(token);
-    res.locals.user = User.findById(jwtPayload.userId);
+    res.locals.user = await User.findById(jwtPayload.userId);
     return next();
   } catch (err) {
     sendError(res, 401, "Authentification failed");

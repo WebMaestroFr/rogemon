@@ -8,10 +8,10 @@ async function signIn(body: { email: string; password: string }) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
-  if (!response.ok) throw 'SignIn request failed'
+  if (!response.ok) throw 'Request to sign in failed'
   const accessToken = await response.text()
   localStorage.setItem('accessToken', accessToken)
-  return accessToken
+  location.reload()
 }
 
 async function signInOrUp(body: { email: string; password: string }) {
@@ -20,10 +20,10 @@ async function signInOrUp(body: { email: string; password: string }) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
-  if (!response.ok) throw 'SignInOrUp request failed'
+  if (!response.ok) throw 'Request to sign in or up failed'
   const accessToken = await response.text()
   localStorage.setItem('accessToken', accessToken)
-  return accessToken
+  location.reload()
 }
 
 async function signUp(body: { email: string; password: string }) {
@@ -32,14 +32,37 @@ async function signUp(body: { email: string; password: string }) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
-  if (!response.ok) throw 'SignUp request failed'
+  if (!response.ok) throw 'Request to sign up failed'
   const accessToken = await response.text()
   localStorage.setItem('accessToken', accessToken)
-  return accessToken
+  location.reload()
 }
 
 function signOut() {
   localStorage.removeItem('accessToken')
+  location.reload()
 }
 
-export default { getToken, signIn, signInOrUp, signUp, signOut }
+async function authFetch<T>(url: string, init: RequestInit = {}) {
+  const token = getToken()
+  if (!token) {
+    throw 'Authentication token is missing'
+  }
+  const requestInit = {
+    ...init,
+    headers: {
+      ...init.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const res = await fetch(url, requestInit)
+  if (res.status === 401) {
+    signOut()
+  }
+  if (!res.ok) {
+    throw res.text()
+  }
+  return res.json() as T
+}
+
+export default { fetch: authFetch, getToken, signIn, signInOrUp, signUp, signOut }
