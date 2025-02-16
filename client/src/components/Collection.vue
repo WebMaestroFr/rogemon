@@ -7,7 +7,7 @@
         :key="card.id"
         class="collection__card"
         :card="card"
-        :count="records[card.id]"
+        :count="collection[card.id]"
         @increase="() => increaseCardRecord(card.id)"
         @decrease="() => decreaseCardRecord(card.id)"
       />
@@ -23,37 +23,37 @@ import type { ICard } from '@/types'
 
 const props = defineProps<{ id: string; name: string }>()
 const cards = ref<ICard[]>()
-const records = ref<Collection>({})
+const collection = ref<Collection>({})
 
 onMounted(async () => {
   const cardsResponse = await fetch(`cards/${props.id}.json`)
   cards.value = await cardsResponse.json()
 
-  const collection = await loadCollection(props.id)
-  if (collection) {
-    records.value = collection
+  const collectionResponse = await loadCollection(props.id)
+  if (collectionResponse) {
+    collection.value = collectionResponse
   }
 })
 
 function increaseCardRecord(cardId: string) {
-  const cardRecord = records.value[cardId]
+  const cardRecord = collection.value[cardId]
   if (cardRecord === undefined || cardRecord === -1) {
-    records.value[cardId] = 1
+    collection.value[cardId] = 1
   } else {
-    records.value[cardId] += 1
+    collection.value[cardId] += 1
   }
-  setCardCount(props.id, cardId, records.value[cardId])
+  setCardCount(props.id, cardId, collection.value[cardId])
 }
 function decreaseCardRecord(cardId: string) {
-  const cardRecord = records.value[cardId]
+  const cardRecord = collection.value[cardId]
   if (cardRecord === -1) {
-    records.value[cardId] = 0
+    collection.value[cardId] = 0
   } else if (cardRecord === undefined || cardRecord <= 1) {
-    records.value[cardId] = -1
+    collection.value[cardId] = -1
   } else {
-    records.value[cardId] -= 1
+    collection.value[cardId] -= 1
   }
-  setCardCount(props.id, cardId, records.value[cardId])
+  setCardCount(props.id, cardId, collection.value[cardId])
 }
 </script>
 

@@ -39,7 +39,8 @@ export async function loadCollection(expansionId: string) {
   return await auth
     .fetch<Collection>(`/api/collection/${expansionId}`)
     .then((collection) => {
-      setCollection(expansionId, collection)
+      const key = getCollectionKey(expansionId)
+      store.set(key, collection)
       return collection
     })
     .catch(() => getCollection(expansionId))
@@ -54,4 +55,19 @@ async function _saveCollection(expansionId: string) {
   })
 }
 // Debounce the saveCollection function to prevent making too many requests
-export const saveCollection = _.debounce(_saveCollection, 1000)
+const debounceTimerMap = new Map<string, number>()
+export function saveCollection(expansionId: string, timeout = 1500) {
+  const key = getCollectionKey(expansionId)
+  const timer = debounceTimerMap.get(key)
+  if (timer) {
+    clearTimeout(timer)
+  }
+  return new Promise<Collection>((resolve, reject) =>
+    debounceTimerMap.set(
+      key,
+      setTimeout(() => {
+        _saveCollection(expansionId).then(resolve).catch(reject)
+      }, timeout),
+    ),
+  )
+}
