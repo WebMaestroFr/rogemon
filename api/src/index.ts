@@ -10,7 +10,6 @@ import handleError from "./middlewares/handleError";
 import verifyUser from "./middlewares/verifyUser";
 
 import apiRouter from "./routes";
-import path from "path";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,10 +20,6 @@ app.use(jsonMiddleware);
 app.use(logRequest);
 
 app.use(verifyUser);
-
-const staticRootPath = path.resolve(__dirname, "../../client/dist");
-console.log(`Serving static files from ${staticRootPath}`);
-app.use("/", express.static(staticRootPath));
 
 app.use("/api", apiRouter);
 
