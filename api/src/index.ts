@@ -10,6 +10,7 @@ import handleError from "./middlewares/handleError";
 import verifyUser from "./middlewares/verifyUser";
 
 import apiRouter from "./routes";
+import path from "path";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,9 +22,10 @@ app.use(logRequest);
 
 app.use(verifyUser);
 
-app.use("/api", apiRouter);
+const staticRootPath = path.resolve(__dirname, "../../client/dist");
+app.use(express.static(staticRootPath));
 
-app.use("/", express.static("../../client/dist"));
+app.use("/api", apiRouter);
 
 app.use(handleError);
 
