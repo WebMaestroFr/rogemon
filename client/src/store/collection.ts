@@ -55,7 +55,7 @@ async function _saveCollection(expansionId: string) {
   })
 }
 // Debounce the saveCollection function to prevent making too many requests
-const debounceTimerMap = new Map<string, number>()
+const debounceTimerMap = new Map<string, ReturnType<typeof setTimeout>>()
 export function saveCollection(expansionId: string, timeout = 1500) {
   const key = getCollectionKey(expansionId)
   const timer = debounceTimerMap.get(key)
