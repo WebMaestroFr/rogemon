@@ -13,7 +13,7 @@ export interface IUser {
 const UserSchema = new mongoose.Schema<IUser>(
   {
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true, select: false },
+    password: { type: String, required: true },
   },
   {
     methods: {

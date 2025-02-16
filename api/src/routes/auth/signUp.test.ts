@@ -1,25 +1,31 @@
 import { describe, it, expect, vi, Mock } from "vitest";
 
-import handleSignUp from "../../../controllers/auth/signUp";
-import { User } from "../../../database";
-import { signToken } from "../../../middlewares/verifyUser";
-import mockExpress, { expectValidHandler } from "../../mockExpress";
+import { ObjectId, User } from "../../database";
+import { signToken } from "../../middlewares/verifyUser";
+import mockExpress from "../../tests/mockExpress";
+import expectExpressHandler from "../../tests/expectExpressHandler";
 
-vi.mock("../../../database");
-vi.mock("../../../middlewares/verifyUser");
+import handleSignUp from "./signUp";
+
+vi.mock("../../database");
+vi.mock("../../middlewares/verifyUser");
 
 describe("handleSignUp", () => {
-  const _id = "12345";
+  const _id = new ObjectId("a1b2c3d4e5f6a7b8c9d0e1f2");
   const email = "test@example.com";
   const password = "password123";
 
   function mockSuccess() {
     (User.findOne as Mock).mockResolvedValueOnce(null);
-    (User.prototype.save as Mock).mockResolvedValueOnce({ _id });
+    (User.prototype.save as Mock).mockResolvedValueOnce({
+      _id,
+      email,
+      password,
+    });
     (signToken as Mock).mockReturnValueOnce("fakeAccessToken");
   }
 
-  expectValidHandler(handleSignUp, (req) => {
+  expectExpressHandler(handleSignUp, (req) => {
     req.body = { email, password };
     mockSuccess();
   });
@@ -45,7 +51,7 @@ describe("handleSignUp", () => {
     expect(User.findOne).toHaveBeenCalledWith({ email });
     expect(User).toHaveBeenCalledWith({ email, password });
     expect(User.prototype.save).toHaveBeenCalled();
-    expect(signToken).toHaveBeenCalledWith({ userId: _id, email });
+    expect(signToken).toHaveBeenCalledWith({ userId: _id.toString(), email });
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.send).toHaveBeenCalledWith("fakeAccessToken");
   });

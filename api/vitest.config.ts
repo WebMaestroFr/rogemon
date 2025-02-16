@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
     environment: "node",
     exclude: [...configDefaults.exclude, "e2e/**"],
     root: fileURLToPath(new URL("./", import.meta.url)),
-    dir: "./src/tests",
+    dir: "./src",
     setupFiles: ["./vitest.setupFile.ts"],
   },
 }));

@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   validateRequestBody,
   default as validateRequestBodyMiddleware,
-} from "../../middlewares/validateRequestBody";
-import mockExpress from "../mockExpress";
+} from "./validateRequestBody";
+import mockExpress from "../tests/mockExpress";
 
 describe("validateRequestBody", () => {
   it("should throw an error if a required field is missing", () => {

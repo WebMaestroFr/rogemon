@@ -13,7 +13,7 @@ export function sendError(
   res.status(status).send(message);
 }
 
-export function sendData(res: Response, status: number, data: unknown) {
+export function sendData<T>(res: Response, status: number, data: T) {
   res.status(status).json(data);
 }
 
