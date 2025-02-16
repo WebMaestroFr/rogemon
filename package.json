@@ -4,7 +4,24 @@
     "api",
     "client"
   ],
+  "scripts": {
+    "build": "npm run build:api && npm run build:client",
+    "build:api": "cd api && npm run build",
+    "build:client": "cd client && npm run build"
+  },
   "dependencies": {
+    "@netlify/functions": "^3.0.0",
+    "express": "^4.21.2",
+    "rogemon-api": "file:api",
+    "rogemon-client": "file:client",
     "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.1",
+    "eslint": "^9.20.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3"
   }
 }

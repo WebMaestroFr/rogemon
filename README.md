@@ -1,5 +1,9 @@
 # Rogémon!
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/eec5e0ed-8028-4ef4-b614-0acdda16ac55/deploy-status)](https://app.netlify.com/sites/rogemon/deploys)
+
+
+
 ## _api/.env_
 
 ```env
