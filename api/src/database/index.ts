@@ -7,7 +7,12 @@ if (!process.env.MONGODB_URI) {
   throw new Error("The MONGODB_URI environment variable is undefined");
 }
 
-export default mongoose.connect(process.env.MONGODB_URI).catch(console.error);
+export default mongoose
+  .connect(process.env.MONGODB_URI, {
+    serverSelectionTimeoutMS: 60000,
+  })
+  .then(() => console.log("Connected to MongoDB database"))
+  .catch((err) => console.error("Error connecting to MongoDB database:", err));
 
 export const Collection = mongoose.model<ICollection>(
   "Collection",

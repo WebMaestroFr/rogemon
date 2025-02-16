@@ -23,10 +23,16 @@ app.use(verifyUser);
 
 app.use("/api", apiRouter);
 
+// const staticRootPath = path.resolve(__dirname, "../../client/dist");
+// console.log(`Serving static files from ${staticRootPath}`);
+// app.use(express.static(staticRootPath));
+
 app.use(handleError);
 
-app.listen(port, () => {
-  console.log(`API running at http://localhost:${port}`);
-});
+if (process.env.NODE_ENV === "dev") {
+  app.listen(port, () => {
+    console.log(`API running at http://localhost:${port}`);
+  });
+}
 
 export default app;
