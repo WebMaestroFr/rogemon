@@ -1,34 +1,59 @@
 import store from '@/store'
+import auth from './auth'
 
-export type CardCounts = { [cardId: string]: number }
+export type CardCount = { [cardId: string]: number }
 
-export function getCardCountsKey(collectionId: string) {
-  return `cardCounts__${collectionId}`
+export function getCollectionCountKey(collectionId: string) {
+  return `cardCount__${collectionId}`
 }
 
-export function getCardCounts(collectionId: string) {
-  const collectionKey = getCardCountsKey(collectionId)
-  return store.get<CardCounts>(collectionKey) || {}
+export function getCollectionCount(collectionId: string) {
+  const key = getCollectionCountKey(collectionId)
+  return store.get<CardCount>(key) || {}
 }
 
-export function getcardCount(collectionId: string, cardId: string): number {
-  return getCardCounts(collectionId)[cardId] || 0
+export function getCardCount(collectionId: string, cardId: string): number {
+  return getCollectionCount(collectionId)[cardId] || 0
 }
 
-export function setCardCount(collectionId: string, cardId: string, count: number) {
-  const records = getCardCounts(collectionId)
-  if (count === 0) {
-    delete records[cardId]
+export function setCardCount(collectionId: string, cardId: string, cardCount: number) {
+  const count = getCollectionCount(collectionId)
+  if (cardCount === 0) {
+    delete count[cardId]
   } else {
-    records[cardId] = count
+    count[cardId] = cardCount
   }
-  const collectionKey = getCardCountsKey(collectionId)
-  store.set(collectionKey, records)
+  const key = getCollectionCountKey(collectionId)
+  store.set(key, count)
 }
 
 export function removeCardCount(collectionId: string, cardId: string) {
-  const records = getCardCounts(collectionId)
-  delete records[cardId]
-  const collectionKey = getCardCountsKey(collectionId)
-  store.set(collectionKey, records)
+  const count = getCollectionCount(collectionId)
+  delete count[cardId]
+  const key = getCollectionCountKey(collectionId)
+  store.set(key, count)
+}
+
+export async function loadCollectionCounts() {
+  const collectionCounts =
+    await auth.fetch<{ collectionId: string; count: CardCount }[]>(`/api/card-count`)
+  for (const { collectionId, count } of collectionCounts) {
+    const key = getCollectionCountKey(collectionId)
+    store.set(key, count)
+  }
+  return collectionCounts
+}
+
+export async function loadCollectionCount(collectionId: string) {
+  const cardCounts = await loadCollectionCounts()
+  return cardCounts.find((cardCount) => cardCount.collectionId === collectionId)
+}
+
+export async function saveCollectionCount(collectionId: string) {
+  const count = getCollectionCount(collectionId)
+  return auth.fetch('/api/card-count', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ collectionId, count }),
+  })
 }

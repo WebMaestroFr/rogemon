@@ -3,10 +3,17 @@ import mongoose from "mongoose";
 
 const BCRYPT_SALT_ROUNDS = 10;
 
-const UserSchema = new mongoose.Schema(
+export interface IUser {
+  _id: mongoose.Types.ObjectId;
+  email: string;
+  password: string;
+  comparePassword(password: string): Promise<boolean>;
+}
+
+const UserSchema = new mongoose.Schema<IUser>(
   {
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
   },
   {
     methods: {

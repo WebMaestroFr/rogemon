@@ -39,7 +39,7 @@ async function signUp(body: { email: string; password: string }) {
 }
 
 function signOut() {
-  localStorage.removeItem('accessToken')
+  localStorage.clear()
   location.reload()
 }
 

@@ -1,14 +1,14 @@
 <template>
-  <div class="rogedex">
+  <div v-if="auth.getToken()" class="rogedex">
     <Collection id="A1" name="Genetic Apex" />
     <Collection id="A1a" name="Mythical Island" />
     <Collection id="A2" name="Space-Time Smackdown" />
-    <Collection id="P-A" name="Promo-A" />
   </div>
 </template>
 
 <script setup lang="ts">
 import Collection from '@/components/Collection.vue'
+import auth from '@/store/auth'
 </script>
 
 <style scoped>

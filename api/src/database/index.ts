@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
-import UserSchema from "./models/user";
+import CardCountSchema from "./schemas/cardCount";
+import UserSchema, { IUser } from "./schemas/user";
 
 if (!process.env.MONGODB_URI) {
   throw new Error("The MONGODB_URI environment variable is undefined");
@@ -8,4 +9,5 @@ if (!process.env.MONGODB_URI) {
 
 export default mongoose.connect(process.env.MONGODB_URI).catch(console.error);
 
-export const User = mongoose.model("User", UserSchema);
+export const CardCount = mongoose.model("CardCount", CardCountSchema);
+export const User = mongoose.model<IUser>("User", UserSchema);

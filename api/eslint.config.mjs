@@ -23,6 +23,7 @@ export default [
         },
       ],
       "no-else-return": "error",
+      // "sort-imports": "error",
     },
   },
 ];

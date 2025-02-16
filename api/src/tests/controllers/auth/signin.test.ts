@@ -1,71 +1,63 @@
-import { describe, it, expect, vi, Mock } from "vitest";
-import jwt from "jsonwebtoken";
+import { describe, vi, it, expect, Mock } from "vitest";
 
-import handleSignin from "../../../controllers/auth/signIn";
+import handleSignIn from "../../../controllers/auth/signIn";
 import { User } from "../../../database";
-import mockExpress from "../../mockExpress";
+import { signToken } from "../../../middlewares/verifyUser";
+import mockExpress, { expectValidHandler } from "../../mockExpress";
 
 vi.mock("../../../database");
-vi.mock("../../../middlewares/verifyAuth");
-vi.mock("../../../middlewares/validateRequestBody");
-vi.mock("jsonwebtoken");
+vi.mock("../../../middlewares/verifyUser");
 
-describe("handleSignin", () => {
-  it("should return 401 if user is not found", async () => {
-    const [req, res] = mockExpress({
-      body: {
-        email: "test@example.com",
-        password: "password123",
-      },
+describe("handleSignIn", () => {
+  const _id = "12345";
+  const email = "test@example.com";
+  const password = "password123";
+
+  function mockSuccess() {
+    (User.findOne as Mock).mockResolvedValueOnce({
+      _id,
+      email,
+      password,
+      comparePassword: vi.fn().mockResolvedValueOnce(true),
     });
+    (signToken as Mock).mockReturnValueOnce("fakeAccessToken");
+  }
 
-    (User.findOne as Mock).mockResolvedValue(null);
+  expectValidHandler(handleSignIn, (req) => {
+    req.body = { email, password };
+    mockSuccess();
+  });
 
-    await handleSignin(req, res);
+  it("should return 401 if email is not found", async () => {
+    const [req, res, next] = mockExpress({ body: { email, password } });
 
-    expect(res.send).toHaveBeenCalledWith("Invalid email or password");
+    await handleSignIn(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(401);
   });
 
   it("should return 401 if password is incorrect", async () => {
-    const [req, res] = mockExpress({
-      body: {
-        email: "test@example.com",
-        password: "password123",
-      },
+    const [req, res, next] = mockExpress({ body: { email, password } });
+
+    (User.findOne as Mock).mockResolvedValueOnce({
+      comparePassword: vi.fn().mockResolvedValueOnce(false),
     });
 
-    const mockUser = {
-      comparePassword: vi.fn().mockReturnValue(false),
-    };
+    await handleSignIn(req, res, next);
 
-    (User.findOne as Mock).mockResolvedValue(mockUser);
-
-    await handleSignin(req, res);
-
-    expect(res.send).toHaveBeenCalledWith("Invalid email or password");
+    expect(res.status).toHaveBeenCalledWith(401);
   });
 
-  it("should return 200 and access token if authentication is successful", async () => {
-    const [req, res] = mockExpress({
-      body: {
-        email: "test@example.com",
-        password: "password123",
-      },
-    });
+  it("should return access token if email and password are correct", async () => {
+    const [req, res, next] = mockExpress({ body: { email, password } });
 
-    const mockUser = {
-      _id: "userId",
-      comparePassword: vi.fn().mockReturnValue(true),
-    };
-    const mockToken = "mockToken";
+    mockSuccess();
 
-    (User.findOne as Mock).mockResolvedValue(mockUser);
-    (jwt.sign as Mock).mockReturnValue(mockToken);
+    await handleSignIn(req, res, next);
 
-    await handleSignin(req, res);
-
+    expect(User.findOne).toHaveBeenCalledWith({ email });
+    expect(signToken).toHaveBeenCalledWith({ userId: _id, email });
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.send).toHaveBeenCalledWith(mockToken);
-    expect(res.send).toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledWith("fakeAccessToken");
   });
 });

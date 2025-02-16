@@ -1,54 +1,52 @@
 import { describe, it, expect, vi, Mock } from "vitest";
-import handleSignup from "../../../controllers/auth/signUp";
+
+import handleSignUp from "../../../controllers/auth/signUp";
 import { User } from "../../../database";
-import { validateRequestBody } from "../../../middlewares/validateRequestBody";
-import mockExpress from "../../mockExpress";
+import { signToken } from "../../../middlewares/verifyUser";
+import mockExpress, { expectValidHandler } from "../../mockExpress";
 
 vi.mock("../../../database");
-vi.mock("../../../middlewares/validateRequestBody");
+vi.mock("../../../middlewares/verifyUser");
 
-describe("handleSignup", () => {
-  it("should return 403 if email is already used", async () => {
-    const [req, res] = mockExpress({
-      body: {
-        name: "John",
-        email: "john@example.com",
-        password: "password123",
-      },
-    });
+describe("handleSignUp", () => {
+  const _id = "12345";
+  const email = "test@example.com";
+  const password = "password123";
 
-    (validateRequestBody as Mock).mockImplementation(() => {});
-    (User.findOne as Mock).mockResolvedValue(true);
+  function mockSuccess() {
+    (User.findOne as Mock).mockResolvedValueOnce(null);
+    (User.prototype.save as Mock).mockResolvedValueOnce({ _id });
+    (signToken as Mock).mockReturnValueOnce("fakeAccessToken");
+  }
 
-    await handleSignup(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(409);
-    expect(res.send).toHaveBeenCalledWith("Email already used");
+  expectValidHandler(handleSignUp, (req) => {
+    req.body = { email, password };
+    mockSuccess();
   });
 
-  it("should create a new user and return 201", async () => {
-    const [req, res] = mockExpress({
-      body: {
-        name: "John",
-        email: "john@example.com",
-        password: "password123",
-      },
-    });
+  it("should return 409 if email is already used", async () => {
+    const [req, res, next] = mockExpress({ body: { email, password } });
 
-    const mockUser = {
-      save: vi
-        .fn()
-        .mockResolvedValue({ id: 1, name: "John", email: "john@example.com" }),
-    };
-    (validateRequestBody as Mock).mockImplementation(() => {});
-    (User.findOne as Mock).mockResolvedValue(null);
-    (User as unknown as Mock).mockImplementation(() => mockUser);
+    (User.findOne as Mock).mockResolvedValueOnce({ _id });
 
-    await handleSignup(req, res);
+    await handleSignUp(req, res, next);
 
-    expect(mockUser.save).toHaveBeenCalled();
+    expect(User.findOne).toHaveBeenCalledWith({ email });
+    expect(res.status).toHaveBeenCalledWith(409);
+  });
+
+  it("should create a new user and return access token", async () => {
+    const [req, res, next] = mockExpress({ body: { email, password } });
+
+    mockSuccess();
+
+    await handleSignUp(req, res, next);
+
+    expect(User.findOne).toHaveBeenCalledWith({ email });
+    expect(User).toHaveBeenCalledWith({ email, password });
+    expect(User.prototype.save).toHaveBeenCalled();
+    expect(signToken).toHaveBeenCalledWith({ userId: _id, email });
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.send).toHaveBeenCalledWith(expect.any(String));
-    expect(res.send).toHaveBeenCalled();
+    expect(res.send).toHaveBeenCalledWith("fakeAccessToken");
   });
 });

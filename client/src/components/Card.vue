@@ -64,7 +64,7 @@ const props = defineProps({
   width: 100%;
   height: 100%;
   z-index: -1;
-  filter: grayscale(33%);
+  opacity: 0.5;
 }
 .card__id {
   font-size: 2em;
