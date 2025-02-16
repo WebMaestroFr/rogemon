@@ -23,7 +23,8 @@ app.use(logRequest);
 app.use(verifyUser);
 
 const staticRootPath = path.resolve(__dirname, "../../client/dist");
-app.use(express.static(staticRootPath));
+console.log(`Serving static files from ${staticRootPath}`);
+app.use("/", express.static(staticRootPath));
 
 app.use("/api", apiRouter);
 

@@ -20,5 +20,5 @@ body {
 
   @font-face {
   font-family: 'PokemonSolid';
-  src: url('fonts/pokemon-solid.ttf') format('truetype');
+  src: url('/fonts/pokemon-solid.ttf') format('truetype');
 }
