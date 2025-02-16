@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const BCRYPT_SALT_ROUNDS = 10;
 
 export interface IUser {
-  _id: mongoose.Types.ObjectId;
+  _id: mongoose.Types.ObjectId | string;
   email: string;
   password: string;
   comparePassword(password: string): Promise<boolean>;

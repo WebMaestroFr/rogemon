@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, Mock } from "vitest";
 
-import { ObjectId, User } from "../../database";
+import { User } from "../../database";
 import { signToken } from "../../middlewares/verifyUser";
 import mockExpress from "../../tests/mockExpress";
 import expectExpressHandler from "../../tests/expectExpressHandler";
@@ -11,7 +11,7 @@ vi.mock("../../database");
 vi.mock("../../middlewares/verifyUser");
 
 describe("handleSignInOrUp", () => {
-  const _id = new ObjectId("a1b2c3d4e5f6a7b8c9d0e1f2");
+  const _id = "a1b2c3d4e5f6a7b8c9d0e1f2";
   const email = "test@example.com";
   const password = "password123";
 

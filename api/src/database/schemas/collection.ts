@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
+import { Document, Schema, Types } from "mongoose";
 
-export interface ICollection extends mongoose.Document {
-  userId: mongoose.Types.ObjectId;
+export interface ICollection extends Document {
+  userId: Types.ObjectId;
   expansionId: "A1" | "A1a" | "A2" | "P-A";
   countMap: Map<string, number>;
 }
 
-const CollectionSchema = new mongoose.Schema({
-  userId: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+const CollectionSchema = new Schema<ICollection>({
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   expansionId: {
     type: String,
     required: true,

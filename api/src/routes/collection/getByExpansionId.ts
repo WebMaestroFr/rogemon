@@ -9,7 +9,7 @@ export default async function getByExpansionId(
   next: NextFunction
 ): Promise<void> {
   try {
-    assertUser(req);
+    assertUser(req, res);
     const collection = await Collection.findOne({
       userId: req.user._id,
       expansionId: req.params.expansionId,

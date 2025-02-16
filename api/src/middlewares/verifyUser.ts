@@ -4,6 +4,7 @@ import _ from "lodash";
 
 import { User } from "../database";
 import { IUser } from "../database/schemas/user";
+import { sendError } from "../response";
 
 if (!process.env.JWT_SECRET) {
   throw new Error("The JWT_SECRET environment variable is undefined");
@@ -42,9 +43,11 @@ export default async function verifyUser(
 }
 
 export function assertUser(
-  req: Request
+  req: Request,
+  res: Response
 ): asserts req is Request & { user: IUser } {
   if (!req.user) {
+    sendError(res, 401, "User is not authenticated");
     throw "User is not authenticated";
   }
 }

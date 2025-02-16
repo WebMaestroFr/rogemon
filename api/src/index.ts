@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import express, { Request, Response } from "express";
+import express from "express";
 
 dotenv.config({
   path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env",
@@ -11,26 +11,24 @@ import verifyUser from "./middlewares/verifyUser";
 
 import apiRouter from "./routes";
 
-const api = express();
+const app = express();
 const port = process.env.PORT || 3000;
 
 const jsonMiddleware = express.json();
-api.use(jsonMiddleware);
+app.use(jsonMiddleware);
 
-api.use(logRequest);
+app.use(logRequest);
 
-api.use(verifyUser);
+app.use(verifyUser);
 
-api.use("/api", apiRouter);
+app.use("/api", apiRouter);
 
-api.get("/", (_req: Request, res: Response) => {
-  res.send("Rogémon!");
-});
+app.use("/", express.static("../../client/dist"));
 
-api.use(handleError);
+app.use(handleError);
 
-api.listen(port, () => {
+app.listen(port, () => {
   console.log(`API running at http://localhost:${port}`);
 });
 
-export default api;
+export default app;

@@ -9,7 +9,7 @@ export default async function listByUserId(
   next: NextFunction
 ): Promise<void> {
   try {
-    assertUser(req);
+    assertUser(req, res);
     const collections = await Collection.find({ userId: req.user._id });
     return sendData(res, 200, collections);
   } catch (err) {

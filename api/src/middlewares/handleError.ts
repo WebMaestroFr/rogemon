@@ -6,7 +6,7 @@ export default function handleError(
   err: Error | string,
   _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) {
   if (err instanceof Error) {
     console.error(
@@ -37,5 +37,4 @@ export default function handleError(
   if (!res.headersSent) {
     return sendError(res, 500, "Internal server error");
   }
-  return next(err);
 }
