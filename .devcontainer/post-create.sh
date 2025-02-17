@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Install Node Packages
-npm install
+cd api && npm install && cd ../client && npm install && cd .. && npm install
