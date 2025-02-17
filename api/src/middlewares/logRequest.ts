@@ -6,6 +6,8 @@ export default function logRequest(
   res: Response,
   next: NextFunction
 ) {
+  const stdoutColumns = process.stdout.columns || 80;
+  const stdoutPaddedString = " ".repeat(stdoutColumns - 1);
   function logRequest() {
     if (res.statusCode >= 500) {
       console.error(
@@ -20,11 +22,9 @@ export default function logRequest(
         chalk.italic(req.originalUrl)
       );
     } else if (res.statusCode >= 300) {
-      console.log(
-        chalk.cyan(res.statusCode),
-        req.method,
-        chalk.italic(req.originalUrl)
-      );
+      const message = `${chalk.cyan(res.statusCode)} ${req.method} ${chalk.italic(req.originalUrl)}`;
+      const paddedMessage = message + stdoutPaddedString.slice(message.length);
+      process.stdout.write(`${paddedMessage}\r`);
     } else {
       console.log(
         chalk.green(res.statusCode),
