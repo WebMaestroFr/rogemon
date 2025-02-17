@@ -5,8 +5,8 @@
     <div class="card__buttons">
       <button
         :class="[
-          'card__button-down',
-          props.count === -1 ? 'card__button-down--on' : 'card__button-down--off',
+          'card__button-decrease',
+          props.count === -1 ? 'card__button-decrease--on' : 'card__button-decrease--off',
         ]"
         @click="$emit('decrease')"
       >
@@ -14,8 +14,8 @@
       </button>
       <button
         :class="[
-          'card__button-up',
-          props.count > 2 ? 'card__button-up--on' : 'card__button-up--off',
+          'card__button-increase',
+          props.count > 2 ? 'card__button-increase--on' : 'card__button-increase--off',
         ]"
         @click="$emit('increase')"
       >
@@ -87,19 +87,19 @@ const props = defineProps({
   font-size: 1.6rem;
   box-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
 }
-.card__button-down {
+.card__button-decrease {
   color: red;
   background-color: white;
 }
-.card__button-down--on {
+.card__button-decrease--on {
   color: white;
   background-color: red;
 }
-.card__button-up {
+.card__button-increase {
   color: green;
   background-color: white;
 }
-.card__button-up--on {
+.card__button-increase--on {
   color: white;
   background-color: green;
 }

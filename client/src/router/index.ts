@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import JonatradeView from '@/views/JonatradeView.vue'
 import RogedexView from '@/views/RogedexView.vue'
 
 const router = createRouter({
@@ -8,7 +9,11 @@ const router = createRouter({
       path: '/',
       name: 'rogedex',
       component: RogedexView,
-      // component: () => import('../views/RogedexView.vue'),
+    },
+    {
+      path: '/jonatrade',
+      name: 'jonatrade',
+      component: JonatradeView,
     },
   ],
 })

@@ -18,21 +18,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import Card from '@/components/Card.vue'
-import { type Collection, loadCollection, setCardCount } from '@/store/collection'
-import type { ICard } from '@/types'
+import { type ICollection, type ICard, loadCollection, setCardCount } from '@/store/collection'
 
 const props = defineProps<{ id: string; name: string }>()
 const cards = ref<ICard[]>()
-const collection = ref<Collection>({})
+const collection = ref<ICollection>({})
 
 onMounted(async () => {
   const cardsResponse = await fetch(`cards/${props.id}.json`)
   cards.value = await cardsResponse.json()
-
-  const collectionResponse = await loadCollection(props.id)
-  if (collectionResponse) {
-    collection.value = collectionResponse
-  }
+  collection.value = await loadCollection(props.id)
 })
 
 function increaseCardRecord(cardId: string) {

@@ -3,7 +3,11 @@ import _ from 'lodash'
 
 import auth from './auth'
 
-export type Collection = { [cardId: string]: number }
+export type { ICard } from '@/types'
+
+export interface ICollection {
+  [cardId: string]: number
+}
 
 export function getCollectionKey(expansionId: string) {
   return `collection/${expansionId}`
@@ -11,10 +15,10 @@ export function getCollectionKey(expansionId: string) {
 
 export function getCollection(expansionId: string) {
   const key = getCollectionKey(expansionId)
-  return store.get<Collection>(key) || {}
+  return store.get<ICollection>(key) || {}
 }
 
-export function setCollection(expansionId: string, collection: Collection) {
+export function setCollection(expansionId: string, collection: ICollection) {
   const key = getCollectionKey(expansionId)
   store.set(key, collection)
   // Save the collection to the server
@@ -37,7 +41,7 @@ export function setCardCount(expansionId: string, cardId: string, count: number)
 
 export async function loadCollection(expansionId: string) {
   return await auth
-    .fetch<Collection>(`/api/collection/${expansionId}`)
+    .fetch<ICollection>(`/api/collection/${expansionId}`)
     .then((collection) => {
       const key = getCollectionKey(expansionId)
       store.set(key, collection)
@@ -50,7 +54,7 @@ export async function saveCollection(expansionId: string) {
   const collection = getCollection(expansionId)
   const key = getCollectionKey(expansionId)
   return store.debounce(key, () =>
-    auth.fetch<Collection>(`/api/collection/${expansionId}`, {
+    auth.fetch<ICollection>(`/api/collection/${expansionId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(collection),
