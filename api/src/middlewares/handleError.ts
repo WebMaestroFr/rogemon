@@ -11,28 +11,21 @@ export default function handleError(
   if (err instanceof Error) {
     console.error(
       chalk.red(err.name),
-      chalk.bold(err.message),
+      err.message,
       err.stack &&
         "\n" +
           err.stack
-            .replace(`${err.name}: ${err.message}`, "")
             .split("\n")
             .filter(
               (line) =>
                 line.includes("at /workspace/") &&
                 !line.includes("/node_modules/")
             )
-            .map((line) =>
-              line.replace(
-                /\/dist\/(.+).js[0-9:]*/g,
-                chalk.underline("/src/$1.ts")
-              )
-            )
             .filter((value, index, self) => self.indexOf(value) === index)
             .join("\n")
     );
   } else {
-    console.error(chalk.red("Error"), chalk.bold(err));
+    console.error(chalk.red("✘"), err);
   }
   if (!res.headersSent) {
     return sendError(res, 500, "Internal server error");

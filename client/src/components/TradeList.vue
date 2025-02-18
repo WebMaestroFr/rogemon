@@ -9,11 +9,11 @@ import { onMounted, ref } from 'vue'
 import Trade from '@/components/Trade.vue'
 import { type ITrade, loadTrades } from '@/store/trade'
 
-const props = defineProps<{ userEmails: string[] }>()
+const props = defineProps<{ emails: string[] }>()
 const trades = ref<ITrade[]>()
 
 onMounted(async () => {
-  trades.value = await loadTrades(props.userEmails)
+  trades.value = await loadTrades(props.emails)
 })
 </script>
 

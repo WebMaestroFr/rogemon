@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { sendError } from "../response";
+import chalk from "chalk";
 
 export interface ValidationRule {
   email?: boolean;
@@ -11,6 +12,16 @@ export interface ValidationRule {
 
 export interface ValidationRules {
   [key: string]: ValidationRule;
+}
+
+export class ValidationError extends Error {
+  constructor(header: string, input?: unknown) {
+    const message = input
+      ? `${chalk.bold(header)} (${chalk.blue(input)})`
+      : header;
+    super(message);
+    this.name = "ValidationError";
+  }
 }
 
 const EMAIL_REGEX =
@@ -55,7 +66,7 @@ export function validateRequestBody(
  */
 function validateArray(input: unknown, label: string, rule: ValidationRule) {
   if (!Array.isArray(input)) {
-    throw `${label} should be an array`;
+    throw new ValidationError(`${label} should be an array`, input);
   }
 
   for (const value of input) {
@@ -75,19 +86,25 @@ function validateArray(input: unknown, label: string, rule: ValidationRule) {
  */
 function validateField(input: unknown, label: string, rule: ValidationRule) {
   if (rule.required && !input) {
-    throw `${label} is required`;
+    throw new ValidationError(`${label} is required`, input);
   }
 
   if (typeof input !== "string") {
-    throw `${label} should be a string`;
+    throw new ValidationError(`${label} should be a string`, typeof input);
   }
 
   if (rule.minLength && input.length < rule.minLength) {
-    throw `${label} should have at least ${rule.minLength} characters`;
+    throw new ValidationError(
+      `${label} should have at least ${rule.minLength} characters`,
+      input.length
+    );
   }
 
   if (rule.email && !input.match(EMAIL_REGEX)) {
-    throw `${label} should be a valid email address`;
+    throw new ValidationError(
+      `${label} should be a valid email address`,
+      input
+    );
   }
 }
 
@@ -100,12 +117,13 @@ export function assertBody<T = { [key: string]: string }>(
     sendError(res, 400, "Request body is missing");
     throw "Request body is missing";
   }
+  console.log(chalk.blue(JSON.stringify(body)));
   if (rules) {
     try {
       validateRequestBody(body, rules);
     } catch (error) {
-      if (typeof error === "string") {
-        sendError(res, 400, error);
+      if (error instanceof ValidationError) {
+        sendError(res, 400, error.message);
       }
       throw error;
     }
