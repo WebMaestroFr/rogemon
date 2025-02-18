@@ -32,3 +32,15 @@ export interface ICard {
   }
   crafting_cost: number | 'Unknown'
 }
+
+export interface ITradeCard {
+  userId: string
+  cardId: string
+  expansionId: string
+  count: number
+}
+export interface ITrade {
+  key: string
+  cards: [ITradeCard, ITradeCard]
+  priority: number
+}

@@ -5,7 +5,7 @@ import auth from './auth'
 
 export type { ICard } from '@/types'
 
-export interface ICollection {
+export interface ICountMap {
   [cardId: string]: number
 }
 
@@ -15,10 +15,10 @@ export function getCollectionKey(expansionId: string) {
 
 export function getCollection(expansionId: string) {
   const key = getCollectionKey(expansionId)
-  return store.get<ICollection>(key) || {}
+  return store.get<ICountMap>(key) || {}
 }
 
-export function setCollection(expansionId: string, collection: ICollection) {
+export function setCollection(expansionId: string, collection: ICountMap) {
   const key = getCollectionKey(expansionId)
   store.set(key, collection)
   // Save the collection to the server
@@ -41,7 +41,7 @@ export function setCardCount(expansionId: string, cardId: string, count: number)
 
 export async function loadCollection(expansionId: string) {
   return await auth
-    .fetch<ICollection>(`/api/collection/${expansionId}`)
+    .fetch<ICountMap>(`/api/collection/${expansionId}`)
     .then((collection) => {
       const key = getCollectionKey(expansionId)
       store.set(key, collection)
@@ -54,7 +54,7 @@ export async function saveCollection(expansionId: string) {
   const collection = getCollection(expansionId)
   const key = getCollectionKey(expansionId)
   return store.debounce(key, () =>
-    auth.fetch<ICollection>(`/api/collection/${expansionId}`, {
+    auth.fetch<ICountMap>(`/api/collection/${expansionId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(collection),

@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import _ from "lodash";
 
-import { sendData, sendError } from "../../response";
+import { sendData } from "../../response";
+import { assertUser } from "../../middlewares/verifyUser";
 
 export default async function handleProfile(
   req: Request,
@@ -9,10 +10,8 @@ export default async function handleProfile(
   next: NextFunction
 ): Promise<void> {
   try {
-    if (req.user) {
-      return sendData(res, 200, _.pick(req.user, ["_id", "email"]));
-    }
-    return sendError(res, 401, "User is not authenticated");
+    assertUser(req.user, res);
+    return sendData(res, 200, _.pick(req.user, ["_id", "email"]));
   } catch (err) {
     next(err);
   }

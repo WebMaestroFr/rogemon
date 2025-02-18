@@ -9,7 +9,7 @@ export default async function upsertExpansionCount(
   next: NextFunction
 ): Promise<void> {
   try {
-    assertUser(req, res);
+    assertUser(req.user, res);
     const collection = await Collection.findOneAndUpdate(
       {
         userId: req.user._id,

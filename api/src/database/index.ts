@@ -22,3 +22,5 @@ export const Collection = mongoose.model<ICollection>(
   CollectionSchema
 );
 export const User = mongoose.model<IUser>("User", UserSchema);
+
+export type { ICollection, IUser };

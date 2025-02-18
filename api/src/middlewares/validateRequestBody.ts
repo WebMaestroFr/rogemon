@@ -1,30 +1,30 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { sendError } from "../response";
 
+export interface ValidationRule {
+  email?: boolean;
+  label?: string;
+  minLength?: number;
+  required?: boolean;
+  array?: boolean;
+}
+
 export interface ValidationRules {
-  [key: string]: {
-    email?: boolean;
-    label?: string;
-    minLength?: number;
-    required?: boolean;
-  };
+  [key: string]: ValidationRule;
 }
 
 const EMAIL_REGEX =
   /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 
 /**
- * Validates the request body against the provided rules.
+ * Validates the request body against the provided validation rules.
  *
- * @param req - The request object containing the body to be validated.
- * @param rules - An object where each key corresponds to a field in the request body.
- * Each field can have the following validation rules:
- * - `email` (boolean): If true, the field should be a valid email address.
- * - `label` (string): A custom label for the field to be used in error messages.
- * - `minLength` (number): The minimum length the field should have.
- * - `required` (boolean): If true, the field must be present.
+ * @param body - The request body to validate, where each key is a field name and the value is the field value.
+ * @param rules - The validation rules to apply, where each key is a field name and the value is the validation rule.
  *
- * @throws Will throw an error if a required field is missing or if a field does not meet the minimum length requirement.
+ * The function iterates over each rule and validates the corresponding field in the request body.
+ * If the rule specifies that the field is an array, it calls `validateArray` to validate the array.
+ * Otherwise, it calls `validateField` to validate the individual field.
  */
 export function validateRequestBody(
   body: { [key: string]: string },
@@ -33,36 +33,81 @@ export function validateRequestBody(
   for (const [key, rule] of Object.entries(rules)) {
     const input = body[key];
     const label = rule.label || key;
-    if (rule.required && !input) {
-      throw `${label} is required`;
+
+    if (rule.array) {
+      validateArray(input, label, rule);
+      continue;
     }
-    if (rule.minLength && input.length < rule.minLength) {
-      throw `${label} should have at least ${rule.minLength} characters`;
-    }
-    if (rule.email && !input.match(EMAIL_REGEX)) {
-      throw `${label} should be a valid email address`;
-    }
+
+    validateField(input, label, rule);
   }
 }
 
 /**
- * Middleware to validate the request body against specified validation rules.
+ * Validates that the input is an array and that each element in the array
+ * conforms to the specified validation rule.
  *
- * @param {ValidationRules} rules - The validation rules to apply to the request body.
- * @returns {Function} Middleware function to validate the request body.
+ * @param input - The input to be validated.
+ * @param label - A label to be used in error messages.
+ * @param rule - The validation rule to apply to each element in the array.
+ * @throws Will throw an error if the input is not an array or if any element
+ *         in the array does not pass the validation rule.
  */
-export default function validateRequestBodyMiddleware(
-  rules: ValidationRules
-): (req: Request, res: Response, next: NextFunction) => void {
-  return (req: Request, res: Response, next: NextFunction) => {
+function validateArray(input: unknown, label: string, rule: ValidationRule) {
+  if (!Array.isArray(input)) {
+    throw `${label} should be an array`;
+  }
+
+  for (const value of input) {
+    validateField(value, label, rule);
+  }
+}
+
+/**
+ * Validates a field based on the provided validation rule.
+ *
+ * @param input - The input value to be validated.
+ * @param label - The label of the field being validated, used in error messages.
+ * @param rule - The validation rule to apply to the input.
+ * @throws Will throw an error if the input is required but not provided.
+ * @throws Will throw an error if the input is a string and does not meet the minimum length requirement.
+ * @throws Will throw an error if the input is a string and is not a valid email address.
+ */
+function validateField(input: unknown, label: string, rule: ValidationRule) {
+  if (rule.required && !input) {
+    throw `${label} is required`;
+  }
+
+  if (typeof input !== "string") {
+    throw `${label} should be a string`;
+  }
+
+  if (rule.minLength && input.length < rule.minLength) {
+    throw `${label} should have at least ${rule.minLength} characters`;
+  }
+
+  if (rule.email && !input.match(EMAIL_REGEX)) {
+    throw `${label} should be a valid email address`;
+  }
+}
+
+export function assertBody<T = { [key: string]: string }>(
+  body: Request["body"],
+  res: Response,
+  rules?: ValidationRules
+): asserts body is T {
+  if (!body) {
+    sendError(res, 400, "Request body is missing");
+    throw "Request body is missing";
+  }
+  if (rules) {
     try {
-      validateRequestBody(req.body, rules);
-      return next();
+      validateRequestBody(body, rules);
     } catch (error) {
       if (typeof error === "string") {
-        return sendError(res, 400, error);
+        sendError(res, 400, error);
       }
-      return next(error);
+      throw error;
     }
-  };
+  }
 }

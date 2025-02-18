@@ -43,10 +43,10 @@ export default async function verifyUser(
 }
 
 export function assertUser(
-  req: Request,
+  user: Request["user"],
   res: Response
-): asserts req is Request & { user: IUser } {
-  if (!req.user) {
+): asserts user is IUser {
+  if (!user) {
     sendError(res, 401, "User is not authenticated");
     throw "User is not authenticated";
   }
