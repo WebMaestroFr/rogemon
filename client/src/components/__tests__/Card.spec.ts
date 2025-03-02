@@ -53,6 +53,8 @@ describe('Card', () => {
         },
       },
     })
-    expect(wrapper.text()).toContain('001')
+    expect(wrapper.html()).toContain(
+      'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/pocket/A1/A1_001_EN.webp',
+    )
   })
 })

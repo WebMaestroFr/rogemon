@@ -1,3 +1,17 @@
 {
-  "include": ["api", "client"]
+  "compilerOptions": {
+    "rootDir": "./api/src",
+    "outDir": "./api/dist",
+    "composite": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "include": ["**/*.ts", "**/*.vue", "**/*.json"],
+  "exclude": ["**/node_modules/**", "**/dist/**"]
 }

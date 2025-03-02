@@ -18,11 +18,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { loadCollectionCount } from '@/store/collection'
-import type { ICard, ICollectionCount } from '@/types'
+import type { ExpansionId, ICard, ICollectionCount } from '@/types'
 import { setCardCount } from '@/store/card'
 import CollectionCard from './CollectionCard.vue'
 
-const props = defineProps<{ expansionId: string; name: string }>()
+const props = defineProps<{ expansionId: ExpansionId; name: string }>()
 const cards = ref<ICard[]>()
 const countMap = ref<ICollectionCount>({})
 

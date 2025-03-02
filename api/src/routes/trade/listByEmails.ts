@@ -5,7 +5,7 @@ import { assertUser } from "../../middlewares/verifyUser";
 
 import { assertBody } from "../../middlewares/validateRequestBody";
 import { getTrades } from ".";
-import { ITrade } from "../../../../client/src/types";
+import type { ITrade } from "../../../../client/src/types";
 
 export default async function listByEmails(
   req: Request,

@@ -33,6 +33,8 @@ export interface ICard {
   crafting_cost: number | 'Unknown'
 }
 
+export type ExpansionId = 'A1' | 'A1a' | 'A2' | 'A2a'
+
 export interface ICollectionCount {
   [cardId: string]: number
 }
@@ -40,7 +42,7 @@ export interface ICollectionCount {
 export interface ITradeCard {
   userId: string
   cardId: string
-  expansionId: string
+  expansionId: ExpansionId
   count: number
 }
 export interface ITrade {

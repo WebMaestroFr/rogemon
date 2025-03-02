@@ -15,7 +15,7 @@ describe('Collection', () => {
   it('renders properly', () => {
     const wrapper = mount(Collection, {
       props: {
-        id: 'A1',
+        expansionId: 'A1',
         name: 'Genetic Apex',
       },
     })
