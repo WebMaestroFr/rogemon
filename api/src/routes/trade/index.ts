@@ -80,23 +80,25 @@ export function getTrades(
     }
   }
   const trades: ITrade[] = [];
-  // for (const userTradeCard of userDuplicateOtherMissing) {
-  //   const userCardRarity = getCardRarity(
-  //     userTradeCard.expansionId,
-  //     userTradeCard.cardId
-  //   );
-  //   for (const otherTradeCard of userMissingOtherDuplicate) {
-  //     const otherCardRarity = getCardRarity(
-  //       otherTradeCard.expansionId,
-  //       otherTradeCard.cardId
-  //     );
-  //     console.log(userCardRarity, otherCardRarity);
-  //     if (userCardRarity !== otherCardRarity) {
-  //       continue;
-  //     }
-  //     trades.push(getTrade(userTradeCard, otherTradeCard));
-  //   }
-  // }
+  for (const userTradeCard of userDuplicateOtherMissing) {
+    const userCardRarity = getCardRarity(
+      userTradeCard.expansionId,
+      userTradeCard.cardId
+    );
+    console.log({ userCardRarity });
+    for (const otherTradeCard of userMissingOtherDuplicate) {
+      const otherCardRarity = getCardRarity(
+        otherTradeCard.expansionId,
+        otherTradeCard.cardId
+      );
+      console.log({ userCardRarity, otherCardRarity });
+      if (userCardRarity !== otherCardRarity) {
+        continue;
+      }
+      trades.push(getTrade(userTradeCard, otherTradeCard));
+    }
+  }
+  console.log({ trades });
   return trades;
 }
 

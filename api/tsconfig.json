@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "../dist/api",
     "module": "commonjs",
     "resolveJsonModule": true,
     "esModuleInterop": true,
