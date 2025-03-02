@@ -1,6 +1,10 @@
 <template>
   <header class="app__header">
     <h1 @click="toggleAudio">Rogémon</h1>
+    <nav class="app__nav">
+      <RouterLink to="/">Rogédex</RouterLink>
+      <RouterLink to="/jonatrade">Jonatrade</RouterLink>
+    </nav>
     <AuthProfile v-if="auth.getToken()" />
     <AuthSignInOrUp v-else />
   </header>
@@ -9,7 +13,7 @@
 
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
-import { RouterView } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router'
 import AuthProfile from '@/components/Auth/Profile.vue'
 import AuthSignInOrUp from '@/components/Auth/SignInOrUp.vue'
 import auth from '@/store/auth'

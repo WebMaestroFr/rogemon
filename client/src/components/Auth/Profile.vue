@@ -13,7 +13,6 @@ const email = ref<string>()
 
 onMounted(async () => {
   const profile = await auth.fetch<{ email: string }>('/api/auth/profile')
-  console.log(profile)
   email.value = profile.email
 })
 </script>

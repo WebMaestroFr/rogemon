@@ -33,6 +33,10 @@ export interface ICard {
   crafting_cost: number | 'Unknown'
 }
 
+export interface ICollectionCount {
+  [cardId: string]: number
+}
+
 export interface ITradeCard {
   userId: string
   cardId: string

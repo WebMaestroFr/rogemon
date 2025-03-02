@@ -1,8 +1,8 @@
 <template>
   <div v-if="auth.getToken()" class="rogedex">
-    <Collection id="A1" name="Genetic Apex" />
-    <Collection id="A1a" name="Mythical Island" />
-    <Collection id="A2" name="Space-Time Smackdown" />
+    <Collection expansionId="A1" name="Genetic Apex" />
+    <Collection expansionId="A1a" name="Mythical Island" />
+    <!-- <Collection expansionId="A2" name="Space-Time Smackdown" /> -->
   </div>
 </template>
 

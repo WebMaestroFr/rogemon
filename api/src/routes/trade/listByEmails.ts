@@ -4,7 +4,8 @@ import { sendData } from "../../response";
 import { assertUser } from "../../middlewares/verifyUser";
 
 import { assertBody } from "../../middlewares/validateRequestBody";
-import { getTrade } from ".";
+import { getTrades } from ".";
+import { ITrade } from "../../../../client/src/types";
 
 export default async function listByEmails(
   req: Request,
@@ -38,7 +39,7 @@ export default async function listByEmails(
       collections.map((collection) => collection.expansionId)
     );
 
-    const trades = [];
+    const trades: { [email: string]: ITrade[] } = {};
     for (const expansionId of expansionIds) {
       const userExpansionCollection = userCollections.find(
         (collection) => collection.expansionId === expansionId
@@ -55,30 +56,30 @@ export default async function listByEmails(
         continue;
       }
 
-      const expansionCollectionsCardIds = collections
-        .filter((collection) => collection.expansionId === expansionId)
-        .map((collection) => collection.countMap.keys());
-      const expansionCardIds = new Set<string>(
-        expansionCollectionsCardIds.flatMap((collectionCardIds) =>
-          Array.from(collectionCardIds)
-        )
-      );
-
       for (const otherUserExpansionCollection of otherUserExpansionCollections) {
-        for (const cardId of expansionCardIds) {
-          const trade = getTrade(
-            cardId,
-            userExpansionCollection,
-            otherUserExpansionCollection
-          );
-          trades.push(trade);
+        const collectionTrades = getTrades(
+          userExpansionCollection,
+          otherUserExpansionCollection
+        );
+        const otherUser = otherUsers.find((user) =>
+          otherUserExpansionCollection.userId.equals(user._id)
+        );
+        if (!otherUser) {
+          throw `No user found for ID ${otherUserExpansionCollection.userId}`;
+        }
+        if (!trades[otherUser.email]) {
+          trades[otherUser.email] = collectionTrades;
+        } else {
+          trades[otherUser.email].push(...collectionTrades);
         }
       }
     }
 
-    const sortedTrades = trades.sort((a, b) => b.priority - a.priority);
+    for (const otherTrades of Object.values(trades)) {
+      otherTrades.sort((a, b) => b.priority - a.priority);
+    }
 
-    return sendData(res, 200, sortedTrades);
+    return sendData(res, 200, trades);
   } catch (err) {
     next(err);
   }
