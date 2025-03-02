@@ -12,7 +12,7 @@
   "description": "",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "chalk": "^4.1.2",
+    "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
@@ -28,7 +28,7 @@
     "@types/lodash": "^4.17.15",
     "@types/node": "^22.13.4",
     "eslint": "^9.20.1",
-    "globals": "^15.14.0",
+    "globals": "^16.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.23.0",
