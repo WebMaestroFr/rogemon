@@ -1,0 +1,17 @@
+{
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "include": ["api/**/*", "env.d.ts"],
+  "exclude": ["**/node_modules/**", "**/dist/**"],
+  "compilerOptions": {
+    "paths": {
+      "@api/*": ["./api/*"]
+    },
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "./dist",
+    "rootDir": "./api",
+    "noEmit": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  }
+}

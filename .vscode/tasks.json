@@ -2,32 +2,48 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "dev:api",
-      "path": "api",
-      "type": "npm",
-      "script": "dev",
-      "isBackground": true,
-      "problemMatcher": ["$tsc-watch"]
-    },
-    {
-      "label": "dev:client",
-      "path": "client",
-      "type": "npm",
-      "script": "dev",
-      "isBackground": true,
-      "problemMatcher": ["$vite"]
-    },
-    {
       "label": "dev",
-      "dependsOn": ["dev:api", "dev:client"],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      },
+      "dependsOn": ["test", "dev:app", "dev:server"],
       "runOptions": {
         "runOn": "folderOpen"
       },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:setup",
+      "type": "shell",
+      "command": "while [ -f /workspace/.devcontainer/.lock ]; do sleep 1; done",
+      "problemMatcher": [],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
+      "label": "dev:server",
+      "dependsOn": ["dev:setup"],
+      "type": "npm",
+      "script": "dev:server",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:app",
+      "dependsOn": ["dev:setup"],
+      "type": "npm",
+      "script": "dev:app",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "test",
+      "dependsOn": ["dev:setup"],
+      "type": "npm",
+      "script": "test",
+      "isBackground": true,
       "problemMatcher": []
     }
   ]

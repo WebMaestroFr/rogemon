@@ -1,0 +1,21 @@
+{
+  "recommendations": [
+    "foxundermoon.shell-format",
+    "christian-kohler.npm-intellisense",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "mongodb.mongodb-vscode",
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode.vscode-typescript-next",
+    "vitest.explorer",
+    "Vue.volar"
+  ],
+  "unwantedRecommendations": [
+    "DavidAnson.vscode-markdownlint",
+    "donjayamanne.githistory",
+    "firefox-devtools.vscode-firefox-debug",
+    "ms-azuretools.vscode-docker",
+    "ms-edgedevtools.vscode-edge-devtools",
+    "vscodevim.vim"
+  ]
+}

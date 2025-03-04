@@ -1,20 +1,23 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  application:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+  workspace:
+    image: mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
     volumes:
       - ..:/workspace:cached
     command: sleep infinity
     network_mode: service:database
+    environment:
+      - PORT_API=3000
+      - PORT_CLIENT=5173
 
   database:
     image: mongo:latest
     restart: unless-stopped
     volumes:
       - mongodb-data:/data/db
+    ports:
+      - '0:27017'
 
 volumes:
   mongodb-data:

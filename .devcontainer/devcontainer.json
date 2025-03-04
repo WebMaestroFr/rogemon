@@ -1,27 +1,26 @@
 {
   "name": "Rogémon!",
   "dockerComposeFile": "docker-compose.yml",
-  "service": "application",
+  "service": "workspace",
   "workspaceFolder": "/workspace",
-  "forwardPorts": [27017, 3000, 5173],
-  "features": {
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
-  },
-  "postCreateCommand": "sh .devcontainer/post-create.sh",
+  "forwardPorts": [3000, 5173],
   "customizations": {
     "vscode": {
       "extensions": [
+        "foxundermoon.shell-format",
+        "christian-kohler.npm-intellisense",
         "dbaeumer.vscode-eslint",
-        "EditorConfig.EditorConfig",
         "esbenp.prettier-vscode",
         "mongodb.mongodb-vscode",
-        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers",
         "ms-vscode.vscode-typescript-next",
-        "rvest.vs-code-prettier-eslint",
-        "timonwong.shellcheck",
         "vitest.explorer",
         "Vue.volar"
-      ]
+      ],
+      "settings": {
+        "vue.server.hybridMode": "typeScriptPluginOnly"
+      }
     }
-  }
+  },
+  "postCreateCommand": ".devcontainer/post-create.sh"
 }
