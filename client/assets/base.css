@@ -18,7 +18,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-  @font-face {
-  font-family: 'PokemonSolid';
-  src: url('/fonts/pokemon-solid.ttf') format('truetype');
+@font-face {
+  font-family: "PokemonSolid";
+  src: url("/fonts/pokemon-solid.ttf") format("truetype");
 }

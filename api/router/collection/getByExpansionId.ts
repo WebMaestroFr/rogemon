@@ -7,7 +7,7 @@ import { sendData, sendError } from "@api/utilities/sendResponse";
 export default async function getByExpansionId(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> {
   try {
     assertRequestUser(req.user, res);

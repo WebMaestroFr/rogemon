@@ -1,23 +1,33 @@
 function get<T>(key: string) {
-  const value = localStorage.getItem(key)
-  return value && (JSON.parse(value) as T)
+  const value = localStorage.getItem(key);
+  return value && (JSON.parse(value) as T);
 }
 
-type ItemValue = string | number | boolean | null | { [key: string]: ItemValue } | ItemValue[]
+type ItemValue =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: ItemValue }
+  | ItemValue[];
 function set(key: string, value: ItemValue) {
-  const valueString = JSON.stringify(value)
-  localStorage.setItem(key, valueString)
+  const valueString = JSON.stringify(value);
+  localStorage.setItem(key, valueString);
 }
 
 function remove(key: string) {
-  localStorage.removeItem(key)
+  localStorage.removeItem(key);
 }
 
-const debounceTimerMap = new Map<string, ReturnType<typeof setTimeout>>()
-export function debounce<T>(key: string, callback: () => Promise<T>, timeout = 2000) {
-  const prevTimer = debounceTimerMap.get(key)
+const debounceTimerMap = new Map<string, ReturnType<typeof setTimeout>>();
+export function debounce<T>(
+  key: string,
+  callback: () => Promise<T>,
+  timeout = 2000,
+) {
+  const prevTimer = debounceTimerMap.get(key);
   if (prevTimer) {
-    clearTimeout(prevTimer)
+    clearTimeout(prevTimer);
   }
   return new Promise<T>((resolve, reject) => {
     const nextTimer = setTimeout(
@@ -27,13 +37,13 @@ export function debounce<T>(key: string, callback: () => Promise<T>, timeout = 2
           .catch(reject)
           .finally(() => debounceTimerMap.delete(key)),
       timeout,
-    )
-    debounceTimerMap.set(key, nextTimer)
-  })
+    );
+    debounceTimerMap.set(key, nextTimer);
+  });
 }
 
 export function isDebouncePending() {
-  return debounceTimerMap.size > 0
+  return debounceTimerMap.size > 0;
 }
 
-export default { debounce, get, set, remove }
+export default { debounce, get, set, remove };

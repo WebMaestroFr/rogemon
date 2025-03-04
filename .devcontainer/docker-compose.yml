@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   workspace:
@@ -17,7 +17,7 @@ services:
     volumes:
       - mongodb-data:/data/db
     ports:
-      - '0:27017'
+      - "0:27017"
 
 volumes:
   mongodb-data:

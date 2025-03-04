@@ -7,7 +7,7 @@ import { sendData } from "@api/utilities/sendResponse";
 export default async function listByUserId(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> {
   try {
     assertRequestUser(req.user, res);

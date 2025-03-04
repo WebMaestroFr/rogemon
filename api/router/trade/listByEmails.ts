@@ -11,7 +11,7 @@ import { sendData } from "@api/utilities/sendResponse";
 export default async function listByEmails(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> {
   try {
     assertRequestUser(req.user, res);
@@ -30,27 +30,27 @@ export default async function listByEmails(
       userId: { $in: [userId, ...otherIds] },
     });
     const userCollections = collections.filter((collection) =>
-      collection.userId.equals(userId)
+      collection.userId.equals(userId),
     );
     const otherUserCollections = collections.filter(
-      (collection) => !collection.userId.equals(userId)
+      (collection) => !collection.userId.equals(userId),
     );
 
     const expansionIds = new Set<string>(
-      collections.map((collection) => collection.expansionId)
+      collections.map((collection) => collection.expansionId),
     );
 
     const trades: { [email: string]: ITrade[] } = {};
     for (const expansionId of expansionIds) {
       const userExpansionCollection = userCollections.find(
-        (collection) => collection.expansionId === expansionId
+        (collection) => collection.expansionId === expansionId,
       );
       if (!userExpansionCollection) {
         console.warn("No user collection for expansion", expansionId);
         continue;
       }
       const otherUserExpansionCollections = otherUserCollections.filter(
-        (collection) => collection.expansionId === expansionId
+        (collection) => collection.expansionId === expansionId,
       );
       if (otherUserExpansionCollections.length === 0) {
         console.warn("No other user collections for expansion", expansionId);
@@ -60,10 +60,10 @@ export default async function listByEmails(
       for (const otherUserExpansionCollection of otherUserExpansionCollections) {
         const collectionTrades = getTrades(
           userExpansionCollection,
-          otherUserExpansionCollection
+          otherUserExpansionCollection,
         );
         const otherUser = otherUsers.find((user) =>
-          otherUserExpansionCollection.userId.equals(user._id)
+          otherUserExpansionCollection.userId.equals(user._id),
         );
         if (!otherUser) {
           throw `No user found for ID ${otherUserExpansionCollection.userId}`;

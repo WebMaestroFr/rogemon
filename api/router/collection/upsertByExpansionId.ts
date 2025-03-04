@@ -7,7 +7,7 @@ import { sendData } from "@api/utilities/sendResponse";
 export default async function upsertExpansionCount(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> {
   try {
     assertRequestUser(req.user, res);
@@ -17,7 +17,7 @@ export default async function upsertExpansionCount(
         expansionId: req.params.expansionId,
       },
       { countMap: req.body },
-      { new: true, upsert: true }
+      { new: true, upsert: true },
     );
     const collectionResult = await collection.save();
     return sendData(res, 201, collectionResult.countMap);

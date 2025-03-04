@@ -1,7 +1,7 @@
-import { type NextFunction, type Request, type Response } from 'express'
+import { type NextFunction, type Request, type Response } from "express";
 
-import debug from '@api/utilities/debug'
-import { sendError } from '@api/utilities/sendResponse'
+import debug from "@api/utilities/debug";
+import { sendError } from "@api/utilities/sendResponse";
 
 export default function handleError(
   err: Error | string,
@@ -9,8 +9,8 @@ export default function handleError(
   res: Response,
   _next: NextFunction,
 ) {
-  debug.error(err)
+  debug.error(err);
   if (!res.headersSent) {
-    return sendError(res, 500, 'Internal server error')
+    return sendError(res, 500, "Internal server error");
   }
 }

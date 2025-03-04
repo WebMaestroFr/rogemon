@@ -1,5 +1,5 @@
 [build]
-  publish = "client/dist"
+  publish = "dist/static"
   command = "npm run build"
 
 [functions]

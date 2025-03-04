@@ -1,5 +1,5 @@
 import serverless from "serverless-http";
 
-import api from "../../api";
+import api from "../../dist";
 
 export const handler = serverless(api);

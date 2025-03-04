@@ -20,11 +20,11 @@ onMounted(async () => {
   const [userTradeCard, otherTradeCard] = props.trade.cards;
   userCard.value = await loadCard(
     userTradeCard.expansionId,
-    userTradeCard.cardId
+    userTradeCard.cardId,
   );
   otherCard.value = await loadCard(
     otherTradeCard.expansionId,
-    otherTradeCard.cardId
+    otherTradeCard.cardId,
   );
 });
 </script>

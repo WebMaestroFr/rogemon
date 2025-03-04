@@ -6,32 +6,32 @@ import debug from "@api/utilities/debug";
 export default function logRequest(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   function logRequest() {
     if (res.statusCode >= 500) {
       debug.log(
         chalk.red(chalk.bold("✘", res.statusCode), req.method),
         chalk.italic(req.originalUrl),
-        chalk.dim.red(res.statusMessage)
+        chalk.dim.red(res.statusMessage),
       );
     } else if (res.statusCode >= 400) {
       debug.log(
         chalk.yellow(chalk.bold("✘", res.statusCode), req.method),
         chalk.italic(req.originalUrl),
-        chalk.dim.yellow(res.statusMessage)
+        chalk.dim.yellow(res.statusMessage),
       );
     } else if (res.statusCode >= 300) {
       debug.log(
         chalk.cyan(chalk.bold("•", res.statusCode), req.method),
         chalk.italic(req.originalUrl),
-        chalk.dim.cyan(res.statusMessage)
+        chalk.dim.cyan(res.statusMessage),
       );
     } else {
       debug.log(
         chalk.green(chalk.bold("✔", res.statusCode), req.method),
         chalk.italic(req.originalUrl),
-        chalk.dim.green(res.statusMessage)
+        chalk.dim.green(res.statusMessage),
       );
     }
     if (process.env.NODE_ENV === "development") {

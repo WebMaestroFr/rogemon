@@ -13,7 +13,7 @@ export function getCollectionCount(expansionId: ExpansionId) {
 
 export function setCollectionCount(
   expansionId: ExpansionId,
-  collection: ICollectionCount
+  collection: ICollectionCount,
 ) {
   const key = getCollectionKey(expansionId);
   store.set(key, collection);
@@ -39,6 +39,6 @@ export async function saveCollectionCount(expansionId: ExpansionId) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(collection),
-    })
+    }),
   );
 }

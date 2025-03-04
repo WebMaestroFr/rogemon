@@ -8,7 +8,7 @@ import { signToken } from "@api/utilities/userToken";
 export default async function handleSignIn(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> {
   try {
     assertRequestBody<{ email: string; password: string }>(req.body, res, {
