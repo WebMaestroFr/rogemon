@@ -4,6 +4,7 @@
       <ExpansionCard
         v-for="card in ask"
         :key="`${card.expansionId}-${card.cardId}`"
+        :card-id="card.cardId"
         :expansion-id="card.expansionId"
       />
     </div>
@@ -12,6 +13,7 @@
       <ExpansionCard
         v-for="card in offer"
         :key="`${card.expansionId}-${card.cardId}`"
+        :card-id="card.cardId"
         :expansion-id="card.expansionId"
       />
     </div>
@@ -20,7 +22,7 @@
 
 <script setup lang="ts">
 import type { ITradeCard } from '../../env'
-import type ExpansionCard from './ExpansionCard.vue'
+import ExpansionCard from './ExpansionCard.vue'
 
 defineProps<{ ask: ITradeCard[]; offer: ITradeCard[] }>()
 </script>

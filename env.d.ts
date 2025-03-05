@@ -58,5 +58,9 @@ export interface ITrade {
   ask: ITradeCard[]
   offer: ITradeCard[]
 }
-export type ITradeRarityMap = Map<string, ITrade>
-export type ITradeEmailMap = Map<string, ITradeRarityMap>
+export interface ITradeRarityMap {
+  [rarity: string]: ITrade
+}
+export interface ITradeEmailMap {
+  [email: string]: ITradeRarityMap
+}
