@@ -71,14 +71,17 @@ export default async function listUserTrades(req: Request, res: Response, next: 
           continue
         }
         const rarity = getCardRarity(otherCollection.expansionId, cardId)
+        console.log(otherCollection.expansionId, cardId, { userCount, otherCount, rarity })
         const rarityTrade = emailTrade.get(rarity) || { ask: [], offer: [] }
         if (userCount < 1 && otherCount > 1) {
+          console.log(`User ${userEmail} wants ${cardId} from ${otherUser.email}`)
           rarityTrade.offer.push({
             cardId,
             expansionId: otherCollection.expansionId,
             priority: Math.min(otherCount, 3) - userCount,
           })
         } else if (userCount > 1 && otherCount < 1) {
+          console.log(`User ${userEmail} has ${cardId} for ${otherUser.email}`)
           rarityTrade.ask.push({
             cardId,
             expansionId: otherCollection.expansionId,

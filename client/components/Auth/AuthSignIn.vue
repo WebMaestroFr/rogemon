@@ -1,8 +1,8 @@
 <template>
-  <form class="authSignIn" @submit.prevent="auth.signIn({ email, password })">
+  <form class="authSignIn" @submit.prevent="auth.signInOrUp({ email, password })">
     <input v-model="email" type="text" placeholder="Email" />
     <input v-model="password" type="password" placeholder="Password" />
-    <button type="submit">Sign In or Up</button>
+    <button type="submit">Sign In</button>
   </form>
 </template>
 
