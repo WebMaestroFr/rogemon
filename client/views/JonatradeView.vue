@@ -13,6 +13,7 @@ const emails = [
   "joni@rogemon.app",
   "maxime@rogemon.app",
   "etienne@rogemon.app",
+  "fabi@rogemon.app",
 ];
 </script>
 
