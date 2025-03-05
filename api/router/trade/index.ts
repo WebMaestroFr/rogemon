@@ -68,9 +68,9 @@ export function getTrades(
   for (const cardId of cardIds) {
     const userCount = userCollection.countMap.get(cardId) || 0;
     const otherCount = otherCollection.countMap.get(cardId) || 0;
-    if (userCount < 1 && otherCount > 1) {
+    if (userCount < 1 && otherCount > 0) {
       userMissingOtherDuplicate.push(getTradeCard(cardId, userCollection));
-    } else if (userCount > 1 && otherCount < 1) {
+    } else if (userCount > 0 && otherCount < 1) {
       userDuplicateOtherMissing.push(getTradeCard(cardId, otherCollection));
     }
   }
