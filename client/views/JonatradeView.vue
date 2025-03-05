@@ -5,16 +5,11 @@
 </template>
 
 <script setup lang="ts">
-import auth from "../stores/auth";
+import auth from '../stores/auth'
 
-import TradeList from "../components/TradeList.vue";
+import TradeList from '../components/TradeList.vue'
 
-const emails = [
-  "joni@rogemon.app",
-  "maxime@rogemon.app",
-  "etienne@rogemon.app",
-  "fabi@rogemon.app",
-];
+const emails = ['joni@rogemon.app', 'maxime@rogemon.app', 'etienne@rogemon.app', 'fabi@rogemon.app']
 </script>
 
 <style scoped>

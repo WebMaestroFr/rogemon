@@ -16,42 +16,39 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import type { ExpansionId, ICard, ICollectionCount } from "../../env";
-import { setCardCount } from "@client/stores/card";
-import { loadCollectionCount } from "@client/stores/collection";
-import CollectionCard from "./CollectionCard.vue";
+import { onMounted, ref } from 'vue'
+import type { ExpansionId, ICard, ICollectionCount } from '../../env'
+import { setCardCount } from '@client/stores/card'
+import { loadCollectionCount } from '@client/stores/collection'
+import CollectionCard from './CollectionCard.vue'
 
-const props = defineProps<{ expansionId: ExpansionId; name: string }>();
-const cards = ref<ICard[]>();
-const countMap = ref<ICollectionCount>({});
+const props = defineProps<{ expansionId: ExpansionId; name: string }>()
+const cards = ref<ICard[]>()
+const countMap = ref<ICollectionCount>({})
 
 onMounted(async () => {
-  const cardsResponse = await fetch(`cards/${props.expansionId}.json`);
-  cards.value = await cardsResponse.json();
-  countMap.value = await loadCollectionCount(props.expansionId);
-});
+  const cardsResponse = await fetch(`cards/${props.expansionId}.json`)
+  cards.value = await cardsResponse.json()
+  countMap.value = await loadCollectionCount(props.expansionId)
+})
 
 function increaseCardRecord(cardId: string) {
   if (countMap.value[cardId] === undefined || countMap.value[cardId] === -1) {
-    countMap.value[cardId] = 1;
+    countMap.value[cardId] = 1
   } else if (cardId in countMap.value) {
-    countMap.value[cardId] += 1;
+    countMap.value[cardId] += 1
   }
-  setCardCount(props.expansionId, cardId, countMap.value[cardId]);
+  setCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 function decreaseCardRecord(cardId: string) {
   if (countMap.value[cardId] === -1) {
-    countMap.value[cardId] = 0;
-  } else if (
-    countMap.value[cardId] === undefined ||
-    countMap.value[cardId] <= 1
-  ) {
-    countMap.value[cardId] = -1;
+    countMap.value[cardId] = 0
+  } else if (countMap.value[cardId] === undefined || countMap.value[cardId] <= 1) {
+    countMap.value[cardId] = -1
   } else {
-    countMap.value[cardId] -= 1;
+    countMap.value[cardId] -= 1
   }
-  setCardCount(props.expansionId, cardId, countMap.value[cardId]);
+  setCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 </script>
 

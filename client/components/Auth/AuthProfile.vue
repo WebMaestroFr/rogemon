@@ -6,15 +6,15 @@
 </template>
 
 <script setup lang="ts">
-import auth from "@client/stores/auth";
-import { onMounted, ref } from "vue";
+import auth from '@client/stores/auth'
+import { onMounted, ref } from 'vue'
 
-const email = ref<string>();
+const email = ref<string>()
 
 onMounted(async () => {
-  const profile = await auth.fetch<{ email: string }>("/api/auth/profile");
-  email.value = profile.email;
-});
+  const profile = await auth.fetch<{ email: string }>('/api/auth/profile')
+  email.value = profile.email
+})
 </script>
 
 <style scoped>

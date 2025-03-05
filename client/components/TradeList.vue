@@ -1,11 +1,6 @@
 <template>
   <div class="trade-list">
-    <div
-      class="trade-list__email"
-      v-if="trades"
-      v-for="email in Object.keys(trades)"
-      :key="email"
-    >
+    <div class="trade-list__email" v-if="trades" v-for="email in Object.keys(trades)" :key="email">
       <h2>{{ email }}</h2>
       <Trade v-for="trade in trades[email]" :key="trade.key" :trade="trade" />
     </div>
@@ -13,18 +8,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { loadTrades } from "@client/stores/trade";
-import type { ITrade } from "../../env";
+import { onMounted, ref } from 'vue'
+import { loadTrades } from '@client/stores/trade'
+import type { ITrade } from '../../env'
 
-import Trade from "./Trade.vue";
+import Trade from './Trade.vue'
 
-const props = defineProps<{ emails: string[] }>();
-const trades = ref<{ [email: string]: ITrade[] }>();
+const props = defineProps<{ emails: string[] }>()
+const trades = ref<{ [email: string]: ITrade[] }>()
 
 onMounted(async () => {
-  trades.value = await loadTrades(props.emails);
-});
+  trades.value = await loadTrades(props.emails)
+})
 </script>
 
 <style scoped>

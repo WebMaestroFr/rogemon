@@ -10,7 +10,7 @@
         ]"
         @click="$emit('decrease')"
       >
-        {{ count > 0 ? "-" : "✗" }}
+        {{ count > 0 ? '-' : '✗' }}
       </button>
       <button
         :class="[
@@ -21,17 +21,17 @@
         ]"
         @click="$emit('increase')"
       >
-        {{ count > 0 ? `×${count}` : "✓" }}
+        {{ count > 0 ? `×${count}` : '✓' }}
       </button>
     </div>
   </Card>
 </template>
 
 <script setup lang="ts">
-import type { ICard } from "../../env";
-import Card from "./Card.vue";
+import type { ICard } from '../../env'
+import Card from './Card.vue'
 
-const props = defineProps<{ card: ICard; count: number }>();
+const props = defineProps<{ card: ICard; count: number }>()
 </script>
 
 <style scoped>

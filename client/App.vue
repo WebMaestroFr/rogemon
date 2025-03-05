@@ -6,28 +6,28 @@
       <RouterLink to="/jonatrade">Jonatrade</RouterLink>
     </nav>
     <AuthProfile v-if="auth.getToken()" />
-    <AuthSignInOrUp v-else />
+    <AuthSignIn v-else />
   </header>
   <RouterView />
 </template>
 
 <script setup lang="ts">
-import { onUnmounted } from "vue";
-import { RouterLink, RouterView } from "vue-router";
-import auth from "./stores/auth";
+import { onUnmounted } from 'vue'
+import { RouterLink, RouterView } from 'vue-router'
+import auth from './stores/auth'
 
-import AuthProfile from "./components/Auth/AuthProfile.vue";
-import AuthSignInOrUp from "./components/Auth/AuthSignInOrUp.vue";
+import AuthProfile from './components/Auth/AuthProfile.vue'
+import AuthSignIn from './components/Auth/AuthSignIn.vue'
 
-const audio = new Audio("audio/theme.mp3");
+const audio = new Audio('audio/theme.mp3')
 onUnmounted(() => {
-  audio.pause();
-});
+  audio.pause()
+})
 function toggleAudio() {
   if (audio.paused) {
-    audio.play();
+    audio.play()
   } else {
-    audio.pause();
+    audio.pause()
   }
 }
 </script>

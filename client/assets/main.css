@@ -1,4 +1,4 @@
-@import "./base.css";
+@import './base.css';
 
 #app {
   margin: 0 auto;
@@ -6,5 +6,5 @@
 }
 
 h1 {
-  font-family: "PokemonSolid", cursive;
+  font-family: 'PokemonSolid', cursive;
 }

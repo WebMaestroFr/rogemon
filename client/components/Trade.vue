@@ -7,26 +7,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { loadCard } from "@client/stores/card";
-import type { ITrade, ICard } from "../../env";
-import Card from "./Card.vue";
+import { onMounted, ref } from 'vue'
+import { loadCard } from '@client/stores/card'
+import type { ITrade, ICard } from '../../env'
+import Card from './Card.vue'
 
-const props = defineProps<{ trade: ITrade }>();
-const userCard = ref<ICard>();
-const otherCard = ref<ICard>();
+const props = defineProps<{ trade: ITrade }>()
+const userCard = ref<ICard>()
+const otherCard = ref<ICard>()
 
 onMounted(async () => {
-  const [userTradeCard, otherTradeCard] = props.trade.cards;
-  userCard.value = await loadCard(
-    userTradeCard.expansionId,
-    userTradeCard.cardId,
-  );
-  otherCard.value = await loadCard(
-    otherTradeCard.expansionId,
-    otherTradeCard.cardId,
-  );
-});
+  const [userTradeCard, otherTradeCard] = props.trade.cards
+  userCard.value = await loadCard(userTradeCard.expansionId, userTradeCard.cardId)
+  otherCard.value = await loadCard(otherTradeCard.expansionId, otherTradeCard.cardId)
+})
 </script>
 
 <style scoped>

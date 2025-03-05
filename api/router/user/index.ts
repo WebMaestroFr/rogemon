@@ -1,10 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express'
 
-import getUser from "./getUser";
-import listUsers from "./listUsers";
+import getUser from './getUser'
+import listUsers from './listUsers'
 
-const userRouter = Router();
-userRouter.get("/", listUsers);
-userRouter.get("/:id", getUser);
+const userRouter = Router()
+userRouter.get('/', listUsers)
+userRouter.get('/:id', getUser)
 
-export default userRouter;
+export default userRouter

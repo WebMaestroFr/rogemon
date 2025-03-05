@@ -2,7 +2,7 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     ".env": ".env.*",
-    "devcontainer.code-workspace": "eslint.config.ts, .gitattributes, .gitignore, .prettier*",
+    "rogemon.code-workspace": "eslint.config.ts, .gitattributes, .gitignore, .prettier*",
     "package.json": "package-lock.json",
     "tsconfig.json": "tsconfig.*.json, vite.config.ts, vitest.setup.ts"
   },

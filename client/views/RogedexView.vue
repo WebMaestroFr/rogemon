@@ -8,9 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import auth from "../stores/auth";
+import auth from '../stores/auth'
 
-import Collection from "../components/Collection.vue";
+import Collection from '../components/Collection.vue'
 </script>
 
 <style scoped>

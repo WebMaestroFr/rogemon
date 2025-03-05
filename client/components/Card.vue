@@ -1,19 +1,14 @@
 <template>
   <div class="card">
-    <img
-      v-if="showImage"
-      class="card__image"
-      :src="card.image"
-      :alt="card.name"
-    />
-    <h3 v-else class="card__id">{{ String(card.id).padStart(3, "0") }}</h3>
+    <img v-if="showImage" class="card__image" :src="card.image" :alt="card.name" />
+    <h3 v-else class="card__id">{{ String(card.id).padStart(3, '0') }}</h3>
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { PropType } from "vue";
-import type { ICard } from "../../env";
+import type { PropType } from 'vue'
+import type { ICard } from '../../env'
 
 const props = defineProps({
   card: {
@@ -24,7 +19,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-});
+})
 </script>
 
 <style scoped>

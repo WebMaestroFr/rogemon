@@ -1,22 +1,22 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router'
 
-import RogedexView from "../views/RogedexView.vue";
-import JonatradeView from "../views/JonatradeView.vue";
+import RogedexView from '../views/RogedexView.vue'
+import JonatradeView from '../views/JonatradeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "rogedex",
+      path: '/',
+      name: 'rogedex',
       component: RogedexView,
     },
     {
-      path: "/jonatrade",
-      name: "jonatrade",
+      path: '/jonatrade',
+      name: 'jonatrade',
       component: JonatradeView,
     },
   ],
-});
+})
 
-export default router;
+export default router
