@@ -1,6 +1,6 @@
 import type { ExpansionId, ICollectionCount } from '../../env'
 import auth from './auth'
-import store from './index'
+import store, { debounce } from './index'
 
 export function getCollectionKey(expansionId: ExpansionId) {
   return `collection/${expansionId}`
@@ -31,7 +31,7 @@ export async function loadCollection(expansionId: ExpansionId) {
 export async function saveCollection(expansionId: ExpansionId) {
   const collection = getCollection(expansionId)
   const key = getCollectionKey(expansionId)
-  return store.debounce(key, () =>
+  return debounce(key, () =>
     auth.fetch<ICollectionCount>(`/api/collection/${expansionId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
