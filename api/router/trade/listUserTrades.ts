@@ -65,9 +65,14 @@ export default async function listUserTrades(req: Request, res: Response, next: 
         ...otherCollection.countMap.keys(),
       ])
       for (const cardId of cardIds) {
-        const userCount = userCollection.countMap.get(cardId) || 0
-        const otherCount = otherCollection.countMap.get(cardId) || 0
-        if ((userCount > 0 && otherCount > 0) || (userCount < 1 && otherCount < 1)) {
+        const userCount = userCollection.countMap.get(cardId)
+        const otherCount = otherCollection.countMap.get(cardId)
+        if (
+          userCount === undefined ||
+          otherCount === undefined ||
+          (userCount > 0 && otherCount > 0) ||
+          (userCount < 1 && otherCount < 1)
+        ) {
           continue
         }
         const rarity = getCardRarity(otherCollection.expansionId, cardId)
