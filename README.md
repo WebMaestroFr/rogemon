@@ -4,7 +4,7 @@
 
 ## Update Cards
 
-The cards are served as JSON files in _client/src/assets/collections_, to update from https://github.com/marcelpanse/tcg-pocket-collection-tracker/tree/main/frontend/assets/cards at the moment.
+The cards are served as JSON files in _public/cards_, to update from https://github.com/marcelpanse/tcg-pocket-collection-tracker/tree/main/frontend/assets/cards at the moment.
 
 ## Local Development Environment
 
