@@ -18,7 +18,7 @@ const expansionsJson = {
 
 export function getCardRarity(
   expansionId: ExpansionId,
-  cardId: string,
+  cardId: string
 ): string {
   const expansionJson = expansionsJson[expansionId];
   if (!expansionJson) {
@@ -33,7 +33,7 @@ export function getCardRarity(
 
 export function getTradeCard(
   cardId: string,
-  collection: ICollection,
+  collection: ICollection
 ): ITradeCard {
   return {
     userId: collection.userId.toString(),
@@ -45,7 +45,7 @@ export function getTradeCard(
 
 export function getTrade(
   userTradeCard: ITradeCard,
-  otherTradeCard: ITradeCard,
+  otherTradeCard: ITradeCard
 ): ITrade {
   const priority = Math.min(otherTradeCard.count, 3) - userTradeCard.count;
   return {
@@ -57,7 +57,7 @@ export function getTrade(
 
 export function getTrades(
   userCollection: ICollection,
-  otherCollection: ICollection,
+  otherCollection: ICollection
 ): ITrade[] {
   const cardIds = new Set([
     ...userCollection.countMap.keys(),
@@ -68,9 +68,9 @@ export function getTrades(
   for (const cardId of cardIds) {
     const userCount = userCollection.countMap.get(cardId) || 0;
     const otherCount = otherCollection.countMap.get(cardId) || 0;
-    if (userCount < 1 && otherCount > 2) {
+    if (userCount < 1 && otherCount > 1) {
       userMissingOtherDuplicate.push(getTradeCard(cardId, userCollection));
-    } else if (userCount > 2 && otherCount < 1) {
+    } else if (userCount > 1 && otherCount < 1) {
       userDuplicateOtherMissing.push(getTradeCard(cardId, otherCollection));
     }
   }
@@ -78,12 +78,12 @@ export function getTrades(
   for (const userTradeCard of userDuplicateOtherMissing) {
     const userCardRarity = getCardRarity(
       userTradeCard.expansionId,
-      userTradeCard.cardId,
+      userTradeCard.cardId
     );
     for (const otherTradeCard of userMissingOtherDuplicate) {
       const otherCardRarity = getCardRarity(
         otherTradeCard.expansionId,
-        otherTradeCard.cardId,
+        otherTradeCard.cardId
       );
       if (userCardRarity !== otherCardRarity) {
         continue;
