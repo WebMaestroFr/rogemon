@@ -6,7 +6,7 @@ export function getCollectionKey(expansionId: ExpansionId) {
   return `collection/${expansionId}`
 }
 
-export function getCollectionCount(expansionId: ExpansionId) {
+export function getCollection(expansionId: ExpansionId) {
   const key = getCollectionKey(expansionId)
   return store.get<ICollectionCount>(key) || {}
 }
@@ -14,10 +14,10 @@ export function getCollectionCount(expansionId: ExpansionId) {
 export function setCollectionCount(expansionId: ExpansionId, collection: ICollectionCount) {
   const key = getCollectionKey(expansionId)
   store.set(key, collection)
-  saveCollectionCount(expansionId)
+  saveCollection(expansionId)
 }
 
-export async function loadCollectionCount(expansionId: ExpansionId) {
+export async function loadCollection(expansionId: ExpansionId) {
   return await auth
     .fetch<ICollectionCount>(`/api/collection/${expansionId}`)
     .then((collection) => {
@@ -25,11 +25,11 @@ export async function loadCollectionCount(expansionId: ExpansionId) {
       store.set(key, collection)
       return collection
     })
-    .catch(() => getCollectionCount(expansionId))
+    .catch(() => getCollection(expansionId))
 }
 
-export async function saveCollectionCount(expansionId: ExpansionId) {
-  const collection = getCollectionCount(expansionId)
+export async function saveCollection(expansionId: ExpansionId) {
+  const collection = getCollection(expansionId)
   const key = getCollectionKey(expansionId)
   return store.debounce(key, () =>
     auth.fetch<ICollectionCount>(`/api/collection/${expansionId}`, {

@@ -44,6 +44,7 @@ export default defineConfigWithVueTs(
         },
       ],
       'no-else-return': 'error',
+      'vue/multi-word-component-names': 'off',
     },
   },
 )

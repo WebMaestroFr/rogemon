@@ -4,10 +4,10 @@
     <div class="collection__cards">
       <CollectionCard
         v-for="card in cards"
-        class="collection__card"
         :key="card.id"
         :card="card"
         :count="countMap[card.id] || 0"
+        class="collection__card"
         @increase="() => increaseCardRecord(card.id)"
         @decrease="() => decreaseCardRecord(card.id)"
       />
@@ -19,7 +19,7 @@
 import { onMounted, ref } from 'vue'
 import type { ExpansionId, ICard, ICollectionCount } from '../../env'
 import { setCardCount } from '@client/stores/card'
-import { loadCollectionCount } from '@client/stores/collection'
+import { loadCollection } from '@client/stores/collection'
 import CollectionCard from './CollectionCard.vue'
 
 const props = defineProps<{ expansionId: ExpansionId; name: string }>()
@@ -29,7 +29,7 @@ const countMap = ref<ICollectionCount>({})
 onMounted(async () => {
   const cardsResponse = await fetch(`cards/${props.expansionId}.json`)
   cards.value = await cardsResponse.json()
-  countMap.value = await loadCollectionCount(props.expansionId)
+  countMap.value = await loadCollection(props.expansionId)
 })
 
 function increaseCardRecord(cardId: string) {

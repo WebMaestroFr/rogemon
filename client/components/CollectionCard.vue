@@ -31,7 +31,8 @@
 import type { ICard } from '../../env'
 import Card from './Card.vue'
 
-const props = defineProps<{ card: ICard; count: number }>()
+defineProps<{ card: ICard; count: number }>()
+defineEmits(['decrease', 'increase'])
 </script>
 
 <style scoped>

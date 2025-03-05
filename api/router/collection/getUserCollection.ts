@@ -4,7 +4,7 @@ import Collection from '@api/models/collection'
 import assertRequestUser from '@api/utilities/assertRequestUser'
 import { sendData, sendError } from '@api/utilities/sendResponse'
 
-export default async function getByExpansionId(
+export default async function getUserCollection(
   req: Request,
   res: Response,
   next: NextFunction,

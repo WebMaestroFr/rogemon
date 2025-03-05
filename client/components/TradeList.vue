@@ -1,24 +1,30 @@
 <template>
-  <div class="trade-list">
-    <div class="trade-list__email" v-if="trades" v-for="email in Object.keys(trades)" :key="email">
+  <div v-if="tradesByEmail" class="trade-list">
+    <div
+      v-for="[email, tradesByRarity] in tradesByEmail.entries()"
+      :key="email"
+      class="trade-list__email"
+    >
       <h2>{{ email }}</h2>
-      <Trade v-for="trade in trades[email]" :key="trade.key" :trade="trade" />
+      <div v-for="[rarity, tradeGroups] in tradesByRarity.entries()" :key="rarity">
+        <h3>{{ rarity }}</h3>
+        <TradeGroup v-bind="tradeGroups" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { loadTrades } from '@client/stores/trade'
-import type { ITrade } from '../../env'
-
-import Trade from './Trade.vue'
+import { listTradesByEmail } from '@client/stores/trade'
+import type { ITradeEmailMap } from '../../env'
+import type TradeGroup from './TradeGroup.vue'
 
 const props = defineProps<{ emails: string[] }>()
-const trades = ref<{ [email: string]: ITrade[] }>()
+const tradesByEmail = ref<ITradeEmailMap>()
 
 onMounted(async () => {
-  trades.value = await loadTrades(props.emails)
+  tradesByEmail.value = await listTradesByEmail(props.emails)
 })
 </script>
 

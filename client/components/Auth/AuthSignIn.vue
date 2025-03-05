@@ -1,7 +1,7 @@
 <template>
   <form class="authSignIn" @submit.prevent="auth.signIn({ email, password })">
-    <input type="text" v-model="email" placeholder="Email" />
-    <input type="password" v-model="password" placeholder="Password" />
+    <input v-model="email" type="text" placeholder="Email" />
+    <input v-model="password" type="password" placeholder="Password" />
     <button type="submit">Sign In or Up</button>
   </form>
 </template>

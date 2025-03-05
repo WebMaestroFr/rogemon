@@ -10,7 +10,7 @@
 import type { PropType } from 'vue'
 import type { ICard } from '../../env'
 
-const props = defineProps({
+defineProps({
   card: {
     type: Object as PropType<ICard>,
     required: true,

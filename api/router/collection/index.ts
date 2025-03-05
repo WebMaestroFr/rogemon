@@ -1,14 +1,13 @@
 import { Router } from 'express'
 
-import listByUserId from './listByUserId'
-import getByExpansionId from './getByExpansionId'
-import upsertExpansionCount from './upsertByExpansionId'
+import getUserCollection from './getUserCollection'
+import listUserCollections from './listUserCollections'
+import upsertUserCollection from './upsertUserCollection'
 
 const collectionRouter = Router()
 
-collectionRouter.get('/:expansionId', getByExpansionId)
-collectionRouter.post('/:expansionId', upsertExpansionCount)
-
-collectionRouter.get('/', listByUserId)
+collectionRouter.get('/:expansionId', getUserCollection)
+collectionRouter.post('/:expansionId', upsertUserCollection)
+collectionRouter.get('/', listUserCollections)
 
 export default collectionRouter

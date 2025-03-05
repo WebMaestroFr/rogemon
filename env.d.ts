@@ -50,13 +50,13 @@ export interface ICollectionCount {
 }
 
 export interface ITradeCard {
-  userId: string
   cardId: string
   expansionId: ExpansionId
-  count: number
-}
-export interface ITrade {
-  key: string
-  cards: [ITradeCard, ITradeCard]
   priority: number
 }
+export interface ITrade {
+  ask: ITradeCard[]
+  offer: ITradeCard[]
+}
+export type ITradeRarityMap = Map<string, ITrade>
+export type ITradeEmailMap = Map<string, ITradeRarityMap>
