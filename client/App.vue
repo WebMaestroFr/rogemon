@@ -3,6 +3,7 @@
   <template v-else>
     <nav>
       <Rogemon />
+      <img src="/img/splitter.png" class="splitter" />
       <span>
         <RouterLink to="/">
           <img src="/icons/collection.png" :style="{ opacity: route.path === '/' ? 1 : 0.6 }" title="Rogédex" />
@@ -34,11 +35,16 @@ nav {
   justify-content: space-between;
 }
 
+.splitter {
+  display: none;
+}
+
 @media (max-width: 600px) {
   .splitter {
+    position: fixed;
+    bottom: 60px;
     display: block;
     width: 100%;
-    margin: -10px 0 5px 0;
   }
 
   nav {
@@ -49,10 +55,9 @@ nav {
   nav span {
     position: fixed;
     bottom: 0;
-    background: #f4f7fa;
+    background: #e8f1f8;
     width: 100%;
     z-index: 2;
-    box-shadow: 0 0 0.4rem rgba(255, 255, 255, 0.8);
   }
 
   span img {

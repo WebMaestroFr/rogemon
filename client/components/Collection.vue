@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="collection">
     <img src="/img/splitter.png" class="splitter" />
     <h2><img :src="'/img/' + expansionId + '_en.png'" :alt="name" /><img src="/icons/down.png" class="scroller"
         @click="scrollToNext" /></h2>
@@ -81,6 +81,10 @@ function scrollToNext() {
 </script>
 
 <style scoped>
+.collection {
+  margin-bottom: 20px;
+}
+
 .fillers div {
   cursor: pointer;
 }
@@ -99,7 +103,7 @@ function scrollToNext() {
 }
 
 .splitter {
-  margin-top: -20px;
+  margin: -50px 0 30px 0;
   width: 450px;
 }
 
@@ -120,6 +124,7 @@ function scrollToNext() {
 @media (max-width: 600px) {
   .splitter {
     width: 100%;
+    margin-top: -35px;
   }
 
   img {

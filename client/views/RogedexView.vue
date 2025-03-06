@@ -1,5 +1,5 @@
 <template>
-  <div v-if="auth.getToken()" class="rogedex">
+  <div style="margin-bottom: 80px;">
     <Collection expansionId="A1" name="Genetic Apex" />
     <Collection expansionId="A1a" name="Mythical Island" />
     <Collection expansionId="A2" name="Space-Time Smackdown" />
@@ -8,7 +8,5 @@
 </template>
 
 <script setup lang="ts">
-import auth from '../stores/auth'
-
 import Collection from '../components/Collection.vue'
 </script>
