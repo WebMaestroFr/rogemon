@@ -65,32 +65,26 @@ export default async function listUserTrades(req: Request, res: Response, next: 
         ...otherCollection.countMap.keys(),
       ])
       for (const cardId of cardIds) {
-        const userCount = userCollection.countMap.get(cardId)
-        const otherCount = otherCollection.countMap.get(cardId)
-        if (
-          userCount === undefined ||
-          otherCount === undefined ||
-          (userCount > 0 && otherCount > 0) ||
-          (userCount < 1 && otherCount < 1)
-        ) {
-          continue
+        const userCount = userCollection.countMap.get(cardId) || 0
+        const otherCount = otherCollection.countMap.get(cardId) || 0
+        if ((userCount < 1 && otherCount > 1) || (userCount > 1 && otherCount < 1)) {
+          const rarity = getCardRarity(otherCollection.expansionId, cardId)
+          const rarityTrade = emailTrade[rarity] || { ask: [], offer: [] }
+          if (userCount < 1 && otherCount > 1) {
+            rarityTrade.offer.push({
+              cardId,
+              expansionId: otherCollection.expansionId,
+              priority: Math.min(otherCount, 3) - userCount,
+            })
+          } else if (userCount > 1 && otherCount < 1) {
+            rarityTrade.ask.push({
+              cardId,
+              expansionId: otherCollection.expansionId,
+              priority: Math.min(userCount, 3) - otherCount,
+            })
+          }
+          emailTrade[rarity] = rarityTrade
         }
-        const rarity = getCardRarity(otherCollection.expansionId, cardId)
-        const rarityTrade = emailTrade[rarity] || { ask: [], offer: [] }
-        if (userCount < 1 && otherCount > 1) {
-          rarityTrade.offer.push({
-            cardId,
-            expansionId: otherCollection.expansionId,
-            priority: Math.min(otherCount, 3) - userCount,
-          })
-        } else if (userCount > 1 && otherCount < 1) {
-          rarityTrade.ask.push({
-            cardId,
-            expansionId: otherCollection.expansionId,
-            priority: Math.min(userCount, 3) - otherCount,
-          })
-        }
-        emailTrade[rarity] = rarityTrade
       }
       emailTrades[otherUser.email] = emailTrade
       return emailTrades
