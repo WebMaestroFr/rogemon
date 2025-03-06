@@ -1,7 +1,7 @@
 <template>
   <div class="card" :class="{ 'shaded': showImage }">
-    <img v-if="showImage" class="card__image" :src="card.image" :alt="card.name" loading="lazy" />
-    <h3 v-else class="card__id">{{ String(card.id).padStart(3, '0') }}</h3>
+    <img v-if="showImage && card" class="card__image" :src="card.image" :alt="card.name" loading="lazy" />
+    <h3 v-else-if="card" class="card__id">{{ String(card.id).padStart(3, '0') }}</h3>
     <slot />
   </div>
 </template>
@@ -13,7 +13,6 @@ import type { ICard } from '../../env'
 defineProps({
   card: {
     type: Object as PropType<ICard>,
-    required: true,
   },
   showImage: {
     type: Boolean,

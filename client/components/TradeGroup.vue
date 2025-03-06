@@ -1,12 +1,14 @@
 <template>
   <div class="tradeGroup">
-    <div :class="{ stacked }" @click="stacked = false">
+    <div v-if="ask.length" :class="{ stacked }" @click="stacked = false">
       <ExpansionCard v-for="card in ask" :key="card.cardId" :card-id="card.cardId" :expansion-id="card.expansionId" />
     </div>
+    <Card v-else />
     <img src="/icons/trade_arrows.png" />
-    <div :class="{ stacked }" @click="stacked = false">
+    <div v-if="offer.length" :class="{ stacked }" @click="stacked = false">
       <ExpansionCard v-for="card in offer" :key="card.cardId" :card-id="card.cardId" :expansion-id="card.expansionId" />
     </div>
+    <Card v-else />
   </div>
 </template>
 
@@ -14,6 +16,7 @@
 import { ref } from 'vue';
 import type { ITradeCard } from '../../env'
 import ExpansionCard from './ExpansionCard.vue'
+import Card from './Card.vue'
 
 defineProps<{ ask: ITradeCard[]; offer: ITradeCard[] }>()
 const stacked = ref(true);

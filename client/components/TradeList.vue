@@ -1,7 +1,7 @@
 <template>
   <div v-if="tradesByEmail">
-    <img src="/img/splitter.png" class="splitter" />
     <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email">
+      <img src="/img/splitter.png" class="splitter" />
       <div class="hollow"><img src="/icons/user.png" />{{ email.substring(0, email.indexOf('@')) }}</div>
       <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
         <img v-for="i in rarity.length" :src="getIcon(rarity)" class="icon" />

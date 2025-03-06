@@ -15,16 +15,3 @@ onMounted(async () => {
   card.value = await loadCard(props.expansionId, props.cardId)
 })
 </script>
-
-<style scoped>
-.trade {
-  display: flex;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-}
-.trade__arrow {
-  font-size: 6em;
-  line-height: 0;
-}
-</style>
