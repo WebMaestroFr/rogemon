@@ -2,7 +2,9 @@
   <div v-if="tradesByEmail">
     <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email">
       <img src="/img/splitter.png" class="splitter" />
-      <div class="hollow"><img src="/icons/user.png" />{{ email.substring(0, email.indexOf('@')) }}</div>
+      <div class="hollow">
+        <img src="/icons/user.png" />{{ email.substring(0, email.indexOf('@')) }}
+      </div>
       <div class="trades">
         <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
           <img v-for="i in rarity.length" :src="getIcon(rarity)" class="icon" />
@@ -31,11 +33,14 @@ function getIcon(rarity: string) {
     case '◊':
     case '◊◊':
     case '◊◊◊':
-    case '◊◊◊◊': return '/img/diamond.png'
+    case '◊◊◊◊':
+      return '/img/diamond.png'
     case '☆':
     case '☆☆':
-    case '☆☆☆': return '/img/star.png'
-    default: return '/img/crown.png'
+    case '☆☆☆':
+      return '/img/star.png'
+    default:
+      return '/img/crown.png'
   }
 }
 </script>

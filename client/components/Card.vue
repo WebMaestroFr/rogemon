@@ -1,6 +1,12 @@
 <template>
-  <div class="card" :class="{ 'shaded': showImage }">
-    <img v-if="showImage && card" class="card__image" :src="card.image" :alt="card.name" loading="lazy" />
+  <div class="card" :class="{ shaded: showImage }">
+    <img
+      v-if="showImage && card"
+      class="card__image"
+      :src="card.image"
+      :alt="card.name"
+      loading="lazy"
+    />
     <h3 v-else-if="card" class="card__id">{{ String(card.id).padStart(3, '0') }}</h3>
     <slot />
   </div>
@@ -38,8 +44,7 @@ defineProps({
 }
 
 .card.shaded {
-  box-shadow:
-    0 0 0.4rem rgba(153, 173, 198, 0.8);
+  box-shadow: 0 0 0.4rem rgba(153, 173, 198, 0.8);
 }
 
 .card__image {
