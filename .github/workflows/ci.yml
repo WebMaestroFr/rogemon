@@ -4,7 +4,7 @@ on:
 
 jobs:
   ci:
-    name: 🚀
+    name: 🚀 Continuous Integration
     runs-on: ubuntu-latest
     steps:
       - name: 📁 Checkout Project
