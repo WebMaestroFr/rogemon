@@ -3,6 +3,9 @@
 #app {
   margin: 0;
   text-align: center;
+  overflow-y: scroll;
+  max-height: 100vh;
+  scrollbar-color: #99adc6 #e8f1f8;
 }
 
 .hollow {

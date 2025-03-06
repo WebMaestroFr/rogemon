@@ -18,8 +18,8 @@ onMounted(async () => {
 
 <style scoped>
 .authProfile {
-  margin: 12px;
-  width: 226px;
+  margin-top: 12px;
+  width: 238px;
   text-align: right;
 }
 
