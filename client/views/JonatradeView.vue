@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tradesByEmail" style="padding-bottom: 60px;">
+  <div v-if="tradesByEmail">
     <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email">
       <img src="/img/splitter.png" class="splitter" />
       <div class="hollow"><img src="/icons/user.png" />{{ email.substring(0, email.indexOf('@')) }}</div>
