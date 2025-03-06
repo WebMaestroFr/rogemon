@@ -46,7 +46,7 @@ function getIcon(rarity: string) {
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px 40px;
-  margin: 10px 0;
+  margin: 10px 0 20px 0;
 }
 
 .hollow {
