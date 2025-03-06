@@ -29,4 +29,21 @@ span,
 small {
   font-weight: bold;
 }
+
+@media (max-width: 600px) {
+  .hollow {
+    font-size: 0.6rem;
+    line-height: 1rem;
+    padding: 0 6px;
+  }
+
+  .hollow span {
+    padding-left: 4px;
+  }
+
+  .hollow img {
+    height: 0.6rem;
+    margin-top: 1px;
+  }
+}
 </style>

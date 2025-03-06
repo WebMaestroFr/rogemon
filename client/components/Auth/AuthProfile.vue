@@ -1,6 +1,6 @@
 <template>
   <div class="authProfile">
-    <div class="hollow" @click="auth.signOut"><img src="/img/logout.png" /><span v-text="email" /></div>
+    <div class="hollow" @click="auth.signOut"><img src="/icons/logout.png" /><span v-text="email" /></div>
   </div>
 </template>
 

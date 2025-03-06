@@ -1,30 +1,22 @@
 <template>
-  <div v-if="ask.length || offer.length" class="tradeGroup">
-    <div>
-      <ExpansionCard
-        v-for="card in ask"
-        :key="`${card.expansionId}-${card.cardId}`"
-        :card-id="card.cardId"
-        :expansion-id="card.expansionId"
-      />
+  <div class="tradeGroup">
+    <div :class="{ stacked }" @click="stacked = false">
+      <ExpansionCard v-for="card in ask" :key="card.cardId" :card-id="card.cardId" :expansion-id="card.expansionId" />
     </div>
-    <span class="tradeGroup__arrow">⇔</span>
-    <div>
-      <ExpansionCard
-        v-for="card in offer"
-        :key="`${card.expansionId}-${card.cardId}`"
-        :card-id="card.cardId"
-        :expansion-id="card.expansionId"
-      />
+    <img src="/icons/trade_arrows.png" />
+    <div :class="{ stacked }" @click="stacked = false">
+      <ExpansionCard v-for="card in offer" :key="card.cardId" :card-id="card.cardId" :expansion-id="card.expansionId" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import type { ITradeCard } from '../../env'
 import ExpansionCard from './ExpansionCard.vue'
 
 defineProps<{ ask: ITradeCard[]; offer: ITradeCard[] }>()
+const stacked = ref(true);
 </script>
 
 <style scoped>
@@ -32,13 +24,25 @@ defineProps<{ ask: ITradeCard[]; offer: ITradeCard[] }>()
   display: flex;
   position: relative;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 }
-.tradeGroup__arrow {
-  font-size: 6em;
-  line-height: 0;
+
+img {
+  width: 38px;
+  margin-top: 58px;
+  opacity: 0.6;
 }
+
+.stacked {
+  cursor: pointer;
+}
+
+.stacked>div:not(:first-child) {
+  margin-top: -140px;
+}
+
 .card {
-  min-height: 150px;
+  height: 150px;
+  margin-bottom: 8px;
 }
 </style>

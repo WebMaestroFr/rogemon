@@ -5,10 +5,10 @@
       <Rogemon />
       <span>
         <RouterLink to="/">
-          <img src="/img/collection.png" :style="{ opacity: route.path === '/' ? 1 : 0.6 }" title="Rogédex" />
+          <img src="/icons/collection.png" :style="{ opacity: route.path === '/' ? 1 : 0.6 }" title="Rogédex" />
         </RouterLink>
         <RouterLink to="/jonatrade">
-          <img src="/img/trade.png" :style="{ opacity: route.path === '/jonatrade' ? 1 : 0.6 }" title="Jonatrade" />
+          <img src="/icons/trade.png" :style="{ opacity: route.path === '/jonatrade' ? 1 : 0.6 }" title="Jonatrade" />
         </RouterLink>
       </span>
       <AuthProfile />
@@ -35,13 +35,28 @@ nav {
 }
 
 @media (max-width: 600px) {
+  .splitter {
+    display: block;
+    width: 100%;
+    margin: -10px 0 5px 0;
+  }
+
   nav {
     flex-direction: column;
     align-items: center;
   }
 
+  nav span {
+    position: fixed;
+    bottom: 0;
+    background: #f4f7fa;
+    width: 100%;
+    z-index: 2;
+    box-shadow: 0 0 0.4rem rgba(255, 255, 255, 0.8);
+  }
+
   span img {
-    height: 80px
+    height: 60px
   }
 
   .authProfile {

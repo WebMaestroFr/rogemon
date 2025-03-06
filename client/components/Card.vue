@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" :class="{ 'shaded': showImage }">
     <img v-if="showImage" class="card__image" :src="card.image" :alt="card.name" loading="lazy" />
     <h3 v-else class="card__id">{{ String(card.id).padStart(3, '0') }}</h3>
     <slot />
@@ -38,6 +38,11 @@ defineProps({
   background-size: cover;
 }
 
+.card.shaded {
+  box-shadow:
+    0 0 0.4rem rgba(153, 173, 198, 0.8);
+}
+
 .card__image {
   position: absolute;
   top: 0;
@@ -51,5 +56,11 @@ defineProps({
   font-size: 2em;
   font-weight: bold;
   color: #99adc6;
+}
+
+@media (max-width: 600px) {
+  .card__id {
+    font-size: 1em;
+  }
 }
 </style>

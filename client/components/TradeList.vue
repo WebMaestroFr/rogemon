@@ -1,13 +1,10 @@
 <template>
-  <div v-if="tradesByEmail" class="trade-list">
-    <div
-      v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)"
-      :key="email"
-      class="trade-list__email"
-    >
-      <h2>{{ email }}</h2>
+  <div v-if="tradesByEmail">
+    <img src="/img/splitter.png" class="splitter" />
+    <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email">
+      <div class="hollow"><img src="/icons/user.png" />{{ email.substring(0, email.indexOf('@')) }}</div>
       <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
-        <h3>{{ rarity }}</h3>
+        <img v-for="i in rarity.length" :src="getIcon(rarity)" class="icon" />
         <TradeGroup v-bind="tradeGroups" />
       </div>
     </div>
@@ -26,18 +23,43 @@ const tradesByEmail = ref<ITradeEmailMap>()
 onMounted(async () => {
   tradesByEmail.value = await listTradesByEmail(props.emails)
 })
+
+function getIcon(rarity: string) {
+  switch (rarity) {
+    case '◊':
+    case '◊◊':
+    case '◊◊◊':
+    case '◊◊◊◊': return '/img/diamond.png'
+    case '☆':
+    case '☆☆':
+    case '☆☆☆': return '/img/star.png'
+    default: return '/img/crown.png'
+  }
+}
 </script>
 
 <style scoped>
-.trade-list {
-  display: flex;
-  gap: 2rem;
-  padding: 1rem 0;
+.hollow {
+  margin: auto;
 }
-.trade-list__email {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem 0;
+
+.hollow img {
+  margin-right: 6px;
+}
+
+.icon {
+  height: 20px;
+  margin: 8px 2px;
+}
+
+.splitter {
+  margin-top: -20px;
+  width: 450px;
+}
+
+@media (max-width: 600px) {
+  .splitter {
+    width: 100%;
+  }
 }
 </style>

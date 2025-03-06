@@ -12,9 +12,3 @@ import auth from '../stores/auth'
 
 import Collection from '../components/Collection.vue'
 </script>
-
-<style scoped>
-.rogedex {
-  padding: 8px;
-}
-</style>

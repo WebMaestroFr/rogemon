@@ -1,21 +1,24 @@
 <template>
   <div>
-    <h2><img :src="'/img/' + expansionId + '_en.png'" :alt="name" /></h2>
+    <img src="/img/splitter.png" class="splitter" />
+    <h2><img :src="'/img/' + expansionId + '_en.png'" :alt="name" /><img src="/icons/down.png" class="scroller"
+        @click="scrollToNext" /></h2>
     <div>
-      <Counter :rarity="['◊', '◊◊', '◊◊◊', '◊◊◊◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['☆', '☆☆', '☆☆☆']" icon="/img/star.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['♕', 'Crown Rare']" icon="/img/crown.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['◊', '◊◊', '◊◊◊', '◊◊◊◊']" icon="/icons/collection_diamond.png" :cards="cards"
+        :countMap="countMap" />
+      <Counter :rarity="['☆', '☆☆', '☆☆☆']" icon="/icons/collection_star.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['♕', 'Crown Rare']" icon="/icons/crown.png" :cards="cards" :countMap="countMap" />
     </div>
     <div class="fillers">
-      <Counter :rarity="['◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊')" />
-      <Counter :rarity="['◊◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊')" />
-      <Counter :rarity="['◊◊◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊')" />
-      <Counter :rarity="['◊◊◊◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊◊')" />
+      <Counter :rarity="['◊']" icon="/icons/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊')" />
+      <Counter :rarity="['◊◊']" icon="/icons/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊')" />
+      <Counter :rarity="['◊◊◊']" icon="/icons/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊')" />
+      <Counter :rarity="['◊◊◊◊']" icon="/icons/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊◊')" />
     </div>
     <div>
-      <Counter :rarity="['☆']" icon="/img/star.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['☆☆']" icon="/img/star.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['☆☆☆']" icon="/img/star.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['☆']" icon="/icons/star.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['☆☆']" icon="/icons/star.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['☆☆☆']" icon="/icons/star.png" :cards="cards" :countMap="countMap" />
     </div>
     <div class="cards">
       <CollectionCard v-for="card in cards" :key="card.id" :card="card" :count="countMap[card.id] || 0"
@@ -66,11 +69,24 @@ function decreaseCardRecord(cardId: string) {
 function fill(rarity: string) {
   cards.value.filter(c => c.rarity === rarity).forEach(c => !countMap.value[c.id] && increaseCardRecord(c.id))
 }
+
+function scrollToNext() {
+  for (const h2 of document.querySelectorAll('h2')) {
+    if (h2.offsetTop > window.scrollY + window.innerHeight) {
+      document.querySelector('#app')!.scrollTo({ top: h2.offsetTop - 20, behavior: 'smooth' })
+      return
+    }
+  };
+}
 </script>
 
 <style scoped>
 .fillers div {
   cursor: pointer;
+}
+
+.fillers div:hover {
+  background-color: #cfdbe0;
 }
 
 .cards {
@@ -80,5 +96,34 @@ function fill(rarity: string) {
   padding: 1rem 0;
   max-width: 750px;
   margin: auto;
+}
+
+.splitter {
+  margin-top: -20px;
+  width: 450px;
+}
+
+.scroller {
+  float: right;
+  width: 20px;
+  height: 20px;
+  margin-top: 10px;
+  margin-left: -20px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.scroller:hover {
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .splitter {
+    width: 100%;
+  }
+
+  img {
+    height: 50px;
+  }
 }
 </style>
