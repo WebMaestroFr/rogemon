@@ -10,18 +10,19 @@ import { computed } from 'vue'
 import type { ICard, ICollectionCount } from '../../env'
 
 const props = defineProps<{
-  rarity: string[],
-  icon: string,
-  cards: ICard[],
-  countMap: ICollectionCount,
+  rarity: string[]
+  icon: string
+  cards: ICard[]
+  countMap: ICollectionCount
 }>()
 
-const filteredCards = computed(() => props.cards.filter(c => props.rarity.includes(c.rarity)));
+const filteredCards = computed(() => props.cards.filter((c) => props.rarity.includes(c.rarity)))
 
 const count = computed(() => {
-  const ids = filteredCards.value.map(c => c.id);
-  return Object.entries(props.countMap).filter(([id, count]) => ids.includes(id) && count > 0).length;
-});
+  const ids = filteredCards.value.map((c) => c.id)
+  return Object.entries(props.countMap).filter(([id, count]) => ids.includes(id) && count > 0)
+    .length
+})
 </script>
 
 <style scoped>
