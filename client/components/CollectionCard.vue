@@ -50,4 +50,10 @@ img {
   padding: 0 20px;
   border-top-right-radius: 10px;
 }
+
+@media (max-width: 600px) {
+  .trash {
+    opacity: 1;
+  }
+}
 </style>
