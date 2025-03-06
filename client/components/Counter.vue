@@ -32,9 +32,9 @@ small {
 
 @media (max-width: 600px) {
   .hollow {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     line-height: 1rem;
-    padding: 0 6px;
+    padding: 1px 6px;
   }
 
   .hollow span {
@@ -42,8 +42,8 @@ small {
   }
 
   .hollow img {
-    height: 0.6rem;
-    margin-top: 1px;
+    height: 0.7rem;
+    margin-top: 2px;
   }
 }
 </style>
