@@ -3,12 +3,12 @@
     <div v-if="ask.length" :class="{ stacked }" @click="stacked = false">
       <ExpansionCard v-for="card in ask" :key="card.cardId" :card-id="card.cardId" :expansion-id="card.expansionId" />
     </div>
-    <Card v-else />
+    <Card v-else :show-image="false" />
     <img src="/icons/trade_arrows.png" />
     <div v-if="offer.length" :class="{ stacked }" @click="stacked = false">
       <ExpansionCard v-for="card in offer" :key="card.cardId" :card-id="card.cardId" :expansion-id="card.expansionId" />
     </div>
-    <Card v-else />
+    <Card v-else :show-image="false" />
   </div>
 </template>
 
