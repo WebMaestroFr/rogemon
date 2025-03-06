@@ -1,13 +1,16 @@
 <template>
-  <form class="authSignIn" @submit.prevent="auth.signInOrUp({ email, password })">
-    <input v-model="email" type="text" placeholder="Email" />
-    <input v-model="password" type="password" placeholder="Password" />
-    <button type="submit">Sign In</button>
+  <form @submit.prevent="auth.signInOrUp({ email, password })">
+    <Rogemon />
+    <div class="hollow"><img src="/img/email.png" /><input type="text" v-model="email" placeholder="Email" /></div>
+    <div class="hollow"><img src="/img/pw.png" /><input type="password" v-model="password" placeholder="Password" />
+    </div>
+    <button :disabled="email.length < 10 || password.length < 6" type="submit">Sign in</button>
   </form>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import Rogemon from '../Rogemon.vue'
 import auth from '@client/stores/auth'
 
 const email = ref('')
@@ -15,8 +18,22 @@ const password = ref('')
 </script>
 
 <style scoped>
-.authSignIn {
+form {
+  padding-top: 24px;
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+}
+
+input {
+  background: none;
+  border: none;
+  outline: none;
+  padding-left: 6px;
+  width: 140px;
+}
+
+button {
+  width: 190px;
 }
 </style>

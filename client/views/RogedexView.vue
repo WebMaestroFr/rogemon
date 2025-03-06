@@ -15,10 +15,6 @@ import Collection from '../components/Collection.vue'
 
 <style scoped>
 .rogedex {
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(auto-fill, minmax(512px, 1fr));
-  grid-template-rows: masonry;
-  padding: 1rem 0;
+  padding: 8px;
 }
 </style>

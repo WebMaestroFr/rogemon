@@ -1,50 +1,45 @@
 <template>
-  <header class="app__header">
-    <h1 @click="toggleAudio">Rogémon</h1>
-    <nav class="app__nav">
-      <RouterLink to="/">Rogédex</RouterLink>
-      <RouterLink to="/jonatrade">Jonatrade</RouterLink>
+  <AuthSignIn v-if="!auth.getToken()" />
+  <template v-else>
+    <nav>
+      <Rogemon />
+      <span>
+        <RouterLink to="/"><img src="/img/dex.png" title="Rogédex" /></RouterLink>
+        <RouterLink to="/jonatrade"><img src="/img/trade.png" title="Jonatrade" /></RouterLink>
+      </span>
+      <AuthProfile />
     </nav>
-    <AuthProfile v-if="auth.getToken()" />
-    <AuthSignIn v-else />
-  </header>
-  <RouterView />
+    <RouterView />
+  </template>
 </template>
 
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import auth from './stores/auth'
 
+import Rogemon from './components/Rogemon.vue'
 import AuthProfile from './components/Auth/AuthProfile.vue'
 import AuthSignIn from './components/Auth/AuthSignIn.vue'
-
-const audio = new Audio('audio/theme.mp3')
-onUnmounted(() => {
-  audio.pause()
-})
-function toggleAudio() {
-  if (audio.paused) {
-    audio.play()
-  } else {
-    audio.pause()
-  }
-}
 </script>
 
 <style scoped>
-.app__header {
+nav {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
 }
-.app__header h1 {
-  cursor: pointer;
-}
-.app__nav {
-  display: flex;
-  gap: 0 1rem;
-  padding: 1rem 0;
+
+@media (max-width: 600px) {
+  nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  span img {
+    height: 80px
+  }
+
+  .authProfile {
+    display: none;
+  }
 }
 </style>

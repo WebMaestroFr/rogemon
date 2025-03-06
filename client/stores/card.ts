@@ -7,7 +7,7 @@ export function getCardCount(expansionId: ExpansionId, cardId: string): number {
 
 export function setCardCount(expansionId: ExpansionId, cardId: string, count: number) {
   const collection = getCollection(expansionId)
-  if (count === 0) {
+  if (count < 1) {
     delete collection[cardId]
   } else {
     collection[cardId] = count

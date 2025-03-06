@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <img v-if="showImage" class="card__image" :src="card.image" :alt="card.name" />
+    <img v-if="showImage" class="card__image" :src="card.image" :alt="card.name" loading="lazy" />
     <h3 v-else class="card__id">{{ String(card.id).padStart(3, '0') }}</h3>
     <slot />
   </div>
@@ -27,19 +27,17 @@ defineProps({
   position: relative;
   aspect-ratio: 367/512;
   box-shadow:
-    inset 0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.2),
+    inset 0.2rem 0.2rem 0.4rem rgba(153, 173, 198, 0.4),
     inset -0.2rem -0.2rem 0.4rem rgba(255, 255, 255, 0.8);
   border-radius: 0.2rem;
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   padding: 0.8em 0.4em;
   background-size: cover;
-  gap: 0.5em;
-  min-height: 256px;
-  max-height: 512px;
 }
+
 .card__image {
   position: absolute;
   top: 0;
@@ -48,9 +46,10 @@ defineProps({
   height: 100%;
   z-index: -1;
 }
+
 .card__id {
   font-size: 2em;
   font-weight: bold;
-  color: #888;
+  color: #99adc6;
 }
 </style>

@@ -1,29 +1,7 @@
 <template>
-  <Card class="collection-card" :card="card" :show-image="count > 0">
-    <div class="collection-card__buttons">
-      <button
-        :class="[
-          'collection-card__button-decrease',
-          count === -1
-            ? 'collection-card__button-decrease--on'
-            : 'collection-card__button-decrease--off',
-        ]"
-        @click="$emit('decrease')"
-      >
-        {{ count > 0 ? '-' : '✗' }}
-      </button>
-      <button
-        :class="[
-          'collection-card__button-increase',
-          count > 2
-            ? 'collection-card__button-increase--on'
-            : 'collection-card__button-increase--off',
-        ]"
-        @click="$emit('increase')"
-      >
-        {{ count > 0 ? `×${count}` : '✓' }}
-      </button>
-    </div>
+  <Card :card="card" :show-image="count > 0" @click="$emit('increase')">
+    <span class="trash" v-show="count > 0" @click.stop="$emit('decrease')"><img src="/img/trash.png" /></span>
+    <span class="counter" v-show="count > 0" v-text="count" />
   </Card>
 </template>
 
@@ -36,36 +14,40 @@ defineEmits(['decrease', 'increase'])
 </script>
 
 <style scoped>
-.collection-card__buttons {
-  display: flex;
-  gap: 0.4rem;
-  justify-content: center;
-}
-.collection-card__buttons button {
-  border: none;
-  border-radius: 50%;
-  padding: 0;
-  text-align: center;
-  width: 2.4rem;
-  height: 2.4rem;
+.card {
   cursor: pointer;
-  font-size: 1.6rem;
-  box-shadow: 0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
 }
-.collection-card__button-decrease {
-  color: red;
-  background-color: white;
+
+.card:hover .trash {
+  opacity: 1;
 }
-.collection-card__button-decrease--on {
+
+.trash {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  background: #444;
+  border-bottom-left-radius: 10px;
+  padding: 0 16px;
+  line-height: 20px;
+}
+
+img {
+  width: 16px;
+  vertical-align: text-top;
+}
+
+.counter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: inline-block;
+  background: #444;
   color: white;
-  background-color: red;
-}
-.collection-card__button-increase {
-  color: green;
-  background-color: white;
-}
-.collection-card__button-increase--on {
-  color: white;
-  background-color: green;
+  font-weight: bold;
+  padding: 0 20px;
+  border-top-right-radius: 10px;
 }
 </style>

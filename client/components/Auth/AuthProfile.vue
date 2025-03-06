@@ -1,7 +1,6 @@
 <template>
   <div class="authProfile">
-    <span>{{ email }}</span>
-    <button @click="auth.signOut">Sign Out</button>
+    <div class="hollow" @click="auth.signOut"><img src="/img/logout.png" /><span v-text="email" /></div>
   </div>
 </template>
 
@@ -19,7 +18,17 @@ onMounted(async () => {
 
 <style scoped>
 .authProfile {
-  display: flex;
-  gap: 1rem;
+  margin: 12px;
+  width: 226px;
+  text-align: right;
+}
+
+.hollow {
+  cursor: pointer;
+  color: #99adc6;
+}
+
+.hollow span {
+  padding-left: 8px;
 }
 </style>
