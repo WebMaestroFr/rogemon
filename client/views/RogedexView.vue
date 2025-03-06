@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-bottom: 80px;">
+  <div style="padding-bottom: 60px;">
     <Collection expansionId="A1" name="Genetic Apex" />
     <Collection expansionId="A1a" name="Mythical Island" />
     <Collection expansionId="A2" name="Space-Time Smackdown" />
