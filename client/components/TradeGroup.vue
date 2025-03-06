@@ -47,5 +47,6 @@ img {
 .card {
   height: 150px;
   margin-bottom: 8px;
+  z-index: 1;
 }
 </style>
