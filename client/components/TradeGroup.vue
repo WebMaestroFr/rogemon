@@ -1,5 +1,5 @@
 <template>
-  <div class="tradeGroup">
+  <div v-if="ask.length || offer.length" class="tradeGroup">
     <div>
       <ExpansionCard
         v-for="card in ask"
@@ -37,5 +37,8 @@ defineProps<{ ask: ITradeCard[]; offer: ITradeCard[] }>()
 .tradeGroup__arrow {
   font-size: 6em;
   line-height: 0;
+}
+.card {
+  min-height: 150px;
 }
 </style>
