@@ -53,8 +53,9 @@ function getIcon(rarity: string) {
 }
 
 .splitter {
-  margin-top: -20px;
+  margin: -20px auto 10px auto;
   width: 450px;
+  display: block;
 }
 
 @media (max-width: 600px) {
