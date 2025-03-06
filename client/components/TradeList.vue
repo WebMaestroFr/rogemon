@@ -1,12 +1,12 @@
 <template>
   <div v-if="tradesByEmail" class="trade-list">
     <div
-      v-for="[email, tradesByRarity] in tradesByEmail.entries()"
+      v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)"
       :key="email"
       class="trade-list__email"
     >
       <h2>{{ email }}</h2>
-      <div v-for="[rarity, tradeGroups] in tradesByRarity.entries()" :key="rarity">
+      <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
         <h3>{{ rarity }}</h3>
         <TradeGroup v-bind="tradeGroups" />
       </div>
@@ -18,7 +18,7 @@
 import { onMounted, ref } from 'vue'
 import { listTradesByEmail } from '@client/stores/trade'
 import type { ITradeEmailMap } from '../../env'
-import type TradeGroup from './TradeGroup.vue'
+import TradeGroup from './TradeGroup.vue'
 
 const props = defineProps<{ emails: string[] }>()
 const tradesByEmail = ref<ITradeEmailMap>()

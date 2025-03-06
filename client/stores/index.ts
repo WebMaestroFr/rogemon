@@ -13,6 +13,8 @@ function remove(key: string) {
   localStorage.removeItem(key)
 }
 
+export default { get, set, remove }
+
 const debounceTimerMap = new Map<string, ReturnType<typeof setTimeout>>()
 export function debounce<T>(key: string, callback: () => Promise<T>, timeout = 2000) {
   const prevTimer = debounceTimerMap.get(key)
@@ -35,5 +37,3 @@ export function debounce<T>(key: string, callback: () => Promise<T>, timeout = 2
 export function isDebouncePending() {
   return debounceTimerMap.size > 0
 }
-
-export default { debounce, get, set, remove }

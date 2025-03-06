@@ -59,40 +59,42 @@ export default async function listUserTrades(req: Request, res: Response, next: 
       if (!userCollection || !otherUser) {
         return emailTrades
       }
-      const emailTrade = emailTrades.get(otherUser.email) || new Map<string, ITrade>()
+      const emailTrade = emailTrades[otherUser.email] || new Map<string, ITrade>()
       const cardIds = new Set([
         ...userCollection.countMap.keys(),
         ...otherCollection.countMap.keys(),
       ])
       for (const cardId of cardIds) {
-        const userCount = userCollection.countMap.get(cardId) || 0
-        const otherCount = otherCollection.countMap.get(cardId) || 0
-        if ((userCount > 0 && otherCount > 0) || (userCount < 1 && otherCount < 1)) {
+        const userCount = userCollection.countMap.get(cardId)
+        const otherCount = otherCollection.countMap.get(cardId)
+        if (
+          userCount === undefined ||
+          otherCount === undefined ||
+          (userCount > 0 && otherCount > 0) ||
+          (userCount < 1 && otherCount < 1)
+        ) {
           continue
         }
         const rarity = getCardRarity(otherCollection.expansionId, cardId)
-        console.log(otherCollection.expansionId, cardId, { userCount, otherCount, rarity })
-        const rarityTrade = emailTrade.get(rarity) || { ask: [], offer: [] }
+        const rarityTrade = emailTrade[rarity] || { ask: [], offer: [] }
         if (userCount < 1 && otherCount > 1) {
-          console.log(`User ${userEmail} wants ${cardId} from ${otherUser.email}`)
           rarityTrade.offer.push({
             cardId,
             expansionId: otherCollection.expansionId,
             priority: Math.min(otherCount, 3) - userCount,
           })
         } else if (userCount > 1 && otherCount < 1) {
-          console.log(`User ${userEmail} has ${cardId} for ${otherUser.email}`)
           rarityTrade.ask.push({
             cardId,
             expansionId: otherCollection.expansionId,
             priority: Math.min(userCount, 3) - otherCount,
           })
         }
-        emailTrade.set(rarity, rarityTrade)
+        emailTrade[rarity] = rarityTrade
       }
-      emailTrades.set(otherUser.email, emailTrade)
+      emailTrades[otherUser.email] = emailTrade
       return emailTrades
-    }, new Map())
+    }, {})
 
     return sendData(res, 200, emailTrades)
   } catch (err) {
