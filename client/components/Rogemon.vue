@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 const audio = new Audio('audio/theme.mp3')
-const toggleAudio = () => audio.paused ? audio.play() : audio.pause();
+const toggleAudio = () => (audio.paused ? audio.play() : audio.pause())
 </script>
 
 <style scoped>
