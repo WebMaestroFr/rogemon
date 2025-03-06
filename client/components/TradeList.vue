@@ -3,9 +3,11 @@
     <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email">
       <img src="/img/splitter.png" class="splitter" />
       <div class="hollow"><img src="/icons/user.png" />{{ email.substring(0, email.indexOf('@')) }}</div>
-      <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
-        <img v-for="i in rarity.length" :src="getIcon(rarity)" class="icon" />
-        <TradeGroup v-bind="tradeGroups" />
+      <div class="trades">
+        <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
+          <img v-for="i in rarity.length" :src="getIcon(rarity)" class="icon" />
+          <TradeGroup v-bind="tradeGroups" />
+        </div>
       </div>
     </div>
   </div>
@@ -39,6 +41,14 @@ function getIcon(rarity: string) {
 </script>
 
 <style scoped>
+.trades {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 40px;
+  margin: 10px 0;
+}
+
 .hollow {
   margin: auto;
 }
