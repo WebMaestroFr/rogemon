@@ -2,15 +2,15 @@
   <div>
     <h2><img :src="'/img/' + expansionId + '_en.png'" :alt="name" /></h2>
     <div>
-      <Counter :rarity="['◊', '◊◊', '◊◊◊', '◊◊◊◊']" icon="/img/rarity_1.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['☆', '☆☆', '☆☆☆']" icon="/img/rarity_2.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['♕', 'Crown Rare']" icon="/img/rarity_3.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['◊', '◊◊', '◊◊◊', '◊◊◊◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['☆', '☆☆', '☆☆☆']" icon="/img/star.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['♕', 'Crown Rare']" icon="/img/crown.png" :cards="cards" :countMap="countMap" />
     </div>
     <div class="fillers">
-      <Counter :rarity="['◊']" icon="/img/losange.png" :cards="cards" :countMap="countMap" @click="fill('◊')" />
-      <Counter :rarity="['◊◊']" icon="/img/losange.png" :cards="cards" :countMap="countMap" @click="fill('◊◊')" />
-      <Counter :rarity="['◊◊◊']" icon="/img/losange.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊')" />
-      <Counter :rarity="['◊◊◊◊']" icon="/img/losange.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊◊')" />
+      <Counter :rarity="['◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊')" />
+      <Counter :rarity="['◊◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊')" />
+      <Counter :rarity="['◊◊◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊')" />
+      <Counter :rarity="['◊◊◊◊']" icon="/img/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊◊')" />
     </div>
     <div>
       <Counter :rarity="['☆']" icon="/img/star.png" :cards="cards" :countMap="countMap" />
