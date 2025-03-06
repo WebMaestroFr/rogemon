@@ -14,7 +14,6 @@
       <AuthProfile />
     </nav>
     <RouterView />
-    <div class="padder" />
   </template>
 </template>
 
@@ -56,10 +55,6 @@ nav {
 
   .authProfile {
     display: none;
-  }
-
-  .padder {
-    height: 60px;
   }
 }
 </style>
