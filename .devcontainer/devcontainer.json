@@ -7,10 +7,11 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "foxundermoon.shell-format",
         "christian-kohler.npm-intellisense",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
+        "foxundermoon.shell-format",
+        "github.vscode-github-actions",
         "mongodb.mongodb-vscode",
         "ms-vscode-remote.remote-containers",
         "ms-vscode.vscode-typescript-next",
