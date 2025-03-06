@@ -1,0 +1,22 @@
+name: Continuous Integration
+on:
+  pull_request:
+
+jobs:
+  ci:
+    name: 🚀 Continuous Integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📁 Checkout Project
+        uses: actions/checkout@v4
+      - name: 🌳 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: 📦 Install Node Dependencies
+        run: npm clean-install
+      - name: 🔍 Check Types
+        run: npx vue-tsc --noEmit
+      - name: 🛠 Run Unit Tests
+        run: npx vitest --coverage.enabled true
