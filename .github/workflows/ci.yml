@@ -1,9 +1,10 @@
+name: Continuous Integration
 on:
   pull_request:
 
 jobs:
   ci:
-    name: 🚀 Continuous Integration
+    name: 🚀
     runs-on: ubuntu-latest
     steps:
       - name: 📁 Checkout Project
@@ -15,7 +16,7 @@ jobs:
           cache: 'npm'
       - name: 📦 Install Node Dependencies
         run: npm clean-install
-      - name: 🛠 Build Project
-        run: npm run build
+      - name: 🛠 Check Types
+        run: npx vue-tsc --noEmit
       - name: 🔍 Run Unit Tests
-        run: npm run test
+        run: npx vitest --coverage.enabled true
