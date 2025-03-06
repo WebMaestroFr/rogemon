@@ -1,0 +1,22 @@
+name: 🚀 Continuous Integration
+
+on:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 📁 Checkout Project
+      uses: actions/checkout@v4
+    - name: 🌳 Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
+    - name: 📦 Install Node Dependencies
+      run: npm clean-install
+    - name: 🛠 Build Project
+      run: npm run build
+    - name: 🔍 Run Unit Tests
+      run: npm run test
