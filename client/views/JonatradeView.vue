@@ -1,8 +1,9 @@
 <template>
   <div v-if="tradesByEmail">
-    <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email">
+    <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email" class="user">
       <img src="/img/splitter.png" class="splitter" />
       <div class="hollow"><img src="/icons/user.png" />{{ email.substring(0, email.indexOf('@')) }}</div>
+      <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
       <div class="trades">
         <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
           <img v-for="i in rarity.length" :src="getIcon(rarity)" class="icon" />
@@ -38,6 +39,16 @@ function getIcon(rarity: string) {
     default: return '/img/crown.png'
   }
 }
+
+function scrollToNext() {
+  for (const scroller of document.querySelectorAll('.scroller')) {
+    const next = scroller as HTMLImageElement
+    if (next.offsetTop > window.scrollY + window.innerHeight) {
+      window.scrollTo({ top: next.offsetTop - 20, behavior: 'smooth' })
+      return
+    }
+  };
+}
 </script>
 
 <style scoped>
@@ -66,6 +77,24 @@ function getIcon(rarity: string) {
   margin: -50px auto 30px auto;
   width: 450px;
   display: block;
+}
+
+.scroller {
+  float: right;
+  width: 20px;
+  height: 20px;
+  margin-top: 10px;
+  margin-left: -20px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.scroller:hover {
+  opacity: 1;
+}
+
+.user:last-child .scroller {
+  visibility: hidden;
 }
 
 @media (max-width: 600px) {
