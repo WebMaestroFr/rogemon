@@ -1,11 +1,11 @@
 <template>
   <div class="tradeGroup">
-    <div v-if="ask.length" :class="{ stacked }" @click="stacked = false">
+    <div v-if="ask.length" :class="{ stacked, clickable: ask.length > 1 }" @click="stacked = !stacked">
       <ExpansionCard v-for="card in ask" :key="card.cardId" :card-id="card.cardId" :expansion-id="card.expansionId" />
     </div>
     <Card v-else :show-image="false" />
     <img src="/icons/trade_arrows.png" />
-    <div v-if="offer.length" :class="{ stacked }" @click="stacked = false">
+    <div v-if="offer.length" :class="{ stacked, clickable: offer.length > 1 }" @click="stacked = !stacked">
       <ExpansionCard v-for="card in offer" :key="card.cardId" :card-id="card.cardId" :expansion-id="card.expansionId" />
     </div>
     <Card v-else :show-image="false" />
@@ -36,7 +36,7 @@ img {
   opacity: 0.6;
 }
 
-.stacked {
+.clickable {
   cursor: pointer;
 }
 
