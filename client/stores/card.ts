@@ -2,17 +2,17 @@ import type { ExpansionId, ICard } from '../../env'
 import { getCollection, setCollectionCount } from './collection'
 
 export function getCardCount(expansionId: ExpansionId, cardId: string): number {
-  return getCollection(expansionId)[cardId] || 0
+  return getCollection(expansionId).countMap[cardId] || 0
 }
 
 export function setCardCount(expansionId: ExpansionId, cardId: string, count: number) {
   const collection = getCollection(expansionId)
   if (count < 1) {
-    delete collection[cardId]
+    delete collection.countMap[cardId]
   } else {
-    collection[cardId] = count
+    collection.countMap[cardId] = count
   }
-  setCollectionCount(expansionId, collection)
+  setCollectionCount(expansionId, collection.countMap)
 }
 
 const cardsCacheMap = new Map<string, Promise<ICard[]>>()

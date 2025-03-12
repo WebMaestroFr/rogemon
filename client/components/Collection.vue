@@ -1,36 +1,85 @@
 <template>
   <div class="collection">
     <img src="/img/splitter.png" class="splitter" />
-    <h2><img :src="'/img/' + expansionId + '_en.png'" :alt="name" /><img src="/icons/down.png" class="scroller"
-        @click="scrollToNext" /></h2>
+    <h2>
+      <img :src="'/img/' + expansionId + '_en.png'" :alt="name" /><img
+        src="/icons/down.png"
+        class="scroller"
+        @click="scrollToNext"
+      />
+    </h2>
     <div>
-      <Counter :rarity="['◊', '◊◊', '◊◊◊', '◊◊◊◊']" icon="/icons/collection_diamond.png" :cards="cards"
-        :countMap="countMap" />
-      <Counter :rarity="['☆', '☆☆', '☆☆☆']" icon="/icons/collection_star.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['♕', 'Crown Rare']" icon="/icons/crown.png" :cards="cards" :countMap="countMap" />
+      <Counter
+        :rarity="['◊', '◊◊', '◊◊◊', '◊◊◊◊']"
+        icon="/icons/collection_diamond.png"
+        :cards="cards"
+        :count-map="countMap"
+      />
+      <Counter
+        :rarity="['☆', '☆☆', '☆☆☆']"
+        icon="/icons/collection_star.png"
+        :cards="cards"
+        :count-map="countMap"
+      />
+      <Counter
+        :rarity="['♕', 'Crown Rare']"
+        icon="/icons/crown.png"
+        :cards="cards"
+        :count-map="countMap"
+      />
     </div>
     <div class="fillers">
-      <Counter :rarity="['◊']" icon="/icons/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊')" />
-      <Counter :rarity="['◊◊']" icon="/icons/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊')" />
-      <Counter :rarity="['◊◊◊']" icon="/icons/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊')" />
-      <Counter :rarity="['◊◊◊◊']" icon="/icons/diamond.png" :cards="cards" :countMap="countMap" @click="fill('◊◊◊◊')" />
+      <Counter
+        :rarity="['◊']"
+        icon="/icons/diamond.png"
+        :cards="cards"
+        :count-map="countMap"
+        @click="fill('◊')"
+      />
+      <Counter
+        :rarity="['◊◊']"
+        icon="/icons/diamond.png"
+        :cards="cards"
+        :count-map="countMap"
+        @click="fill('◊◊')"
+      />
+      <Counter
+        :rarity="['◊◊◊']"
+        icon="/icons/diamond.png"
+        :cards="cards"
+        :count-map="countMap"
+        @click="fill('◊◊◊')"
+      />
+      <Counter
+        :rarity="['◊◊◊◊']"
+        icon="/icons/diamond.png"
+        :cards="cards"
+        :count-map="countMap"
+        @click="fill('◊◊◊◊')"
+      />
     </div>
     <div>
-      <Counter :rarity="['☆']" icon="/icons/star.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['☆☆']" icon="/icons/star.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['☆☆☆']" icon="/icons/star.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
+      <Counter :rarity="['☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
+      <Counter :rarity="['☆☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
     </div>
     <div class="cards">
-      <CollectionCard v-for="card in cards" :key="card.id" :card="card" :count="countMap[card.id] || 0"
-        class="collection__card" @increase="() => increaseCardRecord(card.id)"
-        @decrease="() => decreaseCardRecord(card.id)" />
+      <CollectionCard
+        v-for="card in cards"
+        :key="card.id"
+        :card="card"
+        :count="countMap[card.id] || 0"
+        class="collection__card"
+        @increase="() => increaseCardCount(card.id)"
+        @decrease="() => decreaseCardCount(card.id)"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import type { ExpansionId, ICard, ICollectionCount } from '../../env'
+import type { ExpansionId, ICard, ICollection } from '../../env'
 import { setCardCount } from '@client/stores/card'
 import { loadCollection } from '@client/stores/collection'
 import CollectionCard from './CollectionCard.vue'
@@ -38,15 +87,18 @@ import Counter from './Counter.vue'
 
 const props = defineProps<{ expansionId: ExpansionId; name: string }>()
 const cards = ref<ICard[]>([])
-const countMap = ref<ICollectionCount>({})
+const countMap = ref<ICollection['countMap']>({})
+const statusMap = ref<ICollection['statusMap']>({})
 
 onMounted(async () => {
   const cardsResponse = await fetch(`cards/${props.expansionId}.json`)
   cards.value = await cardsResponse.json()
-  countMap.value = await loadCollection(props.expansionId)
+  const collection = await loadCollection(props.expansionId)
+  countMap.value = collection.countMap
+  statusMap.value = collection.statusMap
 })
 
-function increaseCardRecord(cardId: string) {
+function increaseCardCount(cardId: string) {
   if (countMap.value[cardId] === undefined || countMap.value[cardId] === -1) {
     countMap.value[cardId] = 1
   } else if (cardId in countMap.value) {
@@ -55,7 +107,7 @@ function increaseCardRecord(cardId: string) {
   setCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 
-function decreaseCardRecord(cardId: string) {
+function decreaseCardCount(cardId: string) {
   if (countMap.value[cardId] === -1) {
     countMap.value[cardId] = 0
   } else if (countMap.value[cardId] === undefined || countMap.value[cardId] <= 1) {
@@ -67,7 +119,9 @@ function decreaseCardRecord(cardId: string) {
 }
 
 function fill(rarity: string) {
-  cards.value.filter(c => c.rarity === rarity).forEach(c => !countMap.value[c.id] && increaseCardRecord(c.id))
+  cards.value
+    .filter((c) => c.rarity === rarity)
+    .forEach((c) => !countMap.value[c.id] && increaseCardCount(c.id))
 }
 
 function scrollToNext() {
@@ -76,7 +130,7 @@ function scrollToNext() {
       document.querySelector('#app')!.scrollTo({ top: h2.offsetTop - 20, behavior: 'smooth' })
       return
     }
-  };
+  }
 }
 </script>
 

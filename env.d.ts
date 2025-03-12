@@ -1,11 +1,19 @@
 /// <reference types="vite/client" />
 
-import { IUser } from './api/models/user'
+import type { ICollection as ICollectionModel } from './api/models/collection'
+import type { IUser as IUserModel } from './api/models/user'
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: IUser | null
+export interface ICollection extends ICollectionModel {
+  _id: string
+  countMap: {
+    [cardId: string]: number
   }
+  statusMap: {
+    [cardId: string]: 'ask' | 'offer' | null
+  }
+}
+export interface IUser extends IUserModel {
+  _id: string
 }
 
 export interface ICard {
@@ -44,10 +52,6 @@ export interface ICard {
 }
 
 export type ExpansionId = 'A1' | 'A1a' | 'A2' | 'A2a'
-
-export interface ICollectionCount {
-  [cardId: string]: number
-}
 
 export interface ITradeCard {
   cardId: string

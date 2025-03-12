@@ -20,3 +20,5 @@ jobs:
         run: npx vue-tsc --noEmit
       - name: 🛠 Run Unit Tests
         run: npx vitest --coverage.enabled true
+      - name: 🪛 Lint Codebase
+        run: npx eslint . --no-ignore

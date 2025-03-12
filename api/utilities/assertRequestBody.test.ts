@@ -36,19 +36,18 @@ it('should send an error if validation fails', () => {
 })
 
 it('should validate array fields', () => {
-  const [req, res] = mockExpressArguments({ body: { tags: ['tag1', 'tag2'] } })
+  const [req, res] = mockExpressArguments({ body: { tags: ['tag1', 'tag2', 'tag3'] } })
   const validationRules: IValidationRules = {
-    tags: { array: true, minLength: 3 },
+    tags: { type: 'array', minLength: 3 },
   }
-
   const validationProcess = () => assertRequestBody(req.body, res, validationRules)
   expect(validationProcess).not.toThrow()
 })
 
 it('should send an error if array validation fails', () => {
-  const [req, res] = mockExpressArguments({ body: { tags: ['t1', 't2'] } })
+  const [req, res] = mockExpressArguments({ body: { tags: ['tag1', 'tag2'] } })
   const validationRules: IValidationRules = {
-    tags: { array: true, minLength: 3 },
+    tags: { type: 'array', minLength: 3 },
   }
 
   const validationProcess = () => assertRequestBody(req.body, res, validationRules)
