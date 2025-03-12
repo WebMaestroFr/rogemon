@@ -124,7 +124,7 @@ function fill(rarity: string) {
 function scrollToNext() {
   for (const h2 of document.querySelectorAll('h2')) {
     if (h2.offsetTop > window.scrollY + window.innerHeight) {
-      document.querySelector('#app')!.scrollTo({ top: h2.offsetTop - 20, behavior: 'smooth' })
+      window.scrollTo({ top: h2.offsetTop - 20, behavior: 'smooth' })
       return
     }
   }
@@ -162,7 +162,6 @@ function scrollToNext() {
   float: right;
   width: 20px;
   height: 20px;
-  margin-top: 10px;
   margin-left: -20px;
   cursor: pointer;
   opacity: 0.6;
@@ -170,6 +169,10 @@ function scrollToNext() {
 
 .scroller:hover {
   opacity: 1;
+}
+
+.collection:last-child .scroller {
+  visibility: hidden;
 }
 
 @media (max-width: 600px) {
