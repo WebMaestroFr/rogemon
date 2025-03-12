@@ -35,7 +35,7 @@ export default async function listUserTrades(req: Request, res: Response, next: 
   try {
     assertRequestUser(req.user, res)
     assertRequestBody<{ emails: string[] }>(req.body, res, {
-      emails: { required: true, email: true, array: true },
+      emails: { required: true, email: true, type: 'array' },
     })
 
     const userId = req.user._id

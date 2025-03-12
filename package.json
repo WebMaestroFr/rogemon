@@ -13,7 +13,7 @@
     "build:app": "vite build",
     "build:server": "tsc --project tsconfig.server.json && tsc-alias --project tsconfig.server.json",
     "format": "prettier . --write",
-    "lint": "eslint . --fix --no-ignore",
+    "lint": "eslint . --fix",
     "test": "run-p test:*",
     "test:type": "vue-tsc --watch --preserveWatchOutput",
     "test:unit": "vitest"
