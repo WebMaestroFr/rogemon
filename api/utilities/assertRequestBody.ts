@@ -7,7 +7,8 @@ export interface IValidationRule {
   label?: string
   minLength?: number
   required?: boolean
-  array?: boolean
+  type?: 'object' | 'array' | 'string' | 'number' | 'boolean'
+  rules?: IValidationRules
 }
 
 export interface IValidationRules {
@@ -33,7 +34,7 @@ const EMAIL_REGEX =
  * @param {IValidationRules} [validationRules] - Optional validation rules to validate the request body against.
  * @throws Will throw an error if the request body is missing or if validation fails.
  */
-export default function assertRequestBody<T = { [key: string]: string }>(
+export default function assertRequestBody<T>(
   body: Request['body'],
   res: Response,
   validationRules?: IValidationRules,
@@ -44,7 +45,7 @@ export default function assertRequestBody<T = { [key: string]: string }>(
   }
   if (validationRules) {
     try {
-      validateRequestBody(body, validationRules)
+      validateObject(body, 'Request body', validationRules)
     } catch (error) {
       if (error instanceof ValidationError) {
         sendError(res, 400, error.message)
@@ -54,20 +55,35 @@ export default function assertRequestBody<T = { [key: string]: string }>(
   }
 }
 
-function validateRequestBody(
-  body: Exclude<Request['body'], null>,
-  validationRules: IValidationRules,
+function assertRecordObject(
+  input: unknown,
+  label: string,
+): asserts input is Record<string, unknown> {
+  if (typeof input !== 'object' || input === null) {
+    throw new ValidationError(`${label} should be an object`, input)
+  }
+}
+
+function validateObject(
+  input: unknown,
+  label: string,
+  rules?: IValidationRules,
+  allowUnknownKeys = false,
 ) {
-  for (const [key, rule] of Object.entries(validationRules)) {
-    const input = body[key]
-    const label = rule.label || key
-
-    if (rule.array) {
-      validateArray(input, label, rule)
-      continue
+  assertRecordObject(input, label)
+  if (rules) {
+    if (!allowUnknownKeys) {
+      for (const key of Object.keys(input)) {
+        if (!(key in rules)) {
+          throw new ValidationError(`${label} includes unknown key ${key}`, input)
+        }
+      }
     }
-
-    validateField(input, label, rule)
+    for (const [key, fieldRule] of Object.entries(rules)) {
+      const value = input[key] as unknown
+      const label = fieldRule.label || key
+      assertValidType(value, label, fieldRule)
+    }
   }
 }
 
@@ -76,25 +92,65 @@ function validateArray(input: unknown, label: string, rule: IValidationRule) {
     throw new ValidationError(`${label} should be an array`, input)
   }
 
+  const { minLength, type, ...fieldRule } = rule
+
+  if (minLength && input.length < minLength) {
+    throw new ValidationError(`${label} should have at least ${minLength} items`, input)
+  }
+
   for (const value of input) {
-    validateField(value, label, rule)
+    assertValidType(value, label, fieldRule)
   }
 }
 
-function validateField(input: unknown, label: string, rule: IValidationRule) {
+function validateNumber(input: unknown, label: string, _rule: IValidationRule) {
+  if (typeof input !== 'number') {
+    throw new ValidationError(`${label} should be a number`, input)
+  }
+}
+
+function validateBoolean(input: unknown, label: string, _rule: IValidationRule) {
+  if (typeof input !== 'boolean') {
+    throw new ValidationError(`${label} should be a boolean`, input)
+  }
+}
+
+function validateString(input: unknown, label: string, rule: IValidationRule) {
+  if (typeof input !== 'string') {
+    throw new ValidationError(`${label} should be a string`, input)
+  }
+  if (rule.minLength && String(input).length < rule.minLength) {
+    throw new ValidationError(`${label} should have at least ${rule.minLength} characters`, input)
+  }
+  if (rule.email && !String(input).match(EMAIL_REGEX)) {
+    throw new ValidationError(`${label} should be a valid email address`, input)
+  }
+}
+
+function assertValidType<T = Record<string, unknown>>(
+  input: unknown,
+  label: string,
+  rule: IValidationRule,
+): asserts input is T {
   if (rule.required && !input) {
     throw new ValidationError(`${label} is required`, input)
   }
 
-  if (typeof input !== 'string') {
-    throw new ValidationError(`${label} should be a string`, input)
-  }
-
-  if (rule.minLength && input.length < rule.minLength) {
-    throw new ValidationError(`${label} should have at least ${rule.minLength} characters`, input)
-  }
-
-  if (rule.email && !input.match(EMAIL_REGEX)) {
-    throw new ValidationError(`${label} should be a valid email address`, input)
+  switch (rule.type) {
+    case 'object':
+      validateObject(input, label, rule.rules)
+      break
+    case 'array':
+      validateArray(input, label, rule)
+      break
+    case 'number':
+      validateNumber(input, label, rule)
+      break
+    case 'boolean':
+      validateBoolean(input, label, rule)
+      break
+    case 'string':
+    default:
+      validateString(input, label, rule)
   }
 }

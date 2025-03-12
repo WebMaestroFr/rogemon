@@ -32,7 +32,7 @@ export default function logRequest(req: Request, res: Response, next: NextFuncti
     }
     if (process.env.NODE_ENV === 'development') {
       if (req.body && Object.keys(req.body).length > 0) {
-        debug.log(chalk.dim(JSON.stringify(req.body, null, 2)))
+        debug.log(chalk.dim(JSON.stringify(req.body)))
       }
     }
   }
