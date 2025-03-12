@@ -1,7 +1,9 @@
 <template>
   <Card :card="card" :show-image="count > 0" @click="$emit('increase')">
-    <span class="trash" v-show="count > 0" @click.stop="$emit('decrease')"><img src="/icons/trash.png" /></span>
-    <span class="counter" v-show="count > 0" v-text="count" />
+    <span v-show="count > 0" class="trash" @click.stop="$emit('decrease')"
+      ><img src="/icons/trash.png"
+    /></span>
+    <span v-show="count > 0" class="counter" v-text="count" />
   </Card>
 </template>
 
