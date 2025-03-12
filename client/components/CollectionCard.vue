@@ -4,6 +4,26 @@
       ><img src="/icons/trash.png"
     /></span>
     <span v-show="count > 0" class="counter" v-text="count" />
+    <button
+      :class="[
+        { active: status === 'ask' },
+        'collection-card__button',
+        'collection-card__button--ask',
+      ]"
+      @click.stop="$emit('ask')"
+    >
+      Ask
+    </button>
+    <button
+      :class="[
+        { active: status === 'offer' },
+        'collection-card__button',
+        'collection-card__button--offer',
+      ]"
+      @click.stop="$emit('offer')"
+    >
+      Offer
+    </button>
   </Card>
 </template>
 
@@ -11,8 +31,8 @@
 import type { ICard } from '../../env'
 import Card from './Card.vue'
 
-defineProps<{ card: ICard; count: number }>()
-defineEmits(['decrease', 'increase'])
+defineProps<{ card: ICard; count: number; status: 'ask' | 'offer' | null }>()
+defineEmits(['decrease', 'increase', 'ask', 'offer'])
 </script>
 
 <style scoped>
@@ -52,6 +72,18 @@ img {
   font-weight: bold;
   padding: 0 20px;
   border-top-right-radius: 10px;
+}
+.collection-card__button {
+  cursor: pointer;
+}
+.collection-card__button.active {
+  font-weight: bold;
+}
+.collection-card__button--ask.active {
+  color: darkred;
+}
+.collection-card__button--offer.active {
+  color: darkgreen;
 }
 
 @media (max-width: 600px) {

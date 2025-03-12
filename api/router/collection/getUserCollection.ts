@@ -18,7 +18,7 @@ export default async function getUserCollection(
     if (!collection) {
       return sendError(res, 404, 'Collection not found')
     }
-    return sendData(res, 200, collection.countMap)
+    return sendData(res, 200, collection)
   } catch (err) {
     next(err)
   }
