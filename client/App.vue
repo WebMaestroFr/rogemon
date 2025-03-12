@@ -42,6 +42,10 @@ nav {
   justify-content: space-between;
 }
 
+nav span img {
+  width: 50%;
+}
+
 @media (max-width: 600px) {
   nav {
     flex-direction: column;
@@ -58,6 +62,7 @@ nav {
   }
 
   nav span img {
+    width: auto;
     height: 60px;
   }
 
