@@ -9,13 +9,21 @@ export function getCollectionStatusKey(expansionId: ExpansionId) {
   return `collection/${expansionId}/statusMap`
 }
 
+export function getCollectionCountMap(expansionId: ExpansionId) {
+  const countKey = getCollectionCountKey(expansionId)
+  return store.get<ICollection['countMap']>(countKey) || {}
+}
+
+export function getCollectionStatusMap(expansionId: ExpansionId) {
+  const statusKey = getCollectionStatusKey(expansionId)
+  return store.get<ICollection['statusMap']>(statusKey) || {}
+}
+
 export function getCollection(
   expansionId: ExpansionId,
 ): Pick<ICollection, 'countMap' | 'statusMap'> {
-  const countKey = getCollectionCountKey(expansionId)
-  const statusKey = getCollectionStatusKey(expansionId)
-  const countMap = store.get<ICollection['countMap']>(countKey) || {}
-  const statusMap = store.get<ICollection['statusMap']>(statusKey) || {}
+  const countMap = getCollectionCountMap(expansionId)
+  const statusMap = getCollectionStatusMap(expansionId)
   return { countMap, statusMap }
 }
 
@@ -31,14 +39,19 @@ export function setCollectionStatus(expansionId: ExpansionId, statusMap: ICollec
   saveCollection(expansionId)
 }
 
+export function setCollection(
+  expansionId: ExpansionId,
+  collection: Pick<ICollection, 'countMap' | 'statusMap'>,
+) {
+  setCollectionCount(expansionId, collection.countMap)
+  setCollectionStatus(expansionId, collection.statusMap)
+}
+
 export async function loadCollection(expansionId: ExpansionId) {
   return await auth
     .fetch<ICollection>(`/api/collection/${expansionId}`)
     .then((collection) => {
-      const countKey = getCollectionCountKey(expansionId)
-      const statusKey = getCollectionStatusKey(expansionId)
-      store.set(countKey, collection.countMap)
-      store.set(statusKey, collection.statusMap)
+      setCollection(expansionId, collection)
       return collection
     })
     .catch(() => getCollection(expansionId))
