@@ -13,19 +13,19 @@
         :rarity="['◊', '◊◊', '◊◊◊', '◊◊◊◊']"
         icon="/icons/collection_diamond.png"
         :cards="cards"
-        :countMap="countMap"
+        :count-map="countMap"
       />
       <Counter
         :rarity="['☆', '☆☆', '☆☆☆']"
         icon="/icons/collection_star.png"
         :cards="cards"
-        :countMap="countMap"
+        :count-map="countMap"
       />
       <Counter
         :rarity="['♕', 'Crown Rare']"
         icon="/icons/crown.png"
         :cards="cards"
-        :countMap="countMap"
+        :count-map="countMap"
       />
     </div>
     <div class="fillers">
@@ -33,35 +33,35 @@
         :rarity="['◊']"
         icon="/icons/diamond.png"
         :cards="cards"
-        :countMap="countMap"
+        :count-map="countMap"
         @click="fill('◊')"
       />
       <Counter
         :rarity="['◊◊']"
         icon="/icons/diamond.png"
         :cards="cards"
-        :countMap="countMap"
+        :count-map="countMap"
         @click="fill('◊◊')"
       />
       <Counter
         :rarity="['◊◊◊']"
         icon="/icons/diamond.png"
         :cards="cards"
-        :countMap="countMap"
+        :count-map="countMap"
         @click="fill('◊◊◊')"
       />
       <Counter
         :rarity="['◊◊◊◊']"
         icon="/icons/diamond.png"
         :cards="cards"
-        :countMap="countMap"
+        :count-map="countMap"
         @click="fill('◊◊◊◊')"
       />
     </div>
     <div>
-      <Counter :rarity="['☆']" icon="/icons/star.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['☆☆']" icon="/icons/star.png" :cards="cards" :countMap="countMap" />
-      <Counter :rarity="['☆☆☆']" icon="/icons/star.png" :cards="cards" :countMap="countMap" />
+      <Counter :rarity="['☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
+      <Counter :rarity="['☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
+      <Counter :rarity="['☆☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
     </div>
     <div class="cards">
       <CollectionCard

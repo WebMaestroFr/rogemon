@@ -1,6 +1,6 @@
 <template>
   <div class="hollow">
-    <img v-for="i in rarity[0].length" :src="icon" />
+    <img v-for="i in rarity[0].length" :key="i" :src="icon" />
     <span>{{ count }} / <small v-text="filteredCards.length" /></span>
   </div>
 </template>

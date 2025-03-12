@@ -19,6 +19,7 @@ import type { ICard } from '../../env'
 defineProps({
   card: {
     type: Object as PropType<ICard>,
+    default: () => ({}),
   },
   showImage: {
     type: Boolean,

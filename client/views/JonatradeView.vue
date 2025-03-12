@@ -7,7 +7,7 @@
       </div>
       <div class="trades">
         <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
-          <img v-for="i in rarity.length" :src="getIcon(rarity)" class="icon" />
+          <img v-for="i in rarity.length" :key="i" :src="getIcon(rarity)" class="icon" />
           <TradeGroup v-bind="tradeGroups" />
         </div>
       </div>
