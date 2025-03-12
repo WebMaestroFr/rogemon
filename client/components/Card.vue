@@ -13,19 +13,12 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
 import type { ICard } from '../../env'
 
-defineProps({
-  card: {
-    type: Object as PropType<ICard>,
-    default: () => ({}),
-  },
-  showImage: {
-    type: Boolean,
-    default: true,
-  },
-})
+const { showImage = true } = defineProps<{
+  card?: ICard
+  showImage: boolean
+}>()
 </script>
 
 <style scoped>
