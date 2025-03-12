@@ -21,4 +21,4 @@ jobs:
       - name: 🛠 Run Unit Tests
         run: npx vitest --coverage.enabled true
       - name: 🪛 Lint Codebase
-        run: npx eslint --no-ignore .
+        run: npx eslint .
