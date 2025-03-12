@@ -1,5 +1,5 @@
 <template>
-  <Card v-if="card" :card="card" />
+  <Card v-if="card" :card="card" :show-image="true" />
 </template>
 
 <script setup lang="ts">
