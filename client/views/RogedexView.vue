@@ -1,9 +1,9 @@
 <template>
   <div>
-    <Collection expansionId="A1" name="Genetic Apex" />
-    <Collection expansionId="A1a" name="Mythical Island" />
-    <Collection expansionId="A2" name="Space-Time Smackdown" />
-    <Collection expansionId="A2a" name="Triumphant Light" />
+    <Collection expansion-id="A1" name="Genetic Apex" />
+    <Collection expansion-id="A1a" name="Mythical Island" />
+    <Collection expansion-id="A2" name="Space-Time Smackdown" />
+    <Collection expansion-id="A2a" name="Triumphant Light" />
   </div>
 </template>
 

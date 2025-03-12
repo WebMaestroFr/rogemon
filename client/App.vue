@@ -5,10 +5,18 @@
       <Rogemon />
       <span>
         <RouterLink to="/">
-          <img src="/icons/collection.png" :style="{ opacity: route.path === '/' ? 1 : 0.6 }" title="Rogédex" />
+          <img
+            src="/icons/collection.png"
+            :style="{ opacity: route.path === '/' ? 1 : 0.6 }"
+            title="Rogédex"
+          />
         </RouterLink>
         <RouterLink to="/jonatrade">
-          <img src="/icons/trade.png" :style="{ opacity: route.path === '/jonatrade' ? 1 : 0.6 }" title="Jonatrade" />
+          <img
+            src="/icons/trade.png"
+            :style="{ opacity: route.path === '/jonatrade' ? 1 : 0.6 }"
+            title="Jonatrade"
+          />
         </RouterLink>
       </span>
       <AuthProfile />
@@ -25,7 +33,7 @@ import Rogemon from './components/Rogemon.vue'
 import AuthProfile from './components/Auth/AuthProfile.vue'
 import AuthSignIn from './components/Auth/AuthSignIn.vue'
 
-const route = useRoute();
+const route = useRoute()
 </script>
 
 <style scoped>
@@ -50,7 +58,7 @@ nav {
   }
 
   nav span img {
-    height: 60px
+    height: 60px;
   }
 
   .authProfile {
