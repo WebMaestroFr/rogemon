@@ -4,6 +4,7 @@
     <Collection expansion-id="A1a" name="Mythical Island" />
     <Collection expansion-id="A2" name="Space-Time Smackdown" />
     <Collection expansion-id="A2a" name="Triumphant Light" />
+    <Collection expansion-id="A2b" name="Shining Revelry" />
   </div>
 </template>
 

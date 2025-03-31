@@ -51,7 +51,7 @@ export interface ICard {
   crafting_cost: number | 'Unknown'
 }
 
-export type ExpansionId = 'A1' | 'A1a' | 'A2' | 'A2a'
+export type ExpansionId = 'A1' | 'A1a' | 'A2' | 'A2a' | 'A2b'
 
 export interface ITradeCard {
   cardId: string
