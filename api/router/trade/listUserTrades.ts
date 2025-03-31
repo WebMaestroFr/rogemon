@@ -11,12 +11,14 @@ import A1 from '../../assets/cards/A1.json'
 import A1a from '../../assets/cards/A1a.json'
 import A2 from '../../assets/cards/A2.json'
 import A2a from '../../assets/cards/A2a.json'
+import A2b from '../../assets/cards/A2b.json'
 
 const expansionsJson = {
   A1,
   A1a,
   A2,
   A2a,
+  A2b,
 }
 
 export function getCardRarity(expansionId: ExpansionId, cardId: string): string {

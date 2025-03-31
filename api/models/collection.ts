@@ -11,7 +11,11 @@ export interface ICollection extends Document {
 
 const CollectionSchema = new mongoose.Schema<ICollection>({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  expansionId: { type: String, required: true, enum: ['A1', 'A1a', 'A2', 'A2a'] },
+  expansionId: {
+    type: String,
+    required: true,
+    enum: ['A1', 'A1a', 'A2', 'A2a', 'A2b'],
+  },
   countMap: { type: Map, of: Number, required: true },
   statusMap: { type: Map, of: String, enum: ['ask', 'offer', null], default: null },
 })
