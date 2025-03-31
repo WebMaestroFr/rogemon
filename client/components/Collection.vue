@@ -69,9 +69,12 @@
         :key="card.id"
         :card="card"
         :count="countMap[card.id] || 0"
+        :status="statusMap[card.id] || null"
         class="collection__card"
-        @increase="() => increaseCardRecord(card.id)"
-        @decrease="() => decreaseCardRecord(card.id)"
+        @increase="() => increaseCardCount(card.id)"
+        @decrease="() => decreaseCardCount(card.id)"
+        @ask="() => askCard(card.id)"
+        @offer="() => offerCard(card.id)"
       />
     </div>
   </div>
@@ -79,46 +82,71 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import type { ExpansionId, ICard, ICollectionCount } from '../../env'
-import { setCardCount } from '@client/stores/card'
+import type { ExpansionId, ICard, ICollection } from '../../env'
+import { setCardCount, setCardStatus } from '@client/stores/card'
 import { loadCollection } from '@client/stores/collection'
 import CollectionCard from './CollectionCard.vue'
 import Counter from './Counter.vue'
+import { getCollection } from '@client/stores/collection'
 
 const props = defineProps<{ expansionId: ExpansionId; name: string }>()
+
+const initialCollection = getCollection(props.expansionId)
+
 const cards = ref<ICard[]>([])
-const countMap = ref<ICollectionCount>({})
+const countMap = ref<ICollection['countMap']>(initialCollection.countMap)
+const statusMap = ref<ICollection['statusMap']>(initialCollection.statusMap)
 
 onMounted(async () => {
   const cardsResponse = await fetch(`cards/${props.expansionId}.json`)
   cards.value = await cardsResponse.json()
-  countMap.value = await loadCollection(props.expansionId)
+  const collection = await loadCollection(props.expansionId)
+  countMap.value = collection.countMap
+  statusMap.value = collection.statusMap
 })
 
-function increaseCardRecord(cardId: string) {
-  if (countMap.value[cardId] === undefined || countMap.value[cardId] === -1) {
+function increaseCardCount(cardId: string) {
+  if (!countMap.value[cardId]) {
     countMap.value[cardId] = 1
-  } else if (cardId in countMap.value) {
+  } else {
     countMap.value[cardId] += 1
   }
   setCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 
-function decreaseCardRecord(cardId: string) {
-  if (countMap.value[cardId] === -1) {
+function decreaseCardCount(cardId: string) {
+  if (!countMap.value[cardId]) {
     countMap.value[cardId] = 0
-  } else if (countMap.value[cardId] === undefined || countMap.value[cardId] <= 1) {
-    countMap.value[cardId] = -1
   } else {
     countMap.value[cardId] -= 1
   }
   setCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 
+function askCard(cardId: string) {
+  if (statusMap.value[cardId] === 'ask') {
+    statusMap.value[cardId] = null
+  } else {
+    statusMap.value[cardId] = 'ask'
+  }
+  setCardStatus(props.expansionId, cardId, statusMap.value[cardId])
+}
+
+function offerCard(cardId: string) {
+  if (statusMap.value[cardId] === 'offer') {
+    statusMap.value[cardId] = null
+  } else {
+    statusMap.value[cardId] = 'offer'
+  }
+  setCardStatus(props.expansionId, cardId, statusMap.value[cardId])
+}
+
 function fill(rarity: string) {
-  cards.value
-    .filter((c) => c.rarity === rarity)
-    .forEach((c) => !countMap.value[c.id] && increaseCardRecord(c.id))
+  if (window.confirm(`Are you sure to fill all ${rarity} cards?`)) {
+    cards.value
+      .filter((c) => c.rarity === rarity)
+      .forEach((c) => !countMap.value[c.id] && increaseCardCount(c.id))
+  }
 }
 
 function scrollToNext() {
