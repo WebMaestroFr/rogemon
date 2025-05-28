@@ -5,6 +5,7 @@
     <Collection expansion-id="A2" name="Space-Time Smackdown" />
     <Collection expansion-id="A2a" name="Triumphant Light" />
     <Collection expansion-id="A2b" name="Shining Revelry" />
+    <Collection expansion-id="A3" name="Celestial Gardians" />
   </div>
 </template>
 
