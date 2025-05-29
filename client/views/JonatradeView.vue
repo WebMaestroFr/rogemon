@@ -2,9 +2,9 @@
   <div v-if="tradesByEmail">
     <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email" class="user">
       <img src="/img/splitter.png" class="splitter" />
-      <div class="hollow">
-        <img src="/icons/user.png" />{{ email.substring(0, email.indexOf('@')) }}
-      </div>
+      <a class="hollow" :href="'/profile/' + getUsername(email)">
+        <img src="/icons/user.png" />{{ getUsername(email) }}
+      </a>
       <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
       <div class="trades">
         <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
@@ -22,7 +22,7 @@ import { listTradesByEmail } from '@client/stores/trade'
 import type { ITradeEmailMap } from '../../env'
 import TradeGroup from '../components/TradeGroup.vue'
 
-const emails = ['joni@rogemon.app', 'maxime@rogemon.app', 'etienne@rogemon.app', 'fabi@rogemon.app']
+const emails = ['test@test.tt', 'test2@test.tt']
 const tradesByEmail = ref<ITradeEmailMap>()
 
 onMounted(async () => {
@@ -43,6 +43,10 @@ function getIcon(rarity: string) {
     default:
       return '/img/crown.png'
   }
+}
+
+function getUsername(email: string) {
+  return email.substring(0, email.indexOf('@'))
 }
 
 function scrollToNext() {
@@ -67,6 +71,7 @@ function scrollToNext() {
 
 .hollow {
   margin: auto;
+  text-decoration: none;
 }
 
 .hollow img {

@@ -7,6 +7,7 @@ import upsertUserCollection from './upsertUserCollection'
 const collectionRouter = Router()
 
 collectionRouter.get('/:expansionId', getUserCollection)
+collectionRouter.get('/:expansionId/:username', getUserCollection)
 collectionRouter.post('/:expansionId', upsertUserCollection)
 collectionRouter.get('/', listUserCollections)
 

@@ -2,11 +2,8 @@
   <div class="collection">
     <img src="/img/splitter.png" class="splitter" />
     <h2>
-      <img :src="'/img/' + expansionId + '_en.png'" :alt="name" /><img
-        src="/icons/down.png"
-        class="scroller"
-        @click="scrollToNext"
-      />
+      <img :src="'/img/' + expansionId + '_en.png'" :alt="name" />
+      <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
     </h2>
     <div>
       <Counter
