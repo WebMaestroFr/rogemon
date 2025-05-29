@@ -50,8 +50,8 @@ const filteredCards = computed(() => cards.value.filter((c) => rarity.includes(c
 
 const obtainedCards = computed(() => {
   const obtained = Object.entries(countMap.value)
-    .filter(([id, count]) => count > 0)
-    .map(([id, count]) => id)
+    .filter(([_, count]) => count > 0)
+    .map(([id, _]) => id)
   return cards.value.filter((c) => obtained.includes(c.id))
 })
 

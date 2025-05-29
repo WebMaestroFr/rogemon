@@ -1,5 +1,5 @@
 <template>
-  <Collection v-for="(name, id) in expansions" :expansion-id="id" :name="name" />
+  <Collection v-for="(name, id) in expansions" :key="id" :expansion-id="id" :name="name" />
 </template>
 
 <script setup lang="ts">
