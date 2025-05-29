@@ -1,14 +1,8 @@
 <template>
-  <div>
-    <Collection expansion-id="A1" name="Genetic Apex" />
-    <Collection expansion-id="A1a" name="Mythical Island" />
-    <Collection expansion-id="A2" name="Space-Time Smackdown" />
-    <Collection expansion-id="A2a" name="Triumphant Light" />
-    <Collection expansion-id="A2b" name="Shining Revelry" />
-    <Collection expansion-id="A3" name="Celestial Gardians" />
-  </div>
+  <Collection v-for="(name, id) in expansions" :expansion-id="id" :name="name" />
 </template>
 
 <script setup lang="ts">
+import { expansions } from '@client/stores/collection'
 import Collection from '../components/Collection.vue'
 </script>

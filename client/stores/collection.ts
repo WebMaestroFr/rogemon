@@ -2,6 +2,15 @@ import type { ExpansionId, ICollectionCount } from '../../env'
 import auth from './auth'
 import store, { debounce } from './index'
 
+export const expansions: Record<ExpansionId, string> = {
+  A1: 'Genetic Apex',
+  A1a: 'Mythical Island',
+  A2: 'Space-Time Smackdown',
+  A2a: 'Triumphant Light',
+  A2b: 'Shining Revelry',
+  A3: 'Celestial Gardians',
+} as const
+
 export function getCollectionKey(expansionId: ExpansionId) {
   return `collection/${expansionId}`
 }
@@ -17,9 +26,9 @@ export function setCollectionCount(expansionId: ExpansionId, collection: ICollec
   saveCollection(expansionId)
 }
 
-export async function loadCollection(expansionId: ExpansionId) {
+export async function loadCollection(expansionId: ExpansionId, username?: string) {
   return await auth
-    .fetch<ICollectionCount>(`/api/collection/${expansionId}`)
+    .fetch<ICollectionCount>(`/api/collection/${expansionId}${username ? `/${username}` : ''}`)
     .then((collection) => {
       const key = getCollectionKey(expansionId)
       store.set(key, collection)
