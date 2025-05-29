@@ -6,7 +6,7 @@ export function getUsername(email: string) {
   return email.substring(0, email.indexOf('@'))
 }
 
-export default async function listUsers(req: Request, res: Response, next: NextFunction) {
+export default async function listUsers(_req: Request, res: Response, next: NextFunction) {
   try {
     const allUsers = await User.find({})
     const usernames = allUsers.map((u) => getUsername(u.email))
