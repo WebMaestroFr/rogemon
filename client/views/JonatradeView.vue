@@ -2,7 +2,7 @@
   <div v-if="tradesByEmail">
     <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email" class="user">
       <img src="/img/splitter.png" class="splitter" />
-      <a class="hollow" :href="'/profile/' + getUsername(email)">
+      <a class="hollow" :href="'/profiles/' + getUsername(email)">
         <img src="/icons/user.png" />{{ getUsername(email) }}
       </a>
       <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
