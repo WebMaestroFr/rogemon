@@ -25,6 +25,8 @@ const expansionsJson = {
   A3a,
 }
 
+const untradable = ['✵', '✵✵', '☆☆', '☆☆☆', 'Crown Rare']
+
 export function getCardRarity(expansionId: ExpansionId, cardId: string): string {
   const expansionJson = expansionsJson[expansionId]
   if (!expansionJson) {
@@ -92,6 +94,9 @@ export default async function listUserTrades(req: Request, res: Response, next: 
           emailTrade[rarity] = rarityTrade
         }
       }
+      Object.keys(emailTrade).forEach((rarity) => {
+        if (untradable.includes(rarity)) delete emailTrade[rarity]
+      })
       emailTrades[otherUser.email] = emailTrade
       return emailTrades
     }, {})
