@@ -1,29 +1,11 @@
 <template>
-  <Card :card="card" :show-image="count > 0" @click="$emit('increase')">
-    <span v-show="count > 0" class="trash" @click.stop="$emit('decrease')"
-      ><img src="/icons/trash.png"
-    /></span>
-    <span v-show="count > 0" class="counter" v-text="count" />
-    <button
-      :class="[
-        { active: status === 'ask' },
-        'collection-card__button',
-        'collection-card__button--ask',
-      ]"
-      @click.stop="$emit('ask')"
-    >
-      Ask
-    </button>
-    <button
-      :class="[
-        { active: status === 'offer' },
-        'collection-card__button',
-        'collection-card__button--offer',
-      ]"
-      @click.stop="$emit('offer')"
-    >
-      Offer
-    </button>
+  <Card :card="card" :show-image="count > 0" @click="count ? empty() : $emit('increase')">
+    <span v-if="status === 'ask'" class="round heart status" @click.stop="$emit('ask')" />
+    <span v-else-if="status === 'offer'" class="round gift status" @click.stop="$emit('offer')" />
+    <div v-if="!status && tradable.includes(card.rarity)" class="actions">
+      <button class="round heart" @click.stop="$emit('ask')" />
+      <button class="round gift" @click.stop="offer" />
+    </div>
   </Card>
 </template>
 
@@ -31,8 +13,20 @@
 import type { ICard } from '../../env'
 import Card from './Card.vue'
 
-defineProps<{ card: ICard; count: number; status: 'ask' | 'offer' | null }>()
-defineEmits(['decrease', 'increase', 'ask', 'offer'])
+const tradable = ['◊', '◊◊', '◊◊◊', '◊◊◊◊', '☆']
+
+const props = defineProps<{ card: ICard; count: number; status: 'ask' | 'offer' | null }>()
+const emit = defineEmits(['decrease', 'increase', 'ask', 'offer'])
+
+function empty() {
+  for (let i = 0; i < props.count; i++) emit('decrease')
+  if (props.status === 'offer') emit('offer')
+}
+
+function offer() {
+  emit('offer')
+  if (!props.count) emit('increase')
+}
 </script>
 
 <style scoped>
@@ -41,54 +35,69 @@ defineEmits(['decrease', 'increase', 'ask', 'offer'])
   min-width: 60px;
 }
 
-.card:hover .trash {
+.card:hover .actions {
   opacity: 1;
 }
 
-.trash {
+.actions {
+  position: absolute;
+  top: 60%;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.heart {
+  background:
+    url('/icons/heart.png') no-repeat,
+    #fd619e;
+}
+
+.heart:not(.status) {
+  margin-right: 10%;
+}
+
+.gift {
+  background:
+    url('/icons/gift.png') no-repeat,
+    #8799b1;
+}
+
+.round {
+  width: 32px;
+  height: 32px;
+  padding: 8px;
+  border-radius: 50%;
+  background-position: center center;
+  background-size: 70%;
+  cursor: pointer;
+  box-shadow:
+    0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.1),
+    -0.1rem -0.1rem 0.2rem rgba(0, 0, 0, 0.1),
+    -0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.1),
+    0.1rem -0.1rem 0.2rem rgba(0, 0, 0, 0.1);
+}
+
+.status {
   position: absolute;
   top: 0;
   right: 0;
-  opacity: 0;
-  transition: opacity 0.2s;
-  background: #444;
-  border-bottom-left-radius: 10px;
-  padding: 0 16px;
-  line-height: 20px;
-}
-
-img {
-  width: 16px;
-  vertical-align: text-top;
-}
-
-.counter {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  display: inline-block;
-  background: #444;
-  color: white;
-  font-weight: bold;
-  padding: 0 20px;
-  border-top-right-radius: 10px;
-}
-.collection-card__button {
-  cursor: pointer;
-}
-.collection-card__button.active {
-  font-weight: bold;
-}
-.collection-card__button--ask.active {
-  color: darkred;
-}
-.collection-card__button--offer.active {
-  color: darkgreen;
 }
 
 @media (max-width: 600px) {
-  .trash {
+  .actions {
+    position: absolute;
+    top: 60%;
+    left: 0;
+    width: 100%;
     opacity: 1;
+  }
+  .round {
+    width: 20px;
+    height: 20px;
+    padding: 4px;
+    margin: 0;
   }
 }
 </style>
