@@ -19,6 +19,13 @@
         :count-map="countMap"
       />
       <Counter
+        v-if="hasShinies"
+        :rarity="['✵', '✵✵']"
+        icon="/icons/collection_shiny.png"
+        :cards="cards"
+        :count-map="countMap"
+      />
+      <Counter
         :rarity="['♕', 'Crown Rare']"
         icon="/icons/crown.png"
         :cards="cards"
@@ -60,7 +67,7 @@
       <Counter :rarity="['☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
       <Counter :rarity="['☆☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
     </div>
-    <div v-if="cards.some((c) => c.rarity === '✵')">
+    <div v-if="hasShinies">
       <Counter :rarity="['✵']" icon="/icons/shiny.png" :cards="cards" :count-map="countMap" />
       <Counter :rarity="['✵✵']" icon="/icons/shiny.png" :cards="cards" :count-map="countMap" />
     </div>
@@ -79,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import type { ExpansionId, ICard, ICollectionCount } from '../../env'
 import { setCardCount } from '@client/stores/card'
 import { loadCollection } from '@client/stores/collection'
@@ -130,6 +137,8 @@ function scrollToNext() {
     }
   }
 }
+
+const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
 </script>
 
 <style scoped>

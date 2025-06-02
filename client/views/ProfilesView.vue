@@ -3,13 +3,8 @@
 </template>
 
 <script setup lang="ts">
+import { emails } from '@client/stores/collection'
 import ProfileView from '../views/ProfileView.vue'
-import { loadUsers } from '@client/stores/users'
-import { onMounted, ref } from 'vue'
 
-const usernames = ref<string[]>([])
-onMounted(async () => {
-  const users = await loadUsers()
-  if (users) usernames.value = users
-})
+const usernames = emails.map((email) => email.substring(0, email.indexOf('@')))
 </script>

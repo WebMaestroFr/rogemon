@@ -6,21 +6,62 @@
       <img v-if="hasMedal" src="/img/medal.png" class="medal" />
     </h2>
     <div class="counters">
-      <Counter
-        :rarity="['◊', '◊◊', '◊◊◊', '◊◊◊◊']"
-        icon="/icons/collection_diamond.png"
-        :cards="cards"
-        :count-map="countMap"
-      />
-      <Counter :rarity="['☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
-      <Counter :rarity="['☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
-      <Counter :rarity="['☆☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
-      <Counter
-        :rarity="['♕', 'Crown Rare']"
-        icon="/icons/crown.png"
-        :cards="cards"
-        :count-map="countMap"
-      />
+      <div>
+        <Counter
+          :rarity="['◊', '◊◊', '◊◊◊', '◊◊◊◊']"
+          icon="/icons/collection_diamond.png"
+          :cards="cards"
+          :count-map="countMap"
+        />
+        <Counter
+          :rarity="['☆', '☆☆', '☆☆☆']"
+          icon="/icons/collection_star.png"
+          :cards="cards"
+          :count-map="countMap"
+        />
+        <Counter
+          v-if="hasShinies"
+          :rarity="['✵', '✵✵']"
+          icon="/icons/collection_shiny.png"
+          :cards="cards"
+          :count-map="countMap"
+        />
+        <Counter
+          v-else
+          :rarity="['♕', 'Crown Rare']"
+          icon="/icons/crown.png"
+          :cards="cards"
+          :count-map="countMap"
+        />
+      </div>
+      <div>
+        <Counter :rarity="['☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
+        <Counter :rarity="['☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
+        <Counter :rarity="['☆☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
+      </div>
+      <div v-if="hasShinies">
+        <Counter
+          v-if="hasShinies"
+          :rarity="['✵']"
+          icon="/icons/shiny.png"
+          :cards="cards"
+          :count-map="countMap"
+        />
+        <Counter
+          v-if="hasShinies"
+          :rarity="['✵']"
+          icon="/icons/shiny.png"
+          :cards="cards"
+          :count-map="countMap"
+        />
+        <Counter
+          v-if="hasShinies"
+          :rarity="['♕', 'Crown Rare']"
+          icon="/icons/crown.png"
+          :cards="cards"
+          :count-map="countMap"
+        />
+      </div>
     </div>
     <div class="best-cards">
       <Card v-for="card in bestCards" :key="card.id" :card="card" :show-image="true" />
@@ -31,7 +72,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import type { ExpansionId, ICard, ICollectionCount } from '../../env'
-import { loadCollection } from '@client/stores/collection'
+import { loadCollectionByUsername } from '@client/stores/collection'
 import Counter from './Counter.vue'
 import Card from './Card.vue'
 
@@ -42,7 +83,7 @@ const countMap = ref<ICollectionCount>({})
 onMounted(async () => {
   const cardsResponse = await fetch(`../cards/${props.expansionId}.json`)
   cards.value = await cardsResponse.json()
-  countMap.value = await loadCollection(props.expansionId, props.username)
+  countMap.value = await loadCollectionByUsername(props.expansionId, props.username)
 })
 
 const rarity = ['◊', '◊◊', '◊◊◊', '◊◊◊◊']
@@ -56,12 +97,13 @@ const obtainedCards = computed(() => {
 })
 
 const bestCards = computed(() => {
-  return obtainedCards.value.slice(obtainedCards.value.length - 10).reverse()
+  return obtainedCards.value.slice(Math.max(obtainedCards.value.length - 10, 0)).reverse()
 })
 
 const count = computed(() => obtainedCards.value.length)
 
 const hasMedal = computed(() => count.value === filteredCards.value.length)
+const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
 </script>
 
 <style scoped>
