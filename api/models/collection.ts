@@ -14,7 +14,7 @@ const CollectionSchema = new mongoose.Schema<ICollection>({
   expansionId: {
     type: String,
     required: true,
-    enum: ['A1', 'A1a', 'A2', 'A2a', 'A2b', 'A3'],
+    enum: ['A1', 'A1a', 'A2', 'A2a', 'A2b', 'A3', 'A3a'],
   },
   countMap: { type: Map, of: Number, required: true },
   statusMap: { type: Map, of: String, enum: ['ask', 'offer', null], default: null },
