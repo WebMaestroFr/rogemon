@@ -7,9 +7,11 @@
       </a>
       <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
       <div class="trades">
-        <div v-for="[rarity, tradeGroups] in Object.entries(tradesByRarity)" :key="rarity">
-          <img v-for="i in rarity.length" :key="i" :src="getIcon(rarity)" class="icon" />
-          <TradeGroup v-bind="tradeGroups" />
+        <div v-for="rarity in rarities" :key="rarity">
+          <template v-if="tradesByRarity[rarity]">
+            <img v-for="i in rarity.length" :key="i" :src="getIcon(rarity)" class="icon" />
+            <TradeGroup v-if="tradesByRarity[rarity]" v-bind="tradesByRarity[rarity]" />
+          </template>
         </div>
       </div>
     </div>
@@ -24,6 +26,7 @@ import TradeGroup from '../components/TradeGroup.vue'
 
 const emails = ['test@test.tt', 'test2@test.tt']
 const tradesByEmail = ref<ITradeEmailMap>()
+const rarities = ['◊◊◊◊', '◊◊◊', '◊◊', '◊', '☆']
 
 onMounted(async () => {
   tradesByEmail.value = await listTradesByEmail(emails)

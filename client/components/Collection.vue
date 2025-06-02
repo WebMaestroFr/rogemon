@@ -60,6 +60,10 @@
       <Counter :rarity="['☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
       <Counter :rarity="['☆☆☆']" icon="/icons/star.png" :cards="cards" :count-map="countMap" />
     </div>
+    <div v-if="cards.some((c) => c.rarity === '✵')">
+      <Counter :rarity="['✵']" icon="/icons/shiny.png" :cards="cards" :count-map="countMap" />
+      <Counter :rarity="['✵✵']" icon="/icons/shiny.png" :cards="cards" :count-map="countMap" />
+    </div>
     <div class="cards">
       <CollectionCard
         v-for="card in cards"
