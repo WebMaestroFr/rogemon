@@ -2,17 +2,17 @@
   <div v-if="tradesByEmail">
     <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email" class="user">
       <img src="/img/splitter.png" class="splitter" />
-      <div class="hollow">
-        <img src="/icons/user.png" />{{ email.substring(0, email.indexOf('@')) }}
-      </div>
+      <a class="hollow" :href="'/profiles/' + getUsername(email)">
+        <img src="/icons/user.png" />{{ getUsername(email) }}
+      </a>
       <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
       <div class="trades">
-        <div v-for="rarity in rarities" :key="rarity">
-          <template v-if="tradesByRarity[rarity]">
+        <template v-for="rarity in rarities">
+          <div v-if="tradesByRarity[rarity]" :key="rarity">
             <img v-for="i in rarity.length" :key="i" :src="getIcon(rarity)" class="icon" />
             <TradeGroup v-if="tradesByRarity[rarity]" v-bind="tradesByRarity[rarity]" />
-          </template>
-        </div>
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -23,8 +23,8 @@ import { onMounted, ref } from 'vue'
 import { listTradesByEmail } from '@client/stores/trade'
 import type { ITradeEmailMap } from '../../env'
 import TradeGroup from '../components/TradeGroup.vue'
+import { emails } from '@client/stores/collection'
 
-const emails = ['joni@rogemon.app', 'maxime@rogemon.app', 'etienne@rogemon.app', 'fabi@rogemon.app']
 const tradesByEmail = ref<ITradeEmailMap>()
 const rarities = ['◊◊◊◊', '◊◊◊', '◊◊', '◊', '☆']
 
@@ -46,6 +46,10 @@ function getIcon(rarity: string) {
     default:
       return '/img/crown.png'
   }
+}
+
+function getUsername(email: string) {
+  return email.substring(0, email.indexOf('@'))
 }
 
 function scrollToNext() {
@@ -70,6 +74,7 @@ function scrollToNext() {
 
 .hollow {
   margin: auto;
+  text-decoration: none;
 }
 
 .hollow img {

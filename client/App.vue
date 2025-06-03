@@ -18,6 +18,13 @@
             title="Jonatrade"
           />
         </RouterLink>
+        <RouterLink to="/profiles">
+          <img
+            src="/icons/friends.png"
+            :style="{ opacity: route.path === '/profiles' ? 1 : 0.6 }"
+            title="Friends"
+          />
+        </RouterLink>
       </span>
       <AuthProfile />
     </nav>
@@ -40,10 +47,7 @@ const route = useRoute()
 nav {
   display: flex;
   justify-content: space-between;
-}
-
-nav span img {
-  width: 50%;
+  white-space: nowrap;
 }
 
 @media (max-width: 600px) {

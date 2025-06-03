@@ -2,6 +2,23 @@ import type { ExpansionId, ICollectionCount } from '../../env'
 import auth from './auth'
 import store, { debounce } from './index'
 
+export const emails = [
+  'joni@rogemon.app',
+  'maxime@rogemon.app',
+  'etienne@rogemon.app',
+  'fabi@rogemon.app',
+]
+
+export const expansions: Record<ExpansionId, string> = {
+  A1: 'Genetic Apex',
+  A1a: 'Mythical Island',
+  A2: 'Space-Time Smackdown',
+  A2a: 'Triumphant Light',
+  A2b: 'Shining Revelry',
+  A3: 'Celestial Gardians',
+  A3a: 'Extradimensional Crisis',
+} as const
+
 export function getCollectionKey(expansionId: ExpansionId) {
   return `collection/${expansionId}`
 }
@@ -26,6 +43,16 @@ export async function loadCollection(expansionId: ExpansionId) {
       return collection
     })
     .catch(() => getCollection(expansionId))
+}
+
+export async function loadCollectionByUsername(expansionId: ExpansionId, username: string) {
+  return await auth
+    .fetch<ICollectionCount>(`/api/collection/${expansionId}/${username}`)
+    .then((collection) => {
+      const key = getCollectionKey(expansionId)
+      store.set(key, collection)
+      return collection
+    })
 }
 
 export async function saveCollection(expansionId: ExpansionId) {
