@@ -3,6 +3,7 @@
     <img src="/img/splitter.png" class="splitter" />
     <h2>
       <img :src="'/img/' + expansionId + '_en.png'" :alt="name" />
+      <img v-if="hasMedal" src="/img/medal.png" class="medal" />
       <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
     </h2>
     <div>
@@ -138,7 +139,18 @@ function scrollToNext() {
   }
 }
 
+const rarity = ['◊', '◊◊', '◊◊◊', '◊◊◊◊']
+const baseCards = computed(() => cards.value.filter((c) => rarity.includes(c.rarity)))
+
+const obtainedCards = computed(() => {
+  const obtained = Object.entries(countMap.value)
+    .filter(([_, count]) => count > 0)
+    .map(([id, _]) => id)
+  return cards.value.filter((c) => obtained.includes(c.id))
+})
+
 const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
+const hasMedal = computed(() => baseCards.value.every((c) => obtainedCards.value.includes(c)))
 </script>
 
 <style scoped>
@@ -168,6 +180,13 @@ const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
   width: 450px;
 }
 
+.medal {
+  width: 40px;
+  position: absolute;
+  margin-left: -20px;
+  margin-top: -20px;
+}
+
 .scroller {
   float: right;
   width: 20px;
@@ -193,6 +212,11 @@ const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
 
   img {
     height: 50px;
+  }
+
+  .medal {
+    width: 30px;
+    height: 30px;
   }
 }
 </style>

@@ -87,7 +87,7 @@ onMounted(async () => {
 })
 
 const rarity = ['◊', '◊◊', '◊◊◊', '◊◊◊◊']
-const filteredCards = computed(() => cards.value.filter((c) => rarity.includes(c.rarity)))
+const baseCards = computed(() => cards.value.filter((c) => rarity.includes(c.rarity)))
 
 const obtainedCards = computed(() => {
   const obtained = Object.entries(countMap.value)
@@ -100,9 +100,7 @@ const bestCards = computed(() => {
   return obtainedCards.value.slice(Math.max(obtainedCards.value.length - 10, 0)).reverse()
 })
 
-const count = computed(() => obtainedCards.value.length)
-
-const hasMedal = computed(() => count.value === filteredCards.value.length)
+const hasMedal = computed(() => baseCards.value.every((c) => obtainedCards.value.includes(c)))
 const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
 </script>
 
