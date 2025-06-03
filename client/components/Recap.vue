@@ -49,7 +49,7 @@
         />
         <Counter
           v-if="hasShinies"
-          :rarity="['✵']"
+          :rarity="['✵✵']"
           icon="/icons/shiny.png"
           :cards="cards"
           :count-map="countMap"
