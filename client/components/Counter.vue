@@ -1,5 +1,5 @@
 <template>
-  <div class="hollow">
+  <div class="hollow" :class="{ full: isFull }">
     <img v-for="i in rarity[0].length" :key="i" :src="icon" />
     <span>{{ count }} / <small v-text="filteredCards.length" /></span>
   </div>
@@ -23,12 +23,18 @@ const count = computed(() => {
   return Object.entries(props.countMap).filter(([id, count]) => ids.includes(id) && count > 0)
     .length
 })
+
+const isFull = computed(() => count.value === filteredCards.value.length)
 </script>
 
 <style scoped>
 span,
 small {
   font-weight: bold;
+}
+
+.full {
+  background: #cfdbe0;
 }
 
 @media (max-width: 600px) {
