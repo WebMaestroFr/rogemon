@@ -2,7 +2,12 @@ import type { ExpansionId, ICollectionCount } from '../../env'
 import auth from './auth'
 import store, { debounce } from './index'
 
-export const emails = ['test@test.tt', 'test2@test.tt']
+export const emails = [
+  'joni@rogemon.app',
+  'maxime@rogemon.app',
+  'etienne@rogemon.app',
+  'fabi@rogemon.app',
+]
 
 export const expansions: Record<ExpansionId, string> = {
   A1: 'Genetic Apex',

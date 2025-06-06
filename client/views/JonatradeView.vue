@@ -1,5 +1,11 @@
 <template>
-  <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email" class="user">
+  <LoadingSpinner v-if="!loaded" />
+  <div
+    v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)"
+    :key="email"
+    class="user"
+    v-show="loaded"
+  >
     <a class="hollow" :href="'/profiles/' + getUsername(email)">
       <img src="/icons/user.png" />{{ getUsername(email) }}
     </a>
@@ -25,9 +31,11 @@ import { emails } from '@client/stores/collection'
 
 const tradesByEmail = ref<ITradeEmailMap>({})
 const rarities = ['◊◊◊◊', '◊◊◊', '◊◊', '◊', '☆']
+const loaded = ref(false)
 
 onMounted(async () => {
   tradesByEmail.value = await listTradesByEmail(emails)
+  loaded.value = true
 })
 
 function getIcon(rarity: string) {

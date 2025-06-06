@@ -1,13 +1,8 @@
 <template>
   <div class="loading">
-    <img v-show="ready" src="/icons/loading.png" @load="ready = true" />
+    <img src="/icons/loading.png" />
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-const ready = ref(false)
-</script>
 
 <style>
 @keyframes spin {
