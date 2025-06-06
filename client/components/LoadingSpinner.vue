@@ -1,6 +1,6 @@
 <template>
   <div class="loading">
-    <img src="/icons/loading.png" />
+    <img src="/icons/loading.png" prefetch="high" />
   </div>
 </template>
 
@@ -48,6 +48,6 @@
     rainbow 20s linear infinite;
   transform-origin: 50% 50%;
   box-shadow: none;
-  border: none;
+  border: 1px solid #f4f7fa;
 }
 </style>
