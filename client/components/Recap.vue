@@ -87,8 +87,8 @@ onMounted(async () => {
     const cardsResponse = await fetch(`../cards/${props.expansionId}.json`)
     cards.value = await cardsResponse.json()
     countMap.value = await loadCollectionByUsername(props.expansionId, props.username)
-  } catch (error) {
-    console.error('Failed to load collection:', props.expansionId, props.username)
+  } catch (err) {
+    console.error(`Failed to load collection ${props.expansionId} for ${props.username}`, err)
   } finally {
     emit('loaded')
   }

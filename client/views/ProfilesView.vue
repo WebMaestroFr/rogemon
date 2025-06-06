@@ -1,8 +1,8 @@
 <template>
   <LoadingSpinner v-if="loaded < allProfiles" />
   <ProfileView
-    v-show="loaded === allProfiles"
     v-for="username of usernames"
+    v-show="loaded === allProfiles"
     :key="username"
     :username="username"
     @loaded="loaded++"

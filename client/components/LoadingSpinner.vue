@@ -1,6 +1,6 @@
 <template>
-  <div v-show="ready" class="loading">
-    <img src="/icons/loading.png" @load="ready = true" />
+  <div class="loading">
+    <img v-show="ready" src="/icons/loading.png" @load="ready = true" />
   </div>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
   <LoadingSpinner v-if="loaded < allCollections" />
   <Collection
-    v-show="loaded === allCollections"
     v-for="(name, id) in expansions"
+    v-show="loaded === allCollections"
     :key="id"
     :expansion-id="id"
     :name="name"
