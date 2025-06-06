@@ -28,6 +28,7 @@
       </span>
       <AuthProfile />
     </nav>
+    <img src="/img/splitter.png" class="splitter" />
     <RouterView />
   </template>
 </template>

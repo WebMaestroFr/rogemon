@@ -1,6 +1,5 @@
 <template>
   <div class="collection">
-    <img src="/img/splitter.png" class="splitter" />
     <h2>
       <img :src="'/img/' + expansionId + '_en.png'" :alt="name" />
       <img v-if="hasMedal" src="/img/medal.png" class="medal" />
@@ -83,6 +82,7 @@
         @decrease="() => decreaseCardRecord(card.id)"
       />
     </div>
+    <img src="/img/splitter.png" class="splitter" />
   </div>
 </template>
 
@@ -98,10 +98,13 @@ const props = defineProps<{ expansionId: ExpansionId; name: string }>()
 const cards = ref<ICard[]>([])
 const countMap = ref<ICollectionCount>({})
 
+const emit = defineEmits(['loaded'])
+
 onMounted(async () => {
   const cardsResponse = await fetch(`cards/${props.expansionId}.json`)
   cards.value = await cardsResponse.json()
   countMap.value = await loadCollection(props.expansionId)
+  emit('loaded')
 })
 
 function increaseCardRecord(cardId: string) {
@@ -175,11 +178,6 @@ const hasMedal = computed(() => baseCards.value.every((c) => obtainedCards.value
   margin: auto;
 }
 
-.splitter {
-  margin: -50px 0 30px 0;
-  width: 450px;
-}
-
 .medal {
   width: 40px;
   position: absolute;
@@ -200,16 +198,12 @@ const hasMedal = computed(() => baseCards.value.every((c) => obtainedCards.value
   opacity: 1;
 }
 
-.collection:last-child .scroller {
+.collection:last-child .scroller,
+.collection:last-child .splitter {
   visibility: hidden;
 }
 
 @media (max-width: 600px) {
-  .splitter {
-    width: 100%;
-    margin-top: -35px;
-  }
-
   img {
     height: 50px;
   }

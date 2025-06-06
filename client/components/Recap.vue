@@ -105,11 +105,6 @@ const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
 </script>
 
 <style scoped>
-.splitter {
-  margin: -50px 0 30px 0;
-  width: 450px;
-}
-
 .medal {
   width: 40px;
   position: absolute;
@@ -134,11 +129,6 @@ const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
 }
 
 @media (max-width: 600px) {
-  .splitter {
-    width: 100%;
-    margin-top: -35px;
-  }
-
   img {
     height: 50px;
   }
