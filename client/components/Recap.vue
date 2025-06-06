@@ -80,10 +80,18 @@ const props = defineProps<{ expansionId: ExpansionId; name: string; username: st
 const cards = ref<ICard[]>([])
 const countMap = ref<ICollectionCount>({})
 
+const emit = defineEmits(['loaded'])
+
 onMounted(async () => {
-  const cardsResponse = await fetch(`../cards/${props.expansionId}.json`)
-  cards.value = await cardsResponse.json()
-  countMap.value = await loadCollectionByUsername(props.expansionId, props.username)
+  try {
+    const cardsResponse = await fetch(`../cards/${props.expansionId}.json`)
+    cards.value = await cardsResponse.json()
+    countMap.value = await loadCollectionByUsername(props.expansionId, props.username)
+  } catch (error) {
+    console.error('Failed to load collection:', props.expansionId, props.username)
+  } finally {
+    emit('loaded')
+  }
 })
 
 const rarity = ['◊', '◊◊', '◊◊◊', '◊◊◊◊']
