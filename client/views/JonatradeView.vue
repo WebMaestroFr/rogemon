@@ -28,6 +28,7 @@ import { listTradesByEmail } from '@client/stores/trade'
 import type { ITradeEmailMap } from '../../env'
 import TradeGroup from '../components/TradeGroup.vue'
 import { emails } from '@client/stores/collection'
+import LoadingSpinner from '@client/components/LoadingSpinner.vue'
 
 const tradesByEmail = ref<ITradeEmailMap>({})
 const rarities = ['◊◊◊◊', '◊◊◊', '◊◊', '◊', '☆']
