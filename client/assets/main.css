@@ -44,6 +44,14 @@ button {
   margin: 6px 4px 4px 4px;
   padding: 0 18px;
   color: #3f4857;
+}
+
+button[disabled] {
+  opacity: 0.6;
+}
+
+button,
+.elevated {
   background: #f4f7fa;
   border-radius: 16px;
   box-shadow:
@@ -51,6 +59,15 @@ button {
     -0.2rem -0.2rem 0.2rem rgba(255, 255, 255, 0.8);
 }
 
-button[disabled] {
-  opacity: 0.6;
+.splitter {
+  margin: -50px auto 30px auto;
+  width: 450px;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .splitter {
+    width: 100%;
+    margin-top: -35px;
+  }
 }

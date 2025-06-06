@@ -49,7 +49,7 @@
         />
         <Counter
           v-if="hasShinies"
-          :rarity="['✵']"
+          :rarity="['✵✵']"
           icon="/icons/shiny.png"
           :cards="cards"
           :count-map="countMap"
@@ -80,14 +80,22 @@ const props = defineProps<{ expansionId: ExpansionId; name: string; username: st
 const cards = ref<ICard[]>([])
 const countMap = ref<ICollectionCount>({})
 
+const emit = defineEmits(['loaded'])
+
 onMounted(async () => {
-  const cardsResponse = await fetch(`../cards/${props.expansionId}.json`)
-  cards.value = await cardsResponse.json()
-  countMap.value = await loadCollectionByUsername(props.expansionId, props.username)
+  try {
+    const cardsResponse = await fetch(`../cards/${props.expansionId}.json`)
+    cards.value = await cardsResponse.json()
+    countMap.value = await loadCollectionByUsername(props.expansionId, props.username)
+  } catch (err) {
+    console.error(`Failed to load collection ${props.expansionId} for ${props.username}`, err)
+  } finally {
+    emit('loaded')
+  }
 })
 
 const rarity = ['◊', '◊◊', '◊◊◊', '◊◊◊◊']
-const filteredCards = computed(() => cards.value.filter((c) => rarity.includes(c.rarity)))
+const baseCards = computed(() => cards.value.filter((c) => rarity.includes(c.rarity)))
 
 const obtainedCards = computed(() => {
   const obtained = Object.entries(countMap.value)
@@ -100,18 +108,11 @@ const bestCards = computed(() => {
   return obtainedCards.value.slice(Math.max(obtainedCards.value.length - 10, 0)).reverse()
 })
 
-const count = computed(() => obtainedCards.value.length)
-
-const hasMedal = computed(() => count.value === filteredCards.value.length)
+const hasMedal = computed(() => baseCards.value.every((c) => obtainedCards.value.includes(c)))
 const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
 </script>
 
 <style scoped>
-.splitter {
-  margin: -50px 0 30px 0;
-  width: 450px;
-}
-
 .medal {
   width: 40px;
   position: absolute;
@@ -136,11 +137,6 @@ const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
 }
 
 @media (max-width: 600px) {
-  .splitter {
-    width: 100%;
-    margin-top: -35px;
-  }
-
   img {
     height: 50px;
   }

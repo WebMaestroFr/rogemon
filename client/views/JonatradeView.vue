@@ -1,20 +1,18 @@
 <template>
-  <div v-if="tradesByEmail">
-    <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email" class="user">
-      <img src="/img/splitter.png" class="splitter" />
-      <a class="hollow" :href="'/profiles/' + getUsername(email)">
-        <img src="/icons/user.png" />{{ getUsername(email) }}
-      </a>
-      <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
-      <div class="trades">
-        <template v-for="rarity in rarities">
-          <div v-if="tradesByRarity[rarity]" :key="rarity">
-            <img v-for="i in rarity.length" :key="i" :src="getIcon(rarity)" class="icon" />
-            <TradeGroup v-if="tradesByRarity[rarity]" v-bind="tradesByRarity[rarity]" />
-          </div>
-        </template>
-      </div>
+  <div v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)" :key="email" class="user">
+    <a class="hollow" :href="'/profiles/' + getUsername(email)">
+      <img src="/icons/user.png" />{{ getUsername(email) }}
+    </a>
+    <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
+    <div class="trades">
+      <template v-for="rarity in rarities">
+        <div v-if="tradesByRarity[rarity]" :key="rarity">
+          <img v-for="i in rarity.length" :key="i" :src="getIcon(rarity)" class="icon" />
+          <TradeGroup v-if="tradesByRarity[rarity]" v-bind="tradesByRarity[rarity]" />
+        </div>
+      </template>
     </div>
+    <img src="/img/splitter.png" class="splitter" />
   </div>
 </template>
 
@@ -25,7 +23,7 @@ import type { ITradeEmailMap } from '../../env'
 import TradeGroup from '../components/TradeGroup.vue'
 import { emails } from '@client/stores/collection'
 
-const tradesByEmail = ref<ITradeEmailMap>()
+const tradesByEmail = ref<ITradeEmailMap>({})
 const rarities = ['◊◊◊◊', '◊◊◊', '◊◊', '◊', '☆']
 
 onMounted(async () => {
@@ -86,12 +84,6 @@ function scrollToNext() {
   margin: 8px 2px;
 }
 
-.splitter {
-  margin: -50px auto 30px auto;
-  width: 450px;
-  display: block;
-}
-
 .scroller {
   float: right;
   width: 20px;
@@ -106,14 +98,8 @@ function scrollToNext() {
   opacity: 1;
 }
 
-.user:last-child .scroller {
+.user:last-child .scroller,
+.user:last-child .splitter {
   visibility: hidden;
-}
-
-@media (max-width: 600px) {
-  .splitter {
-    width: 100%;
-    margin-top: -35px;
-  }
 }
 </style>
