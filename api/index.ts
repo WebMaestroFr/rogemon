@@ -56,35 +56,35 @@ async function setupServer() {
 }
 
 async function fixStatusMaps() {
-  // To avoid having to manually set all status when it's released,
-  // we default to "ask" for count===0 count and "offer" for count>=2 if status is not set.
-
+  // To avoid having to manually set all cards status when collection.statusMap is released,
+  // we default to "ask" for count===0 count, and to "offer" for count>=2 if status is not set.
   for (const [expansionId, expansion] of Object.entries(expansionsJson)) {
     const expansionCollections = await Collection.find({ expansionId })
     for (const collection of expansionCollections) {
       if (!collection.statusMap) {
         collection.statusMap = new Map<string, 'ask' | 'offer'>()
-      }
-      console.log(
-        chalk.blue(
-          `Adding status maps to ${expansionId} collection (${expansion.length} cards) for user ${collection.userId}`,
-        ),
-      )
-      for (const { id } of expansion) {
-        const count = collection.countMap.get(id)
-        if (!collection.statusMap.has(id)) {
-          if (count === undefined) {
+        console.log(
+          chalk.blue(
+            `Adding status maps to ${expansionId} collection (${expansion.length} cards) for user ${collection.userId}`,
+          ),
+        )
+        for (const { id } of expansion) {
+          const count = collection.countMap.get(id)
+          if (!count) {
+            // "No count" means 0 with the previous implementation :(
             console.log(chalk.red(`No count for card ${id}, setting to 'ask'`))
+            // Assuming current users have reasonably completed collection,
+            // it should be quite accurate to consider that any card with count < 1 is "ask"
             collection.statusMap.set(id, 'ask')
             collection.countMap.set(id, 0)
           } else if (count > 1) {
             console.log(chalk.green(`Count for card ${id} is ${count}, setting to 'offer'`))
             collection.statusMap.set(id, 'offer')
-            collection.countMap.set(id, 1)
+            collection.countMap.set(id, 2)
           }
         }
+        await collection.save()
       }
-      await collection.save()
     }
     console.log(chalk.green(`Added status maps to ${expansionId} collections`))
   }

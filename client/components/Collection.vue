@@ -119,6 +119,10 @@ onMounted(async () => {
 function markOwn(cardId: string) {
   countMap.value[cardId] = 1
   setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
+  if (statusMap.value[cardId] === 'ask') {
+    statusMap.value[cardId] = null
+    setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
+  }
 }
 
 function markMiss(cardId: string) {
@@ -142,13 +146,12 @@ function markAsk(cardId: string) {
 function markOffer(cardId: string) {
   if (statusMap.value[cardId] === 'offer') {
     statusMap.value[cardId] = null
+    countMap.value[cardId] = 1
   } else {
     statusMap.value[cardId] = 'offer'
-    if (!countMap.value[cardId]) {
-      countMap.value[cardId] = 1
-      setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
-    }
+    countMap.value[cardId] = 2
   }
+  setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
   setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
 }
 
