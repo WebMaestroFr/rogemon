@@ -58,10 +58,6 @@ export interface ICard {
 
 export type ExpansionId = 'A1' | 'A1a' | 'A2' | 'A2a' | 'A2b' | 'A3' | 'A3a'
 
-export interface ICollectionCount {
-  [cardId: string]: number
-}
-
 export interface ITradeCard {
   cardId: string
   expansionId: ExpansionId
