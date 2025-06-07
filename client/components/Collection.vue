@@ -93,11 +93,7 @@
 import { computed, onMounted, ref } from 'vue'
 import type { ExpansionId, ICard, ICollection } from '../../env'
 import { setUserCardCount, setUserCardStatus } from '@client/stores/card'
-import {
-  getUserCollection,
-  loadUserCollection,
-  setUserCollectionCountMap,
-} from '@client/stores/collection'
+import { getUserCollection, loadUserCollection, setUserCollection } from '@client/stores/collection'
 import CollectionCard from './CollectionCard.vue'
 import Counter from './Counter.vue'
 
@@ -167,6 +163,9 @@ function fillCount(rarity: string) {
     if (window.confirm(`Are you sure to mark all ${rarity} cards as missing?`)) {
       rarityCards.forEach((card) => {
         countMap.value[card.id] = 0
+        if (statusMap.value[card.id] === 'offer') {
+          statusMap.value[card.id] = null
+        }
       })
     }
   } else if (window.confirm(`Are you sure to mark all ${rarity} cards as owned?`)) {
@@ -174,7 +173,7 @@ function fillCount(rarity: string) {
       countMap.value[card.id] = 1
     })
   }
-  setUserCollectionCountMap(props.expansionId, countMap.value)
+  setUserCollection(props.expansionId, { countMap: countMap.value, statusMap: statusMap.value })
 }
 
 function scrollToNext() {
