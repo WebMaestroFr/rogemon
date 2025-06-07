@@ -71,14 +71,14 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import type { ExpansionId, ICard, ICollectionCount } from '../../env'
-import { getCollectionCountMap } from '@client/stores/collection'
+import type { ExpansionId, ICard, ICollection } from '../../env'
+import { loadCollection } from '@client/stores/collection'
 import Counter from './Counter.vue'
 import Card from './Card.vue'
 
 const props = defineProps<{ expansionId: ExpansionId; name: string; username: string }>()
 const cards = ref<ICard[]>([])
-const countMap = ref<ICollectionCount>({})
+const countMap = ref<ICollection['countMap']>({})
 
 const emit = defineEmits(['loaded'])
 
@@ -86,7 +86,8 @@ onMounted(async () => {
   try {
     const cardsResponse = await fetch(`../cards/${props.expansionId}.json`)
     cards.value = await cardsResponse.json()
-    countMap.value = getCollectionCountMap(props.username, props.expansionId)
+    const collection = await loadCollection(props.username, props.expansionId)
+    countMap.value = collection.countMap
   } catch (err) {
     console.error(`Failed to load collection ${props.expansionId} for ${props.username}`, err)
   } finally {
