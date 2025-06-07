@@ -15,7 +15,7 @@ import A2b from '../../assets/cards/A2b.json'
 import A3 from '../../assets/cards/A3.json'
 import A3a from '../../assets/cards/A3a.json'
 
-const expansionsJson = {
+export const expansionsJson = {
   A1,
   A1a,
   A2,

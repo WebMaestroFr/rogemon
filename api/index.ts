@@ -13,6 +13,7 @@ import debug from './utilities/debug'
 import serveStaticFiles from './utilities/serveStaticFiles'
 import serveDevelopment from './utilities/serveDevelopment'
 import Collection from '@api/models/collection'
+import { expansionsJson } from './router/trade/listUserTrades'
 
 const ascii =
   " ____               __                       _  \n\
@@ -46,6 +47,7 @@ async function setupServer() {
 
     await connectDatabase()
 
+    // TODO: Remove this after all users have their status maps set on production.
     await fixStatusMaps()
   } catch (err) {
     debug.error(err)
@@ -54,25 +56,37 @@ async function setupServer() {
 }
 
 async function fixStatusMaps() {
-  // To avoid having to manually set all status when it's released, we default to "ask" for count===0 count and "offer" for count>=2 if status is not set.
-  const allCollections = await Collection.find()
-  console.log(chalk.yellow(`Fixing status maps for ${allCollections.length} collections...`))
-  for (const collection of allCollections) {
-    for (const [cardId, count] of collection.countMap) {
+  // To avoid having to manually set all status when it's released,
+  // we default to "ask" for count===0 count and "offer" for count>=2 if status is not set.
+
+  for (const [expansionId, expansion] of Object.entries(expansionsJson)) {
+    const expansionCollections = await Collection.find({ expansionId })
+    for (const collection of expansionCollections) {
+      if (!collection.statusMap) {
+        collection.statusMap = new Map<string, 'ask' | 'offer'>()
+      }
       console.log(
-        chalk.blue(`Checking card ${cardId} with count ${count} for user ${collection.userId}`),
+        chalk.blue(
+          `Adding status maps to ${expansionId} collection (${expansion.length} cards) for user ${collection.userId}`,
+        ),
       )
-      if (!collection.statusMap.has(cardId)) {
-        if (count > 1) {
-          collection.statusMap.set(cardId, 'offer')
-          // collection.countMap.set(cardId, 1)
-        } else if (!count) {
-          collection.statusMap.set(cardId, 'ask')
-          // collection.countMap.set(cardId, 0)
+      for (const { id } of expansion) {
+        const count = collection.countMap.get(id)
+        if (!collection.statusMap.has(id)) {
+          if (count === undefined) {
+            console.log(chalk.red(`No count for card ${id}, setting to 'ask'`))
+            collection.statusMap.set(id, 'ask')
+            collection.countMap.set(id, 0)
+          } else if (count > 1) {
+            console.log(chalk.green(`Count for card ${id} is ${count}, setting to 'offer'`))
+            collection.statusMap.set(id, 'offer')
+            collection.countMap.set(id, 1)
+          }
         }
       }
+      await collection.save()
     }
-    await collection.save()
+    console.log(chalk.green(`Added status maps to ${expansionId} collections`))
   }
 }
 
