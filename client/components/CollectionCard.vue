@@ -1,10 +1,19 @@
 <template>
-  <Card :card="card" :show-image="count > 0" @click="count ? empty() : $emit('increase')">
-    <span v-if="status === 'ask'" class="round heart status" @click.stop="$emit('ask')" />
-    <span v-else-if="status === 'offer'" class="round gift status" @click.stop="$emit('offer')" />
-    <div v-if="!status && tradable.includes(card.rarity)" class="actions">
-      <button class="round heart" @click.stop="$emit('ask')" />
-      <button class="round gift" @click.stop="offer" />
+  <Card
+    :card="card"
+    :show-image="count > 0"
+    :class="['card', status ? 'has-status' : '']"
+    @click="handleCardClick"
+  >
+    <div v-if="TRADABLE_RARITIES.includes(card.rarity)" class="status">
+      <button
+        :class="['button', 'heart', status === 'ask' ? 'active' : '']"
+        @click.stop="emit('ask')"
+      />
+      <button
+        :class="['button', 'gift', status === 'offer' ? 'active' : '']"
+        @click.stop="emit('offer')"
+      />
     </div>
   </Card>
 </template>
@@ -13,19 +22,19 @@
 import type { ICard } from '../../env'
 import Card from './Card.vue'
 
-const tradable = ['◊', '◊◊', '◊◊◊', '◊◊◊◊', '☆']
+const TRADABLE_RARITIES = ['◊', '◊◊', '◊◊◊', '◊◊◊◊', '☆']
 
 const props = defineProps<{ card: ICard; count: number; status: 'ask' | 'offer' | null }>()
-const emit = defineEmits(['decrease', 'increase', 'ask', 'offer'])
+const emit = defineEmits(['miss', 'own', 'ask', 'offer'])
 
-function empty() {
-  for (let i = 0; i < props.count; i++) emit('decrease')
-  if (props.status === 'offer') emit('offer')
-}
-
-function offer() {
-  emit('offer')
-  if (!props.count) emit('increase')
+function handleCardClick() {
+  if (props.status === null) {
+    if (props.count > 0) {
+      emit('miss')
+    } else {
+      emit('own')
+    }
+  }
 }
 </script>
 
@@ -35,17 +44,25 @@ function offer() {
   min-width: 60px;
 }
 
-.card:hover .actions {
-  opacity: 1;
-}
-
-.actions {
+.status {
   position: absolute;
   top: 60%;
   left: 0;
   width: 100%;
+}
+.button {
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
+}
+.has-status .button {
+  opacity: 0.33;
+}
+.card:hover .button {
+  opacity: 0.67;
+}
+.status .button.active,
+.status .button:hover {
+  opacity: 1;
 }
 
 .heart {
@@ -54,17 +71,13 @@ function offer() {
     #fd619e;
 }
 
-.heart:not(.status) {
-  margin-right: 10%;
-}
-
 .gift {
   background:
     url('/icons/gift.png') no-repeat,
     #8799b1;
 }
 
-.round {
+.button {
   width: 32px;
   height: 32px;
   padding: 8px;
@@ -79,21 +92,15 @@ function offer() {
     0.1rem -0.1rem 0.2rem rgba(0, 0, 0, 0.1);
 }
 
-.status {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
 @media (max-width: 600px) {
-  .actions {
+  .status {
     position: absolute;
     top: 60%;
     left: 0;
     width: 100%;
     opacity: 1;
   }
-  .round {
+  .button {
     width: 20px;
     height: 20px;
     padding: 4px;

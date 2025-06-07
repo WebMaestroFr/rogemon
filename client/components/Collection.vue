@@ -79,10 +79,10 @@
         :count="countMap[card.id] || 0"
         :status="statusMap[card.id] || null"
         class="collection__card"
-        @increase="() => increaseCardCount(card.id)"
-        @decrease="() => decreaseCardCount(card.id)"
-        @ask="() => askCard(card.id)"
-        @offer="() => offerCard(card.id)"
+        @own="() => markOwn(card.id)"
+        @miss="() => markMiss(card.id)"
+        @ask="() => markAsk(card.id)"
+        @offer="() => markOffer(card.id)"
       />
     </div>
     <img src="/img/splitter.png" class="splitter" />
@@ -116,51 +116,52 @@ onMounted(async () => {
   emit('loaded')
 })
 
-function increaseCardCount(cardId: string) {
-  if (!countMap.value[cardId]) {
-    countMap.value[cardId] = 1
-  } else {
-    countMap.value[cardId] += 1
-  }
+function markOwn(cardId: string) {
+  countMap.value[cardId] = 1
   setCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 
-function decreaseCardCount(cardId: string) {
-  if (!countMap.value[cardId]) {
-    countMap.value[cardId] = 0
-  } else {
-    countMap.value[cardId] -= 1
-  }
+function markMiss(cardId: string) {
+  countMap.value[cardId] = 0
   setCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 
-function askCard(cardId: string) {
+function markAsk(cardId: string) {
   if (statusMap.value[cardId] === 'ask') {
     statusMap.value[cardId] = null
   } else {
+    countMap.value[cardId] = -1
     statusMap.value[cardId] = 'ask'
   }
+  setCardCount(props.expansionId, cardId, countMap.value[cardId])
   setCardStatus(props.expansionId, cardId, statusMap.value[cardId])
 }
 
-function offerCard(cardId: string) {
+function markOffer(cardId: string) {
   if (statusMap.value[cardId] === 'offer') {
     statusMap.value[cardId] = null
   } else {
+    countMap.value[cardId] = 2
     statusMap.value[cardId] = 'offer'
   }
+  setCardCount(props.expansionId, cardId, countMap.value[cardId])
   setCardStatus(props.expansionId, cardId, statusMap.value[cardId])
 }
 
 function fill(rarity: string) {
-  const rarityCards = cards.value.filter((card) => card.rarity === rarity)
-  const isComplete = rarityCards.every((card) => countMap.value[card.id] > 0)
+  const cardsToFill = cards.value.filter(
+    (card) => card.rarity === rarity && !statusMap.value[card.id],
+  )
+  if (cardsToFill.length === 0) {
+    return
+  }
+  const isComplete = cardsToFill.every((card) => countMap.value[card.id] > 0)
   if (isComplete) {
     if (window.confirm(`Are you sure to mark all ${rarity} cards as missing?`)) {
-      rarityCards.forEach((card) => (countMap.value[card.id] = 0))
+      cardsToFill.forEach((card) => (countMap.value[card.id] = 0))
     }
   } else if (window.confirm(`Are you sure to mark all ${rarity} cards as owned?`)) {
-    rarityCards.forEach((card) => !countMap.value[card.id] && increaseCardCount(card.id))
+    cardsToFill.forEach((card) => !countMap.value[card.id] && markOwn(card.id))
   }
 }
 
