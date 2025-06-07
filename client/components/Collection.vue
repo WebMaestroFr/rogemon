@@ -130,10 +130,8 @@ function markAsk(cardId: string) {
   if (statusMap.value[cardId] === 'ask') {
     statusMap.value[cardId] = null
   } else {
-    countMap.value[cardId] = -1
     statusMap.value[cardId] = 'ask'
   }
-  setCardCount(props.expansionId, cardId, countMap.value[cardId])
   setCardStatus(props.expansionId, cardId, statusMap.value[cardId])
 }
 
@@ -141,10 +139,8 @@ function markOffer(cardId: string) {
   if (statusMap.value[cardId] === 'offer') {
     statusMap.value[cardId] = null
   } else {
-    countMap.value[cardId] = 2
     statusMap.value[cardId] = 'offer'
   }
-  setCardCount(props.expansionId, cardId, countMap.value[cardId])
   setCardStatus(props.expansionId, cardId, statusMap.value[cardId])
 }
 
