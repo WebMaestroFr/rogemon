@@ -9,8 +9,6 @@ export const emails = [
   'fabi@rogemon.app',
 ]
 
-export const usernames = emails.map((email) => email.split('@')[0])
-
 export const expansions: Record<ExpansionId, string> = {
   A1: 'Genetic Apex',
   A1a: 'Mythical Island',
@@ -22,7 +20,7 @@ export const expansions: Record<ExpansionId, string> = {
 } as const
 
 export function getCollectionKey(username: string, expansionId: ExpansionId) {
-  return `user/${username}/collection/${expansionId}`
+  return `${username}/${expansionId}`
 }
 export function getCollectionCountKey(username: string, expansionId: ExpansionId) {
   return `${getCollectionKey(username, expansionId)}/countMap`
@@ -66,7 +64,6 @@ export function setCollectionCount(
 ) {
   const countKey = getCollectionCountKey(username, expansionId)
   store.set(countKey, countMap)
-  saveCollection(username, expansionId)
 }
 
 export function setUserCollectionCount(
@@ -78,6 +75,7 @@ export function setUserCollectionCount(
     throw new Error('User is not authenticated')
   }
   setCollectionCount(username, expansionId, countMap)
+  saveUserCollection(expansionId)
 }
 
 export function setCollectionStatus(
@@ -87,7 +85,6 @@ export function setCollectionStatus(
 ) {
   const statusKey = getCollectionStatusKey(username, expansionId)
   store.set(statusKey, statusMap)
-  saveCollection(username, expansionId)
 }
 
 export function setUserCollectionStatus(
@@ -99,6 +96,7 @@ export function setUserCollectionStatus(
     throw new Error('User is not authenticated')
   }
   setCollectionStatus(username, expansionId, statusMap)
+  saveUserCollection(expansionId)
 }
 
 export function setCollection(
@@ -123,7 +121,7 @@ export function setUserCollection(
 
 export async function loadCollection(username: string, expansionId: ExpansionId) {
   return await auth
-    .fetch<ICollection>(`/api/${getCollectionKey(username, expansionId)}`)
+    .fetch<ICollection>(`/api/collection/${getCollectionKey(username, expansionId)}`)
     .then((collection) => {
       setCollection(username, expansionId, collection)
       return collection
@@ -139,22 +137,18 @@ export async function loadUserCollection(expansionId: ExpansionId) {
   return loadCollection(username, expansionId)
 }
 
-export async function saveCollection(username: string, expansionId: ExpansionId) {
-  const collection = getCollection(username, expansionId)
-  const collectionKey = getCollectionKey(username, expansionId)
-  return debounce(`${collectionKey}`, () =>
-    auth.fetch<ICollection>(`/api/${collectionKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(collection),
-    }),
-  )
-}
-
 export async function saveUserCollection(expansionId: ExpansionId): Promise<ICollection> {
   const username = auth.getUsername()
   if (!username) {
     throw new Error('User is not authenticated')
   }
-  return saveCollection(username, expansionId)
+  const collection = getCollection(username, expansionId)
+  const collectionKey = getCollectionKey(username, expansionId)
+  return debounce(`${collectionKey}`, () =>
+    auth.fetch<ICollection>(`/api/collection/${expansionId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(collection),
+    }),
+  )
 }

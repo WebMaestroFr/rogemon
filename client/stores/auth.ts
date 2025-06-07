@@ -18,7 +18,7 @@ function getTokenPayload(): IUserPayload | null {
 
 function getUsername() {
   const payload = getTokenPayload()
-  return payload?.email.split('@')[0]
+  return payload ? btoa(payload.email) : null
 }
 
 async function signIn(body: { email: string; password: string }) {

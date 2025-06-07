@@ -4,7 +4,7 @@ import Collection from '@api/models/collection'
 import assertRequestUser from '@api/utilities/assertRequestUser'
 import { sendData, sendError } from '@api/utilities/sendResponse'
 
-export default async function getCurrentUserCollection(
+export default async function getUserCollection(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -19,7 +19,7 @@ export default async function getCurrentUserCollection(
       return sendError(res, 404, 'Collection not found')
     }
 
-    return sendData(res, 200, collection.countMap)
+    return sendData(res, 200, collection)
   } catch (err) {
     next(err)
   }

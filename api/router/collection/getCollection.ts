@@ -5,7 +5,7 @@ import assertRequestUser from '@api/utilities/assertRequestUser'
 import { sendData, sendError } from '@api/utilities/sendResponse'
 import User from '@api/models/user'
 
-export default async function getOtherUserCollection(
+export default async function getCollection(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -13,16 +13,18 @@ export default async function getOtherUserCollection(
   try {
     assertRequestUser(req.user, res)
 
-    const otherUser = await User.findOne({ email: { $regex: `^${req.params.username}` } })
-    if (!otherUser) return sendError(res, 404, 'User not found')
+    const email = atob(req.params.username)
+
+    const user = await User.findOne({ email: { $regex: `^${email}` } })
+    if (!user) return sendError(res, 404, 'User not found')
 
     const collection = await Collection.findOne({
-      userId: otherUser._id,
+      userId: user._id,
       expansionId: req.params.expansionId,
     })
     if (!collection) return sendError(res, 404, 'Collection not found')
 
-    return sendData(res, 200, collection.countMap)
+    return sendData(res, 200, collection)
   } catch (err) {
     next(err)
   }
