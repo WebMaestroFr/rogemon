@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 
+import EXPANSIONS from '@api/assets/cards'
 import Collection from '@api/models/collection'
 import User from '@api/models/user'
 import assertRequestBody from '@api/utilities/assertRequestBody'
@@ -7,26 +8,8 @@ import assertRequestUser from '@api/utilities/assertRequestUser'
 import type { ExpansionId, ITrade, ITradeEmailMap } from '../../../env'
 import { sendData } from '@api/utilities/sendResponse'
 
-import A1 from '../../assets/cards/A1.json'
-import A1a from '../../assets/cards/A1a.json'
-import A2 from '../../assets/cards/A2.json'
-import A2a from '../../assets/cards/A2a.json'
-import A2b from '../../assets/cards/A2b.json'
-import A3 from '../../assets/cards/A3.json'
-import A3a from '../../assets/cards/A3a.json'
-
-export const expansionsJson = {
-  A1,
-  A1a,
-  A2,
-  A2a,
-  A2b,
-  A3,
-  A3a,
-}
-
 export function getCardRarity(expansionId: ExpansionId, cardId: string): string {
-  const expansionJson = expansionsJson[expansionId]
+  const expansionJson = EXPANSIONS[expansionId]
   if (!expansionJson) {
     throw new Error(`Unknown expansion ${expansionId}`)
   }

@@ -12,8 +12,8 @@ import connectDatabase from './utilities/connectDatabase'
 import debug from './utilities/debug'
 import serveStaticFiles from './utilities/serveStaticFiles'
 import serveDevelopment from './utilities/serveDevelopment'
+import EXPANSIONS from '@api/assets/cards'
 import Collection from '@api/models/collection'
-import { expansionsJson } from './router/trade/listUserTrades'
 
 const ascii =
   " ____               __                       _  \n\
@@ -48,7 +48,7 @@ async function setupServer() {
     await connectDatabase()
 
     // TODO: Remove this after all users have their status maps set on production.
-    await fixStatusMaps()
+    await setDefaultCollectionStatusMaps()
   } catch (err) {
     debug.error(err)
     throw err
@@ -56,10 +56,11 @@ async function setupServer() {
 }
 
 // TODO: Remove this after all users have their status maps set on production.
-async function fixStatusMaps() {
+async function setDefaultCollectionStatusMaps() {
+  // Upgrade from countMap to statusMap
   // To avoid having to manually set all cards status when collection.statusMap is released,
   // we default to "ask" for count===0 count, and to "offer" for count>=2 if status is not set.
-  for (const [expansionId, expansion] of Object.entries(expansionsJson)) {
+  for (const [expansionId, expansion] of Object.entries(EXPANSIONS)) {
     const expansionCollections = await Collection.find({ expansionId })
     for (const collection of expansionCollections) {
       if (!collection.statusMap) {
@@ -70,10 +71,6 @@ async function fixStatusMaps() {
           ),
         )
         for (const { id } of expansion) {
-          if (collection.statusMap.has(id)) {
-            // Card already has a status, skipping
-            continue
-          }
           const count = collection.countMap.get(id)
           if (!count) {
             // Assuming current users have reasonably complete collections,
