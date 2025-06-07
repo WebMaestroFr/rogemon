@@ -69,6 +69,17 @@ export function setCollectionCount(
   saveCollection(username, expansionId)
 }
 
+export function setUserCollectionCount(
+  expansionId: ExpansionId,
+  countMap: ICollection['countMap'],
+) {
+  const username = auth.getUsername()
+  if (!username) {
+    throw new Error('User is not authenticated')
+  }
+  setCollectionCount(username, expansionId, countMap)
+}
+
 export function setCollectionStatus(
   username: string,
   expansionId: ExpansionId,
@@ -77,6 +88,17 @@ export function setCollectionStatus(
   const statusKey = getCollectionStatusKey(username, expansionId)
   store.set(statusKey, statusMap)
   saveCollection(username, expansionId)
+}
+
+export function setUserCollectionStatus(
+  expansionId: ExpansionId,
+  statusMap: ICollection['statusMap'],
+) {
+  const username = auth.getUsername()
+  if (!username) {
+    throw new Error('User is not authenticated')
+  }
+  setCollectionStatus(username, expansionId, statusMap)
 }
 
 export function setCollection(

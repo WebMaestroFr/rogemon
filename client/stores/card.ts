@@ -1,32 +1,32 @@
 import type { ExpansionId, ICard } from '../../env'
-import { getUserCollection, setUserCollection } from './collection'
+import { getUserCollection, setUserCollectionCount, setUserCollectionStatus } from './collection'
 
-export function getCardCount(expansionId: ExpansionId, cardId: string) {
+export function getUserCardCount(expansionId: ExpansionId, cardId: string) {
   return getUserCollection(expansionId).countMap[cardId] || 0
 }
 
-export function setCardCount(expansionId: ExpansionId, cardId: string, count: number) {
+export function setUserCardCount(expansionId: ExpansionId, cardId: string, count: number) {
   const collection = getUserCollection(expansionId)
   if (count < 1) {
     delete collection.countMap[cardId]
   } else {
     collection.countMap[cardId] = count
   }
-  setUserCollection(expansionId, collection)
+  setUserCollectionCount(expansionId, collection.countMap)
 }
 
-export function getCardStatus(expansionId: ExpansionId, cardId: string) {
+export function getUserCardStatus(expansionId: ExpansionId, cardId: string) {
   return getUserCollection(expansionId).statusMap[cardId] || null
 }
 
-export function setCardStatus(
+export function setUserCardStatus(
   expansionId: ExpansionId,
   cardId: string,
   status: 'ask' | 'offer' | null,
 ) {
   const collection = getUserCollection(expansionId)
   collection.statusMap[cardId] = status
-  setUserCollection(expansionId, collection)
+  setUserCollectionStatus(expansionId, collection.statusMap)
 }
 
 const cardsCacheMap = new Map<string, Promise<ICard[]>>()

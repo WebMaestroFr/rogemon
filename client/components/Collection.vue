@@ -38,28 +38,28 @@
         icon="/icons/diamond.png"
         :cards="cards"
         :count-map="countMap"
-        @click="fill('◊')"
+        @click="fillCount('◊')"
       />
       <Counter
         :rarity="['◊◊']"
         icon="/icons/diamond.png"
         :cards="cards"
         :count-map="countMap"
-        @click="fill('◊◊')"
+        @click="fillCount('◊◊')"
       />
       <Counter
         :rarity="['◊◊◊']"
         icon="/icons/diamond.png"
         :cards="cards"
         :count-map="countMap"
-        @click="fill('◊◊◊')"
+        @click="fillCount('◊◊◊')"
       />
       <Counter
         :rarity="['◊◊◊◊']"
         icon="/icons/diamond.png"
         :cards="cards"
         :count-map="countMap"
-        @click="fill('◊◊◊◊')"
+        @click="fillCount('◊◊◊◊')"
       />
     </div>
     <div>
@@ -92,8 +92,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import type { ExpansionId, ICard, ICollection } from '../../env'
-import { setCardCount, setCardStatus } from '@client/stores/card'
-import { getUserCollection, loadUserCollection } from '@client/stores/collection'
+import { setUserCardCount, setUserCardStatus } from '@client/stores/card'
+import {
+  getUserCollection,
+  loadUserCollection,
+  setUserCollectionCount,
+} from '@client/stores/collection'
 import CollectionCard from './CollectionCard.vue'
 import Counter from './Counter.vue'
 
@@ -118,12 +122,12 @@ onMounted(async () => {
 
 function markOwn(cardId: string) {
   countMap.value[cardId] = 1
-  setCardCount(props.expansionId, cardId, countMap.value[cardId])
+  setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 
 function markMiss(cardId: string) {
   countMap.value[cardId] = 0
-  setCardCount(props.expansionId, cardId, countMap.value[cardId])
+  setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 
 function markAsk(cardId: string) {
@@ -132,7 +136,7 @@ function markAsk(cardId: string) {
   } else {
     statusMap.value[cardId] = 'ask'
   }
-  setCardStatus(props.expansionId, cardId, statusMap.value[cardId])
+  setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
 }
 
 function markOffer(cardId: string) {
@@ -140,25 +144,29 @@ function markOffer(cardId: string) {
     statusMap.value[cardId] = null
   } else {
     statusMap.value[cardId] = 'offer'
+    if (countMap.value[cardId] === 0) {
+      countMap.value[cardId] = 1
+      setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
+    }
   }
-  setCardStatus(props.expansionId, cardId, statusMap.value[cardId])
+  setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
 }
 
-function fill(rarity: string) {
-  const cardsToFill = cards.value.filter(
-    (card) => card.rarity === rarity && !statusMap.value[card.id],
-  )
-  if (cardsToFill.length === 0) {
-    return
-  }
-  const isComplete = cardsToFill.every((card) => countMap.value[card.id] > 0)
+function fillCount(rarity: string) {
+  const rarityCards = cards.value.filter((card) => card.rarity === rarity)
+  const isComplete = rarityCards.every((card) => countMap.value[card.id] > 0)
   if (isComplete) {
     if (window.confirm(`Are you sure to mark all ${rarity} cards as missing?`)) {
-      cardsToFill.forEach((card) => (countMap.value[card.id] = 0))
+      rarityCards.forEach((card) => {
+        countMap.value[card.id] = 0
+      })
     }
   } else if (window.confirm(`Are you sure to mark all ${rarity} cards as owned?`)) {
-    cardsToFill.forEach((card) => !countMap.value[card.id] && markOwn(card.id))
+    rarityCards.forEach((card) => {
+      countMap.value[card.id] = 1
+    })
   }
+  setUserCollectionCount(props.expansionId, countMap.value)
 }
 
 function scrollToNext() {
