@@ -10,7 +10,6 @@ export default async function upsertUserCollection(
   res: Response,
   next: NextFunction,
 ): Promise<void> {
-  console.log('upsertUserCollection called', req.params.expansionId, req.body)
   try {
     assertRequestUser(req.user, res)
     assertRequestBody<Partial<ICollection>>(req.body, res, {

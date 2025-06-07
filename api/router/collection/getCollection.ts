@@ -13,6 +13,7 @@ export default async function getCollection(
   try {
     assertRequestUser(req.user, res)
 
+    // TODO: add a username field to the user model
     const email = atob(req.params.username)
 
     const user = await User.findOne({ email: { $regex: `^${email}` } })

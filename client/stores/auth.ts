@@ -18,6 +18,7 @@ function getTokenPayload(): IUserPayload | null {
 
 function getUsername() {
   const payload = getTokenPayload()
+  // TODO: add a username field to the user model
   return payload ? btoa(payload.email) : null
 }
 

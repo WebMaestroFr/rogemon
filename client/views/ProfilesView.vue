@@ -1,10 +1,10 @@
 <template>
   <LoadingSpinner v-if="loaded < allProfiles" />
   <ProfileView
-    v-for="username of emails"
+    v-for="email of emails"
     v-show="loaded === allProfiles"
-    :key="username"
-    :username="username"
+    :key="email"
+    :email="email"
     @loaded="loaded++"
   />
 </template>

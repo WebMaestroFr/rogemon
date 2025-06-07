@@ -96,7 +96,7 @@ import { setUserCardCount, setUserCardStatus } from '@client/stores/card'
 import {
   getUserCollection,
   loadUserCollection,
-  setUserCollectionCount,
+  setUserCollectionCountMap,
 } from '@client/stores/collection'
 import CollectionCard from './CollectionCard.vue'
 import Counter from './Counter.vue'
@@ -123,11 +123,19 @@ onMounted(async () => {
 function markOwn(cardId: string) {
   countMap.value[cardId] = 1
   setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
+  if (statusMap.value[cardId] === 'ask') {
+    statusMap.value[cardId] = null
+    setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
+  }
 }
 
 function markMiss(cardId: string) {
   countMap.value[cardId] = 0
   setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
+  if (statusMap.value[cardId] === 'offer') {
+    statusMap.value[cardId] = null
+    setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
+  }
 }
 
 function markAsk(cardId: string) {
@@ -144,7 +152,7 @@ function markOffer(cardId: string) {
     statusMap.value[cardId] = null
   } else {
     statusMap.value[cardId] = 'offer'
-    if (countMap.value[cardId] === 0) {
+    if (!countMap.value[cardId]) {
       countMap.value[cardId] = 1
       setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
     }
@@ -166,7 +174,7 @@ function fillCount(rarity: string) {
       countMap.value[card.id] = 1
     })
   }
-  setUserCollectionCount(props.expansionId, countMap.value)
+  setUserCollectionCountMap(props.expansionId, countMap.value)
 }
 
 function scrollToNext() {

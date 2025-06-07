@@ -3,19 +3,19 @@
     :card="card"
     :show-image="count > 0"
     :class="['card', status ? 'has-status' : '']"
-    @click="handleCardClick"
+    @click="count > 0 ? $emit('miss') : $emit('own')"
   >
     <div v-if="TRADABLE_RARITIES.includes(card.rarity)" class="status">
       <Tooltip content="I want to receive this card!">
         <button
           :class="['button', 'ask', status === 'ask' ? 'active' : '']"
-          @click.stop="emit('ask')"
+          @click.stop="$emit('ask')"
         />
       </Tooltip>
       <Tooltip content="I can send this card!">
         <button
           :class="['button', 'offer', status === 'offer' ? 'active' : '']"
-          @click.stop="emit('offer')"
+          @click.stop="$emit('offer')"
         />
       </Tooltip>
     </div>
@@ -29,16 +29,8 @@ import Tooltip from './Tooltip.vue'
 
 const TRADABLE_RARITIES = ['◊', '◊◊', '◊◊◊', '◊◊◊◊', '☆']
 
-const props = defineProps<{ card: ICard; count: number; status: 'ask' | 'offer' | null }>()
-const emit = defineEmits(['miss', 'own', 'ask', 'offer'])
-
-function handleCardClick() {
-  if (props.count > 0) {
-    emit('miss')
-  } else {
-    emit('own')
-  }
-}
+defineProps<{ card: ICard; count: number; status: 'ask' | 'offer' | null }>()
+defineEmits(['miss', 'own', 'ask', 'offer'])
 </script>
 
 <style scoped>
