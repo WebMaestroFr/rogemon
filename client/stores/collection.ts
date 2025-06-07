@@ -9,6 +9,8 @@ export const emails = [
   'fabi@rogemon.app',
 ]
 
+export const usernames = emails.map((email) => email.split('@')[0])
+
 export const expansions: Record<ExpansionId, string> = {
   A1: 'Genetic Apex',
   A1a: 'Mythical Island',
@@ -19,82 +21,118 @@ export const expansions: Record<ExpansionId, string> = {
   A3a: 'Extradimensional Crisis',
 } as const
 
-// export function getCollectionKey(expansionId: ExpansionId) {
-//   return `collection/${expansionId}`
-// }
-
-export function getCollectionCountKey(expansionId: ExpansionId) {
-  return `collection/${expansionId}/countMap`
+export function getCollectionKey(username: string, expansionId: ExpansionId) {
+  return `user/${username}/collection/${expansionId}`
 }
-export function getCollectionStatusKey(expansionId: ExpansionId) {
-  return `collection/${expansionId}/statusMap`
+export function getCollectionCountKey(username: string, expansionId: ExpansionId) {
+  return `${getCollectionKey(username, expansionId)}/countMap`
+}
+export function getCollectionStatusKey(username: string, expansionId: ExpansionId) {
+  return `${getCollectionKey(username, expansionId)}/statusMap`
 }
 
-export function getCollectionCountMap(expansionId: ExpansionId) {
-  const countKey = getCollectionCountKey(expansionId)
+export function getCollectionCountMap(username: string, expansionId: ExpansionId) {
+  const countKey = getCollectionCountKey(username, expansionId)
   return store.get<ICollection['countMap']>(countKey) || {}
 }
-
-export function getCollectionStatusMap(expansionId: ExpansionId) {
-  const statusKey = getCollectionStatusKey(expansionId)
+export function getCollectionStatusMap(username: string, expansionId: ExpansionId) {
+  const statusKey = getCollectionStatusKey(username, expansionId)
   return store.get<ICollection['statusMap']>(statusKey) || {}
 }
 
 export function getCollection(
+  username: string,
   expansionId: ExpansionId,
 ): Pick<ICollection, 'countMap' | 'statusMap'> {
-  const countMap = getCollectionCountMap(expansionId)
-  const statusMap = getCollectionStatusMap(expansionId)
+  const countMap = getCollectionCountMap(username, expansionId)
+  const statusMap = getCollectionStatusMap(username, expansionId)
   return { countMap, statusMap }
 }
 
-export function setCollectionCount(expansionId: ExpansionId, countMap: ICollection['countMap']) {
-  const countKey = getCollectionCountKey(expansionId)
-  store.set(countKey, countMap)
-  saveCollection(expansionId)
+export function getUserCollection(
+  expansionId: ExpansionId,
+): Pick<ICollection, 'countMap' | 'statusMap'> {
+  const username = auth.getUsername()
+  if (!username) {
+    throw new Error('User is not authenticated')
+  }
+  return getCollection(username, expansionId)
 }
 
-export function setCollectionStatus(expansionId: ExpansionId, statusMap: ICollection['statusMap']) {
-  const statusKey = getCollectionStatusKey(expansionId)
+export function setCollectionCount(
+  username: string,
+  expansionId: ExpansionId,
+  countMap: ICollection['countMap'],
+) {
+  const countKey = getCollectionCountKey(username, expansionId)
+  store.set(countKey, countMap)
+  saveCollection(username, expansionId)
+}
+
+export function setCollectionStatus(
+  username: string,
+  expansionId: ExpansionId,
+  statusMap: ICollection['statusMap'],
+) {
+  const statusKey = getCollectionStatusKey(username, expansionId)
   store.set(statusKey, statusMap)
-  saveCollection(expansionId)
+  saveCollection(username, expansionId)
 }
 
 export function setCollection(
+  username: string,
   expansionId: ExpansionId,
   collection: Pick<ICollection, 'countMap' | 'statusMap'>,
 ) {
-  setCollectionCount(expansionId, collection.countMap)
-  setCollectionStatus(expansionId, collection.statusMap)
+  setCollectionCount(username, expansionId, collection.countMap)
+  setCollectionStatus(username, expansionId, collection.statusMap)
 }
 
-export async function loadCollection(expansionId: ExpansionId) {
+export function setUserCollection(
+  expansionId: ExpansionId,
+  collection: Pick<ICollection, 'countMap' | 'statusMap'>,
+) {
+  const username = auth.getUsername()
+  if (!username) {
+    throw new Error('User is not authenticated')
+  }
+  setCollection(username, expansionId, collection)
+}
+
+export async function loadCollection(username: string, expansionId: ExpansionId) {
   return await auth
-    .fetch<ICollection>(`/api/collection/${expansionId}`)
+    .fetch<ICollection>(`/api/${getCollectionKey(username, expansionId)}`)
     .then((collection) => {
-      setCollection(expansionId, collection)
+      setCollection(username, expansionId, collection)
       return collection
     })
-    .catch(() => getCollection(expansionId))
+    .catch(() => getCollection(username, expansionId))
 }
 
-export async function loadCollectionByUsername(expansionId: ExpansionId, username: string) {
-  return await auth.fetch<ICollection>(`/api/collection/${expansionId}/${username}`).catch(
-    () =>
-      ({
-        countMap: {},
-        statusMap: {},
-      }) as ICollection,
-  )
+export async function loadUserCollection(expansionId: ExpansionId) {
+  const username = auth.getUsername()
+  if (!username) {
+    throw new Error('User is not authenticated')
+  }
+  return loadCollection(username, expansionId)
 }
 
-export async function saveCollection(expansionId: ExpansionId) {
-  const collection = getCollection(expansionId)
-  return debounce(`collection/${expansionId}`, () =>
-    auth.fetch<ICollection>(`/api/collection/${expansionId}`, {
+export async function saveCollection(username: string, expansionId: ExpansionId) {
+  const collection = getCollection(username, expansionId)
+  const collectionKey = getCollectionKey(username, expansionId)
+  return debounce(`${collectionKey}`, () =>
+    auth.fetch<ICollection>(`/api/${collectionKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(collection),
     }),
   )
+}
+
+export async function saveUserCollection(expansionId: ExpansionId): Promise<ICollection> {
+  const username = auth.getUsername()
+  if (!username) {
+    throw new Error('User is not authenticated')
+  }
+  return saveCollection(username, expansionId)
 }

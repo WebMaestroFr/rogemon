@@ -3,6 +3,11 @@
 import type { ICollection as ICollectionModel } from './api/models/collection'
 import type { IUser as IUserModel } from './api/models/user'
 
+export interface IUserPayload extends JwtPayload {
+  userId: string
+  email: string
+}
+
 export interface ICollection extends ICollectionModel {
   _id: string
   countMap: {

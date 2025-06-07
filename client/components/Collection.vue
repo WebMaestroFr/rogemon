@@ -92,14 +92,13 @@
 import { computed, onMounted, ref } from 'vue'
 import type { ExpansionId, ICard, ICollection } from '../../env'
 import { setCardCount, setCardStatus } from '@client/stores/card'
-import { loadCollection } from '@client/stores/collection'
+import { getUserCollection, loadUserCollection } from '@client/stores/collection'
 import CollectionCard from './CollectionCard.vue'
 import Counter from './Counter.vue'
-import { getCollection } from '@client/stores/collection'
 
 const props = defineProps<{ expansionId: ExpansionId; name: string }>()
 
-const initialCollection = getCollection(props.expansionId)
+const initialCollection = getUserCollection(props.expansionId)
 
 const cards = ref<ICard[]>([])
 const countMap = ref<ICollection['countMap']>(initialCollection.countMap)
@@ -108,7 +107,7 @@ const statusMap = ref<ICollection['statusMap']>(initialCollection.statusMap)
 onMounted(async () => {
   const cardsResponse = await fetch(`cards/${props.expansionId}.json`)
   cards.value = await cardsResponse.json()
-  const collection = await loadCollection(props.expansionId)
+  const collection = await loadUserCollection(props.expansionId)
   countMap.value = collection.countMap
   statusMap.value = collection.statusMap
 })
@@ -150,10 +149,14 @@ function offerCard(cardId: string) {
 }
 
 function fill(rarity: string) {
-  if (window.confirm(`Are you sure to fill all ${rarity} cards?`)) {
-    cards.value
-      .filter((c) => c.rarity === rarity)
-      .forEach((c) => !countMap.value[c.id] && increaseCardCount(c.id))
+  const rarityCards = cards.value.filter((card) => card.rarity === rarity)
+  const isComplete = rarityCards.every((card) => countMap.value[card.id] > 0)
+  if (isComplete) {
+    if (window.confirm(`Are you sure to mark all ${rarity} cards as missing?`)) {
+      rarityCards.forEach((card) => (countMap.value[card.id] = 0))
+    }
+  } else if (window.confirm(`Are you sure to mark all ${rarity} cards as owned?`)) {
+    rarityCards.forEach((card) => !countMap.value[card.id] && increaseCardCount(card.id))
   }
 }
 

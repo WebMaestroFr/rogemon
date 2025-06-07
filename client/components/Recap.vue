@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import type { ExpansionId, ICard, ICollectionCount } from '../../env'
-import { loadCollectionByUsername } from '@client/stores/collection'
+import { getCollectionCountMap } from '@client/stores/collection'
 import Counter from './Counter.vue'
 import Card from './Card.vue'
 
@@ -83,7 +83,7 @@ const countMap = ref<ICollectionCount>({})
 onMounted(async () => {
   const cardsResponse = await fetch(`../cards/${props.expansionId}.json`)
   cards.value = await cardsResponse.json()
-  countMap.value = await loadCollectionByUsername(props.expansionId, props.username)
+  countMap.value = getCollectionCountMap(props.username, props.expansionId)
 })
 
 const rarity = ['◊', '◊◊', '◊◊◊', '◊◊◊◊']

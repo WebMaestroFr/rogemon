@@ -1,22 +1,22 @@
 import type { ExpansionId, ICard } from '../../env'
-import { getCollection, setCollectionCount, setCollectionStatus } from './collection'
+import { getUserCollection, setUserCollection } from './collection'
 
 export function getCardCount(expansionId: ExpansionId, cardId: string) {
-  return getCollection(expansionId).countMap[cardId] || 0
+  return getUserCollection(expansionId).countMap[cardId] || 0
 }
 
 export function setCardCount(expansionId: ExpansionId, cardId: string, count: number) {
-  const collection = getCollection(expansionId)
+  const collection = getUserCollection(expansionId)
   if (count < 1) {
     delete collection.countMap[cardId]
   } else {
     collection.countMap[cardId] = count
   }
-  setCollectionCount(expansionId, collection.countMap)
+  setUserCollection(expansionId, collection)
 }
 
 export function getCardStatus(expansionId: ExpansionId, cardId: string) {
-  return getCollection(expansionId).statusMap[cardId] || null
+  return getUserCollection(expansionId).statusMap[cardId] || null
 }
 
 export function setCardStatus(
@@ -24,9 +24,9 @@ export function setCardStatus(
   cardId: string,
   status: 'ask' | 'offer' | null,
 ) {
-  const collection = getCollection(expansionId)
+  const collection = getUserCollection(expansionId)
   collection.statusMap[cardId] = status
-  setCollectionStatus(expansionId, collection.statusMap)
+  setUserCollection(expansionId, collection)
 }
 
 const cardsCacheMap = new Map<string, Promise<ICard[]>>()
