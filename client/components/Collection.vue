@@ -119,10 +119,6 @@ onMounted(async () => {
 function markOwn(cardId: string) {
   countMap.value[cardId] = 1
   setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
-  if (statusMap.value[cardId] === 'ask') {
-    statusMap.value[cardId] = null
-    setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
-  }
 }
 
 function markMiss(cardId: string) {
