@@ -1,8 +1,8 @@
 <template>
   <div class="collection">
-    <img src="/img/splitter.png" class="splitter" />
     <h2>
       <img :src="'/img/' + expansionId + '_en.png'" :alt="name" />
+      <img v-if="hasMedal" src="/img/medal.png" class="medal" />
       <img src="/icons/down.png" class="scroller" @click="scrollToNext" />
     </h2>
     <div>
@@ -85,6 +85,7 @@
         @offer="() => offerCard(card.id)"
       />
     </div>
+    <img src="/img/splitter.png" class="splitter" />
   </div>
 </template>
 
@@ -104,12 +105,15 @@ const cards = ref<ICard[]>([])
 const countMap = ref<ICollection['countMap']>(initialCollection.countMap)
 const statusMap = ref<ICollection['statusMap']>(initialCollection.statusMap)
 
+const emit = defineEmits(['loaded'])
+
 onMounted(async () => {
   const cardsResponse = await fetch(`cards/${props.expansionId}.json`)
   cards.value = await cardsResponse.json()
   const collection = await loadUserCollection(props.expansionId)
   countMap.value = collection.countMap
   statusMap.value = collection.statusMap
+  emit('loaded')
 })
 
 function increaseCardCount(cardId: string) {
@@ -169,7 +173,18 @@ function scrollToNext() {
   }
 }
 
+const rarity = ['◊', '◊◊', '◊◊◊', '◊◊◊◊']
+const baseCards = computed(() => cards.value.filter((c) => rarity.includes(c.rarity)))
+
+const obtainedCards = computed(() => {
+  const obtained = Object.entries(countMap.value)
+    .filter(([_, count]) => count > 0)
+    .map(([id, _]) => id)
+  return cards.value.filter((c) => obtained.includes(c.id))
+})
+
 const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
+const hasMedal = computed(() => baseCards.value.every((c) => obtainedCards.value.includes(c)))
 </script>
 
 <style scoped>
@@ -194,9 +209,11 @@ const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
   margin: auto;
 }
 
-.splitter {
-  margin: -50px 0 30px 0;
-  width: 450px;
+.medal {
+  width: 40px;
+  position: absolute;
+  margin-left: -20px;
+  margin-top: -20px;
 }
 
 .scroller {
@@ -212,18 +229,19 @@ const hasShinies = computed(() => cards.value.some((c) => c.rarity === '✵'))
   opacity: 1;
 }
 
-.collection:last-child .scroller {
+.collection:last-child .scroller,
+.collection:last-child .splitter {
   visibility: hidden;
 }
 
 @media (max-width: 600px) {
-  .splitter {
-    width: 100%;
-    margin-top: -35px;
-  }
-
   img {
     height: 50px;
+  }
+
+  .medal {
+    width: 30px;
+    height: 30px;
   }
 }
 </style>
