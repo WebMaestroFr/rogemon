@@ -55,6 +55,7 @@ async function setupServer() {
   }
 }
 
+// TODO: Remove this after all users have their status maps set on production.
 async function fixStatusMaps() {
   // To avoid having to manually set all cards status when collection.statusMap is released,
   // we default to "ask" for count===0 count, and to "offer" for count>=2 if status is not set.
@@ -69,18 +70,26 @@ async function fixStatusMaps() {
           ),
         )
         for (const { id } of expansion) {
+          if (collection.statusMap.has(id)) {
+            // Card already has a status, skipping
+            continue
+          }
           const count = collection.countMap.get(id)
           if (!count) {
-            // "No count" means 0 with the previous implementation :(
+            // Assuming current users have reasonably complete collections,
+            // we consider that any card with no count is "ask"
             console.log(chalk.red(`No count for card ${id}, setting to 'ask'`))
-            // Assuming current users have reasonably completed collection,
-            // it should be quite accurate to consider that any card with count < 1 is "ask"
             collection.statusMap.set(id, 'ask')
-            collection.countMap.set(id, 0)
+            if (count === undefined) {
+              // undefined means 0 with the previous implementation :(
+              collection.countMap.set(id, 0)
+            }
           } else if (count > 1) {
             console.log(chalk.green(`Count for card ${id} is ${count}, setting to 'offer'`))
             collection.statusMap.set(id, 'offer')
-            collection.countMap.set(id, 2)
+            // TODO: when we don't care for count>2 anymore we should ceil it to 2
+            // to keep it for now will allow compatibility with parallel git branches for now
+            // collection.countMap.set(id, 2)
           }
         }
         await collection.save()
