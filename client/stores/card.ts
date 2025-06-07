@@ -11,11 +11,7 @@ export function getUserCardCount(expansionId: ExpansionId, cardId: string) {
 
 export function setUserCardCount(expansionId: ExpansionId, cardId: string, count: number) {
   const collection = getUserCollection(expansionId)
-  if (count < 1) {
-    delete collection.countMap[cardId]
-  } else {
-    collection.countMap[cardId] = count
-  }
+  collection.countMap[cardId] = count
   setUserCollectionCountMap(expansionId, collection.countMap)
 }
 
