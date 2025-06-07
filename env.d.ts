@@ -65,7 +65,6 @@ export interface ICollectionCount {
 export interface ITradeCard {
   cardId: string
   expansionId: ExpansionId
-  priority: number
 }
 export interface ITrade {
   ask: ITradeCard[]
