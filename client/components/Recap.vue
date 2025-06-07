@@ -86,7 +86,6 @@ onMounted(async () => {
   try {
     const cardsResponse = await fetch(`../cards/${props.expansionId}.json`)
     cards.value = await cardsResponse.json()
-    // TODO: add a username field to the user model
     countMap.value = getCollectionCountMap(props.username, props.expansionId)
   } catch (err) {
     console.error(`Failed to load collection ${props.expansionId} for ${props.username}`, err)
