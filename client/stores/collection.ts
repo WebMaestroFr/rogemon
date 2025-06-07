@@ -19,8 +19,24 @@ export const expansions: Record<ExpansionId, string> = {
   A3a: 'Extradimensional Crisis',
 } as const
 
+// TODO: Remove this once all users have migrated to the new collection structure
+// Copy old collection count to new store location
+for (const expansionId of Object.keys(expansions) as ExpansionId[]) {
+  const username = auth.getUsername()
+  if (username) {
+    const oldCollectionKey = `collection/${expansionId}`
+    const newCollectionCountKey = getCollectionCountKey(username, expansionId)
+    const oldCollection = store.get<ICollection['countMap']>(oldCollectionKey)
+    const newCollectionCount = store.get<ICollection['countMap']>(newCollectionCountKey)
+    if (oldCollection && !newCollectionCount) {
+      store.set(newCollectionCountKey, oldCollection)
+      // store.remove(oldCollectionKey)
+    }
+  }
+}
+
 export function getCollectionKey(username: string, expansionId: ExpansionId) {
-  return `${username}/${expansionId}`
+  return `collection/${username}/${expansionId}`
 }
 export function getCollectionCountKey(username: string, expansionId: ExpansionId) {
   return `${getCollectionKey(username, expansionId)}/countMap`
@@ -121,7 +137,7 @@ export function setUserCollection(
 
 export async function loadCollection(username: string, expansionId: ExpansionId) {
   return await auth
-    .fetch<ICollection>(`/api/collection/${getCollectionKey(username, expansionId)}`)
+    .fetch<ICollection>(`/api/${getCollectionKey(username, expansionId)}`)
     .then((collection) => {
       setCollection(username, expansionId, collection)
       return collection
