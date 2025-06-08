@@ -56,19 +56,19 @@ export default async function listUserTrades(req: Request, res: Response, next: 
       for (const cardId of cardIds) {
         const userStatus = userCollection.statusMap.get(cardId)
         const otherStatus = otherCollection.statusMap.get(cardId)
-        if (userStatus === otherStatus) {
-          continue // Skip if both have the same status
+        if (userStatus === otherStatus || !userStatus || !otherStatus) {
+          continue
         }
         const rarity = getCardRarity(otherCollection.expansionId, cardId)
         const rarityTrade = emailTrade[rarity] || { ask: [], offer: [] }
         if (userStatus === 'ask' && otherStatus === 'offer') {
-          rarityTrade.ask.push({
+          rarityTrade.offer.push({
             cardId,
             expansionId: otherCollection.expansionId,
           })
           emailTrade[rarity] = rarityTrade
         } else if (userStatus === 'offer' && otherStatus === 'ask') {
-          rarityTrade.offer.push({
+          rarityTrade.ask.push({
             cardId,
             expansionId: otherCollection.expansionId,
           })
