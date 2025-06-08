@@ -4,7 +4,7 @@ import Collection from '@api/models/collection'
 import assertRequestUser from '@api/utilities/assertRequestUser'
 import { sendData } from '@api/utilities/sendResponse'
 
-export default async function listUserCollection(
+export default async function listUserCollections(
   req: Request,
   res: Response,
   next: NextFunction,
