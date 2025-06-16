@@ -85,7 +85,7 @@ async function setDefaultCollectionStatusMaps() {
             console.log(chalk.green(`Count for card ${id} is ${count}, setting to 'offer'`))
             collection.statusMap.set(id, 'offer')
             // TODO: when we don't care for count>2 anymore we should ceil it to 2
-            // to keep it for now will allow compatibility with parallel git branches for now
+            // Keeping the count for now will allow compatibility with parallel git branches (during development)
             // collection.countMap.set(id, 2)
           }
         }
