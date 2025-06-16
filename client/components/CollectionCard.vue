@@ -58,7 +58,7 @@ defineEmits(['miss', 'own', 'ask', 'offer'])
   background-color: #8799b1;
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: 70%;
+  background-size: 70%, cover;
   cursor: pointer;
   box-shadow:
     0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.1),
@@ -78,19 +78,19 @@ defineEmits(['miss', 'own', 'ask', 'offer'])
 }
 
 .ask {
-  background-image: url('/icons/trade_arrow_ask-white.png');
+  background-image: url('/icons/heart.png');
 }
 .ask:hover,
 .ask.active {
-  background-color: darkred;
+  background-image: url('/icons/heart.png'), var(--bg-pink);
 }
 
 .offer {
-  background-image: url('/icons/trade_arrow_offer-white.png');
+  background-image: url('/icons/gift.png');
 }
 .offer:hover,
 .offer.active {
-  background-color: darkgreen;
+  background-image: url('/icons/gift.png'), var(--bg-blue);
 }
 
 /* .button.active:hover {
