@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 
+import EXPANSIONS from '@api/assets/cards'
 import Collection from '@api/models/collection'
 import User from '@api/models/user'
 import assertRequestBody from '@api/utilities/assertRequestBody'
@@ -7,30 +8,8 @@ import assertRequestUser from '@api/utilities/assertRequestUser'
 import type { ExpansionId, ITrade, ITradeEmailMap } from '../../../env'
 import { sendData } from '@api/utilities/sendResponse'
 
-import A1 from '../../assets/cards/A1.json'
-import A1a from '../../assets/cards/A1a.json'
-import A2 from '../../assets/cards/A2.json'
-import A2a from '../../assets/cards/A2a.json'
-import A2b from '../../assets/cards/A2b.json'
-import A3 from '../../assets/cards/A3.json'
-import A3a from '../../assets/cards/A3a.json'
-import A3b from '../../assets/cards/A3b.json'
-import A4 from '../../assets/cards/A4.json'
-
-const expansionsJson = {
-  A1,
-  A1a,
-  A2,
-  A2a,
-  A2b,
-  A3,
-  A3a,
-  A3b,
-  A4,
-}
-
 export function getCardRarity(expansionId: ExpansionId, cardId: string): string {
-  const expansionJson = expansionsJson[expansionId]
+  const expansionJson = EXPANSIONS[expansionId]
   if (!expansionJson) {
     throw new Error(`Unknown expansion ${expansionId}`)
   }
@@ -71,28 +50,28 @@ export default async function listUserTrades(req: Request, res: Response, next: 
       }
       const emailTrade = emailTrades[otherUser.email] || new Map<string, ITrade>()
       const cardIds = new Set([
-        ...userCollection.countMap.keys(),
-        ...otherCollection.countMap.keys(),
+        ...userCollection.statusMap.keys(),
+        ...otherCollection.statusMap.keys(),
       ])
       for (const cardId of cardIds) {
-        const userCount = userCollection.countMap.get(cardId) || 0
-        const otherCount = otherCollection.countMap.get(cardId) || 0
-        if ((userCount < 1 && otherCount > 1) || (userCount > 1 && otherCount < 1)) {
-          const rarity = getCardRarity(otherCollection.expansionId, cardId)
-          const rarityTrade = emailTrade[rarity] || { ask: [], offer: [] }
-          if (userCount < 1 && otherCount > 1) {
-            rarityTrade.offer.push({
-              cardId,
-              expansionId: otherCollection.expansionId,
-              priority: Math.min(otherCount, 3) - userCount,
-            })
-          } else if (userCount > 1 && otherCount < 1) {
-            rarityTrade.ask.push({
-              cardId,
-              expansionId: otherCollection.expansionId,
-              priority: Math.min(userCount, 3) - otherCount,
-            })
-          }
+        const userStatus = userCollection.statusMap.get(cardId)
+        const otherStatus = otherCollection.statusMap.get(cardId)
+        if (userStatus === otherStatus || !userStatus || !otherStatus) {
+          continue
+        }
+        const rarity = getCardRarity(otherCollection.expansionId, cardId)
+        const rarityTrade = emailTrade[rarity] || { ask: [], offer: [] }
+        if (userStatus === 'ask' && otherStatus === 'offer') {
+          rarityTrade.offer.push({
+            cardId,
+            expansionId: otherCollection.expansionId,
+          })
+          emailTrade[rarity] = rarityTrade
+        } else if (userStatus === 'offer' && otherStatus === 'ask') {
+          rarityTrade.ask.push({
+            cardId,
+            expansionId: otherCollection.expansionId,
+          })
           emailTrade[rarity] = rarityTrade
         }
       }

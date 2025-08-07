@@ -7,13 +7,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ICard, ICollectionCount } from '../../env'
+import type { ICard, ICollection } from '../../env'
 
 const props = defineProps<{
   rarity: string[]
   icon: string
   cards: ICard[]
-  countMap: ICollectionCount
+  countMap: ICollection['countMap']
 }>()
 
 const filteredCards = computed(() => props.cards.filter((c) => props.rarity.includes(c.rarity)))

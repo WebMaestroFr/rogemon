@@ -1,5 +1,25 @@
+import type { IUserPayload } from '../../env'
+
 function getToken() {
   return localStorage.getItem('accessToken')
+}
+
+function getTokenPayload(): IUserPayload | null {
+  const token = getToken()
+  if (!token) return null
+  try {
+    const encodedPayload = token.split('.')[1]
+    const decodedPayload = atob(encodedPayload)
+    return JSON.parse(decodedPayload)
+  } catch {
+    return null
+  }
+}
+
+function getUsername() {
+  const payload = getTokenPayload()
+  // TODO: add a username field to the user model
+  return payload ? btoa(payload.email) : null
 }
 
 async function signIn(body: { email: string; password: string }) {
@@ -68,6 +88,8 @@ async function authFetch<T>(url: string, init: RequestInit = {}) {
 export default {
   fetch: authFetch,
   getToken,
+  getTokenPayload,
+  getUsername,
   signIn,
   signInOrUp,
   signUp,

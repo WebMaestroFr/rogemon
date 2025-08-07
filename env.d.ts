@@ -3,6 +3,11 @@
 import type { ICollection as ICollectionModel } from './api/models/collection'
 import type { IUser as IUserModel } from './api/models/user'
 
+export interface IUserPayload extends JwtPayload {
+  userId: string
+  email: string
+}
+
 export interface ICollection extends ICollectionModel {
   _id: string
   countMap: {
@@ -53,14 +58,9 @@ export interface ICard {
 
 export type ExpansionId = 'A1' | 'A1a' | 'A2' | 'A2a' | 'A2b' | 'A3' | 'A3a' | 'A3b' | 'A4'
 
-export interface ICollectionCount {
-  [cardId: string]: number
-}
-
 export interface ITradeCard {
   cardId: string
   expansionId: ExpansionId
-  priority: number
 }
 export interface ITrade {
   ask: ITradeCard[]

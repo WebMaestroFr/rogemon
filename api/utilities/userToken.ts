@@ -1,4 +1,5 @@
-import jwt, { type JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
+import type { IUserPayload } from '../../env'
 
 if (!process.env.JWT_SECRET) {
   throw new Error('The JWT_SECRET environment variable is undefined')
@@ -6,15 +7,10 @@ if (!process.env.JWT_SECRET) {
 
 export const JWT_SECRET = process.env.JWT_SECRET
 
-interface UserPayload extends JwtPayload {
-  userId: string
-  email: string
-}
-
-export function signToken(payload: UserPayload) {
+export function signToken(payload: IUserPayload) {
   return jwt.sign(payload, JWT_SECRET)
 }
 
 export function verifyToken(token: string) {
-  return jwt.verify(token, JWT_SECRET) as UserPayload
+  return jwt.verify(token, JWT_SECRET) as IUserPayload
 }

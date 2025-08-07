@@ -1,10 +1,12 @@
 import mongoose from 'mongoose'
+import type { ExpansionId } from '../../env'
 
 export interface ICollection extends Document {
   _id: mongoose.Types.ObjectId
   userId: mongoose.Types.ObjectId
-  expansionId: 'A1' | 'A1a' | 'A2' | 'A2a' | 'A2b' | 'A3' | 'A3a' | 'A3b' | 'A4'
+  expansionId: ExpansionId
   countMap: Map<string, number>
+  statusMap: Map<string, null | 'ask' | 'offer'>
 }
 
 const CollectionSchema = new mongoose.Schema<ICollection>({
@@ -15,6 +17,7 @@ const CollectionSchema = new mongoose.Schema<ICollection>({
     enum: ['A1', 'A1a', 'A2', 'A2a', 'A2b', 'A3', 'A3a', 'A3b', 'A4'],
   },
   countMap: { type: Map, of: Number, required: true },
+  statusMap: { type: Map, of: String, enum: ['ask', 'offer', null], default: null },
 })
 
 export default mongoose.model<ICollection>('Collection', CollectionSchema)

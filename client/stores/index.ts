@@ -1,6 +1,6 @@
 function get<T>(key: string) {
   const value = localStorage.getItem(key)
-  return value && (JSON.parse(value) as T)
+  return value ? (JSON.parse(value) as T) : undefined
 }
 
 type ItemValue = string | number | boolean | null | { [key: string]: ItemValue } | ItemValue[]

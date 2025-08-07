@@ -1,18 +1,36 @@
 <template>
-  <Card :card="card" :show-image="count > 0" @click="$emit('increase')">
-    <span v-show="count > 0" class="trash" @click.stop="$emit('decrease')"
-      ><img src="/icons/trash.png"
-    /></span>
-    <span v-show="count > 0" class="counter" v-text="count" />
+  <Card
+    :card="card"
+    :show-image="count > 0"
+    :class="['card', status ? 'has-status' : '']"
+    @click="count > 0 ? $emit('miss') : $emit('own')"
+  >
+    <div v-if="TRADABLE_RARITIES.includes(card.rarity)" class="status">
+      <Tooltip content="I want to receive this card!">
+        <button
+          :class="['button', 'ask', status === 'ask' ? 'active' : '']"
+          @click.stop="$emit('ask')"
+        />
+      </Tooltip>
+      <Tooltip content="I can send this card!">
+        <button
+          :class="['button', 'offer', status === 'offer' ? 'active' : '']"
+          @click.stop="$emit('offer')"
+        />
+      </Tooltip>
+    </div>
   </Card>
 </template>
 
 <script setup lang="ts">
 import type { ICard } from '../../env'
 import Card from './Card.vue'
+import Tooltip from './Tooltip.vue'
 
-defineProps<{ card: ICard; count: number }>()
-defineEmits(['decrease', 'increase'])
+const TRADABLE_RARITIES = ['◊', '◊◊', '◊◊◊', '◊◊◊◊', '☆']
+
+defineProps<{ card: ICard; count: number; status: 'ask' | 'offer' | null }>()
+defineEmits(['miss', 'own', 'ask', 'offer'])
 </script>
 
 <style scoped>
@@ -21,42 +39,77 @@ defineEmits(['decrease', 'increase'])
   min-width: 60px;
 }
 
-.card:hover .trash {
+.status {
+  position: absolute;
+  top: 60%;
+  left: 0;
+  width: 100%;
+}
+
+.button {
+  opacity: 0;
+  transition:
+    opacity 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+  width: 32px;
+  height: 32px;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: #8799b1;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 70%, cover;
+  cursor: pointer;
+  box-shadow:
+    0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.1),
+    -0.1rem -0.1rem 0.2rem rgba(0, 0, 0, 0.1),
+    -0.1rem 0.1rem 0.2rem rgba(0, 0, 0, 0.1),
+    0.1rem -0.1rem 0.2rem rgba(0, 0, 0, 0.1);
+}
+.has-status .button {
+  opacity: 0.33;
+}
+.card:hover .button {
+  opacity: 0.67;
+}
+.status .button.active,
+.status .button:hover {
   opacity: 1;
 }
 
-.trash {
-  position: absolute;
-  top: 0;
-  right: 0;
-  opacity: 0;
-  transition: opacity 0.2s;
-  background: #444;
-  border-bottom-left-radius: 10px;
-  padding: 0 16px;
-  line-height: 20px;
+.ask {
+  background-image: url('/icons/heart.png');
+}
+.ask:hover,
+.ask.active {
+  background-image: url('/icons/heart.png'), var(--bg-pink);
 }
 
-img {
-  width: 16px;
-  vertical-align: text-top;
+.offer {
+  background-image: url('/icons/gift.png');
+}
+.offer:hover,
+.offer.active {
+  background-image: url('/icons/gift.png'), var(--bg-blue);
 }
 
-.counter {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  display: inline-block;
-  background: #444;
-  color: white;
-  font-weight: bold;
-  padding: 0 20px;
-  border-top-right-radius: 10px;
-}
+/* .button.active:hover {
+  background-color: #8799b1;
+} */
 
 @media (max-width: 600px) {
-  .trash {
+  .status {
+    position: absolute;
+    top: 60%;
+    left: 0;
+    width: 100%;
     opacity: 1;
+  }
+  .button {
+    width: 20px;
+    height: 20px;
+    padding: 4px;
+    margin: 0;
   }
 }
 </style>
