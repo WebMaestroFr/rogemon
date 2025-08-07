@@ -17,6 +17,8 @@ export const expansions: Record<ExpansionId, string> = {
   A2b: 'Shining Revelry',
   A3: 'Celestial Gardians',
   A3a: 'Extradimensional Crisis',
+  A3b: 'Eevee Grove',
+  A4: 'Wisdom of Sea and Sky',
 } as const
 
 // TODO: Remove this once all users have migrated to the new collection structure
