@@ -38,28 +38,28 @@
         icon="/icons/diamond.png"
         :cards="cards"
         :count-map="countMap"
-        @click="fill('◊')"
+        @click="fillCount('◊')"
       />
       <Counter
         :rarity="['◊◊']"
         icon="/icons/diamond.png"
         :cards="cards"
         :count-map="countMap"
-        @click="fill('◊◊')"
+        @click="fillCount('◊◊')"
       />
       <Counter
         :rarity="['◊◊◊']"
         icon="/icons/diamond.png"
         :cards="cards"
         :count-map="countMap"
-        @click="fill('◊◊◊')"
+        @click="fillCount('◊◊◊')"
       />
       <Counter
         :rarity="['◊◊◊◊']"
         icon="/icons/diamond.png"
         :cards="cards"
         :count-map="countMap"
-        @click="fill('◊◊◊◊')"
+        @click="fillCount('◊◊◊◊')"
       />
     </div>
     <div>
@@ -77,9 +77,12 @@
         :key="card.id"
         :card="card"
         :count="countMap[card.id] || 0"
+        :status="statusMap[card.id] || null"
         class="collection__card"
-        @increase="() => increaseCardRecord(card.id)"
-        @decrease="() => decreaseCardRecord(card.id)"
+        @own="() => markOwn(card.id)"
+        @miss="() => markMiss(card.id)"
+        @ask="() => markAsk(card.id)"
+        @offer="() => markOffer(card.id)"
       />
     </div>
     <img src="/img/splitter.png" class="splitter" />
@@ -88,49 +91,88 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import type { ExpansionId, ICard, ICollectionCount } from '../../env'
-import { setCardCount } from '@client/stores/card'
-import { loadCollection } from '@client/stores/collection'
+import type { ExpansionId, ICard, ICollection } from '../../env'
+import { setUserCardCount, setUserCardStatus } from '@client/stores/card'
+import { getUserCollection, loadUserCollection, setUserCollection } from '@client/stores/collection'
 import CollectionCard from './CollectionCard.vue'
 import Counter from './Counter.vue'
 
 const props = defineProps<{ expansionId: ExpansionId; name: string }>()
+
+const initialCollection = getUserCollection(props.expansionId)
+
 const cards = ref<ICard[]>([])
-const countMap = ref<ICollectionCount>({})
+const countMap = ref<ICollection['countMap']>(initialCollection.countMap)
+const statusMap = ref<ICollection['statusMap']>(initialCollection.statusMap)
 
 const emit = defineEmits(['loaded'])
 
 onMounted(async () => {
   const cardsResponse = await fetch(`cards/${props.expansionId}.json`)
   cards.value = await cardsResponse.json()
-  countMap.value = await loadCollection(props.expansionId)
+  const collection = await loadUserCollection(props.expansionId)
+  countMap.value = collection.countMap
+  statusMap.value = collection.statusMap
   emit('loaded')
 })
 
-function increaseCardRecord(cardId: string) {
-  if (countMap.value[cardId] === undefined || countMap.value[cardId] === -1) {
-    countMap.value[cardId] = 1
-  } else if (cardId in countMap.value) {
-    countMap.value[cardId] += 1
+function markOwn(cardId: string) {
+  countMap.value[cardId] = 1
+  setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
+  if (statusMap.value[cardId] === 'ask') {
+    statusMap.value[cardId] = null
+    setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
   }
-  setCardCount(props.expansionId, cardId, countMap.value[cardId])
 }
 
-function decreaseCardRecord(cardId: string) {
-  if (countMap.value[cardId] === -1) {
-    countMap.value[cardId] = 0
-  } else if (countMap.value[cardId] === undefined || countMap.value[cardId] <= 1) {
-    countMap.value[cardId] = -1
+function markMiss(cardId: string) {
+  countMap.value[cardId] = 0
+  setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
+  if (statusMap.value[cardId] === 'offer') {
+    statusMap.value[cardId] = null
+    setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
+  }
+}
+
+function markAsk(cardId: string) {
+  if (statusMap.value[cardId] === 'ask') {
+    statusMap.value[cardId] = null
   } else {
-    countMap.value[cardId] -= 1
+    statusMap.value[cardId] = 'ask'
   }
-  setCardCount(props.expansionId, cardId, countMap.value[cardId])
+  setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
 }
 
-function fill(rarity: string) {
-  cards.value
-    .filter((c) => c.rarity === rarity)
-    .forEach((c) => !countMap.value[c.id] && increaseCardRecord(c.id))
+function markOffer(cardId: string) {
+  if (statusMap.value[cardId] === 'offer') {
+    statusMap.value[cardId] = null
+    countMap.value[cardId] = 1
+  } else {
+    statusMap.value[cardId] = 'offer'
+    countMap.value[cardId] = 2
+  }
+  setUserCardCount(props.expansionId, cardId, countMap.value[cardId])
+  setUserCardStatus(props.expansionId, cardId, statusMap.value[cardId])
+}
+
+function fillCount(rarity: string) {
+  const rarityCards = cards.value.filter((card) => card.rarity === rarity)
+  const isComplete = rarityCards.every((card) => countMap.value[card.id] > 0)
+  if (isComplete) {
+    if (window.confirm(`Are you sure to mark all ${rarity} cards as missing?`)) {
+      rarityCards.forEach((card) => {
+        countMap.value[card.id] = 0
+        if (statusMap.value[card.id] === 'offer') {
+          statusMap.value[card.id] = null
+        }
+      })
+    }
+  } else if (window.confirm(`Are you sure to mark all ${rarity} cards as owned?`)) {
+    rarityCards.forEach((card) => {
+      countMap.value[card.id] = 1
+    })
+  }
+  setUserCollection(props.expansionId, { countMap: countMap.value, statusMap: statusMap.value })
 }
 
 function scrollToNext() {

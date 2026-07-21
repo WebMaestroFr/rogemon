@@ -1,10 +1,10 @@
 <template>
   <LoadingSpinner v-if="loaded < allProfiles" />
   <ProfileView
-    v-for="username of usernames"
+    v-for="email of emails"
     v-show="loaded === allProfiles"
-    :key="username"
-    :username="username"
+    :key="email"
+    :email="email"
     @loaded="loaded++"
   />
 </template>
@@ -15,7 +15,6 @@ import ProfileView from '../views/ProfileView.vue'
 import LoadingSpinner from '@client/components/LoadingSpinner.vue'
 import { ref } from 'vue'
 
-const usernames = emails.map((email) => email.substring(0, email.indexOf('@')))
 const loaded = ref(0)
 const allProfiles = emails.length
 </script>

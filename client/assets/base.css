@@ -37,3 +37,8 @@ body {
   font-family: 'PokemonSolid';
   src: url('/fonts/pokemon-solid.ttf') format('truetype');
 }
+
+:root {
+  --bg-pink: linear-gradient(to bottom right, #ff88c2, #ff3c7d);
+  --bg-blue: linear-gradient(to bottom right, #66e0ff, #00cfff);
+}

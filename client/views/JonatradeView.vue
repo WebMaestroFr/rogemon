@@ -2,9 +2,9 @@
   <LoadingSpinner v-if="!loaded" />
   <div
     v-for="[email, tradesByRarity] in Object.entries(tradesByEmail)"
+    v-show="loaded"
     :key="email"
     class="user"
-    v-show="loaded"
   >
     <a class="hollow" :href="'/profiles/' + getUsername(email)">
       <img src="/icons/user.png" />{{ getUsername(email) }}

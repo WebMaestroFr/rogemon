@@ -54,6 +54,7 @@ const { showImage = true } = defineProps<{
   font-size: 2em;
   font-weight: bold;
   color: #99adc6;
+  margin-top: -50%;
 }
 
 @media (max-width: 600px) {
